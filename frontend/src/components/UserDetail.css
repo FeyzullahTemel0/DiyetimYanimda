@@ -1,0 +1,291 @@
+/* frontend/src/components/UserDetail.css */
+
+/* :root değişkenlerini global bir CSS dosyasından aldığını varsayıyoruz. */
+
+.user-detail-section {
+  padding: 1.5rem 2rem;
+  background-color: var(--bg-dark-primary);
+  border: 1px solid var(--border-dark);
+  border-radius: var(--radius-lg);
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.detail-header {
+  margin-bottom: 2rem;
+}
+
+.btn-back {
+  background: none;
+  border: 1px solid var(--border-dark);
+  color: var(--text-primary);
+  padding: 0.6rem 1.2rem;
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-back:hover {
+  background-color: var(--border-dark);
+  color: var(--text-white);
+}
+
+.detail-content-grid {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 2.5rem;
+  align-items: flex-start;
+}
+
+/* SOL SÜTUN - PROFİL KARTI */
+.profile-card {
+  background-color: var(--bg-dark-secondary);
+  border: 1px solid var(--border-dark);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: sticky;
+  top: 2rem;
+}
+
+.profile-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #34495e, #2c3e50);
+  color: var(--text-white);
+  font-size: 3rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  border: 4px solid var(--border-dark);
+}
+
+.profile-avatar.admin {
+  background: linear-gradient(145deg, var(--admin-color), #8e44ad);
+  border-color: var(--admin-color);
+}
+
+.profile-name {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-white);
+  margin: 0;
+  word-break: break-word;
+}
+
+.profile-email {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin: 0.5rem 0 1.5rem 0;
+  word-break: break-all;
+}
+
+.profile-role {
+  background-color: rgba(139, 148, 158, 0.1);
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  text-transform: capitalize;
+}
+
+.profile-role.admin {
+  background-color: rgba(155, 89, 182, 0.15);
+  color: var(--admin-color);
+}
+
+/* SAĞ SÜTUN - GÜNCELLEME FORMU */
+.update-form {
+  background-color: var(--bg-dark-secondary);
+  border: 1px solid var(--border-dark);
+  border-radius: var(--radius-lg);
+  padding: 2.5rem;
+}
+
+.update-form h3 {
+  font-size: 1.6rem;
+  color: var(--text-white);
+  margin: 0 0 2rem 0;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-dark);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 12px 10px;
+  border: 1px solid var(--border-dark);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  background-color: var(--bg-dark-primary);
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--green-main);
+  box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.2);
+}
+
+.form-group input:disabled {
+  background-color: #21262d;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.form-divider {
+  border: none;
+  height: 1px;
+  background-color: var(--border-dark);
+  margin: 1rem 0 2.5rem 0;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+.btn-update {
+  background-color: var(--green-main);
+  color: var(--bg-dark-primary);
+  padding: 0.75rem 2rem;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.btn-update:hover {
+  background-color: #27ae60;
+  transform: translateY(-2px);
+}
+
+/* BİLDİRİM VE DURUM MESAJLARI */
+.detail-message {
+  text-align: center;
+  padding: 4rem 2rem;
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  background-color: var(--bg-dark-secondary);
+  border: 1px dashed var(--border-dark);
+  border-radius: var(--radius-lg);
+}
+.detail-message.error {
+  color: #ff8a80;
+  border-color: var(--danger-color);
+}
+
+.detail-notification {
+  width: 100%;
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  text-align: center;
+  font-weight: 500;
+  color: #fff;
+  margin-top: 1.5rem;
+}
+.detail-notification.success { background-color: #27ae60; }
+.detail-notification.error { background-color: var(--danger-color); }
+
+
+/* TEHLİKELİ ALAN */
+.danger-zone {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--danger-color);
+}
+.danger-zone h4 {
+  color: #ff8a80;
+  margin: 0 0 0.5rem 0;
+  font-size: 1.2rem;
+}
+.danger-zone p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 0 0 1rem 0;
+}
+.btn-delete {
+  background: transparent;
+  border: 1px solid var(--danger-color);
+  color: #ff8a80;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.btn-delete:hover {
+  background-color: var(--danger-color);
+  color: #fff;
+}
+
+
+/* RESPONSIVE TASARIM */
+@media (max-width: 992px) {
+  .detail-content-grid {
+    grid-template-columns: 1fr;
+  }
+  .profile-card {
+    position: static;
+    flex-direction: row;
+    text-align: left;
+  }
+  .profile-avatar {
+    width: 70px;
+    height: 70px;
+    font-size: 2rem;
+    margin: 0 1.5rem 0 0;
+  }
+}
+
+@media (max-width: 576px) {
+    .user-detail-section {
+        padding: 1rem;
+    }
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+}
+
+@keyframes fadeIn {
+  from { opacity:0; transform: translateY(10px); }
+  to   { opacity:1; transform: translateY(0); }
+}

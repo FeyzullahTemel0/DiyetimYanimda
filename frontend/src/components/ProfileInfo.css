@@ -1,0 +1,141 @@
+/* frontend/src/components/ProfileInfo.css */
+
+/* --- BİLGİ GÖSTERİM ALANI --- */
+.profile-info-display {
+  background-color: var(--bg-dark-secondary);
+  padding: 2.5rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-dark);
+  color: var(--text-primary);
+}
+
+.profile-info-display h3 {
+  font-size: 1.8rem;
+  color: var(--text-white);
+  margin: 0 0 2rem 0;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-dark);
+}
+
+.profile-info-display p {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(48, 54, 61, 0.5);
+  padding-bottom: 1rem;
+}
+
+.profile-info-display strong {
+  color: var(--text-secondary);
+}
+
+.role-pill {
+  font-weight: 500;
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  text-transform: capitalize;
+}
+.role-pill.user { background-color: rgba(139, 148, 158, 0.1); color: var(--text-secondary); }
+.role-pill.admin { background-color: rgba(155, 89, 182, 0.15); color: var(--admin-color); }
+
+.btn-edit-profile {
+  margin-top: 1.5rem;
+  background: var(--green-main);
+  color: var(--bg-dark-primary);
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-edit-profile:hover {
+  background: #27ae60;
+  transform: translateY(-2px);
+}
+
+/* --- FORM DÜZENLEME ALANI --- */
+.profile-info-form {
+  background-color: var(--bg-dark-secondary);
+  padding: 2.5rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-dark);
+}
+
+.profile-info-form h3 {
+  font-size: 1.8rem;
+  color: var(--text-white);
+  margin: 0 0 2rem 0;
+}
+
+.profile-info-form .form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.profile-info-form .form-row:has(input[name="targetWeight"]) {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.profile-info-form .form-group {
+  margin-bottom: 1.5rem;
+}
+
+.profile-info-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.profile-info-form input,
+.profile-info-form select {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--bg-dark-primary);
+  border: 1px solid var(--border-dark);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 1rem;
+}
+
+.profile-info-form input:disabled {
+  background-color: #21262d;
+  cursor: not-allowed;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-dark);
+}
+
+.btn-cancel, .btn-save {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-cancel { background-color: var(--border-dark); color: var(--text-white); }
+.btn-save { background-color: var(--green-main); color: var(--bg-dark-primary); }
+
+.profile-notification {
+  grid-column: 1 / -1; /* Form grid yapısında tam genişlik kaplar */
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+  margin-top: 1rem;
+}
+.profile-notification.success { background-color: #27ae60; color: #fff; }
+.profile-notification.error { background-color: #e74c3c; color: #fff; }
+.profile-notification.info { background-color: #3498db; color: #fff; }

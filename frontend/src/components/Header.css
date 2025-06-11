@@ -1,0 +1,90 @@
+/* ---- Yeni Renk Paleti ---- */
+:root {
+  --accent-color: #2dd4bf;                  /* Ana Vurgu Rengi (Teal) */
+  --accent-color-hover: hsl(168, 65%, 45%);   /* Vurgu Renginin Koyu Tonu */
+  --bg-dark-primary: hsl(0, 0%, 16%);         /* Ana Arka Plan */
+  --bg-dark-secondary: hsl(0, 0%, 22%);       /* İkincil Arka Plan (Header için) */
+  --border-dark: hsl(0, 0%, 30%);            /* Kenarlık Rengi */
+  --text-white: #f0f0f0;                      /* En Açık Metin Rengi */
+  --text-primary: #f0f0f0;                    /* Ana Metin Rengi */
+  --text-on-accent: hsl(0, 0%, 10%);          /* Vurgu rengi üzerindeki metin için */
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  /* Düzeltme: Yeni temaya uygun arkaplan */
+  background: var(--bg-dark-secondary); 
+  /* Düzeltme: Yeni temaya uygun metin rengi */
+  color: var(--text-primary); 
+  /* Düzeltme: Koyu temada border-bottom daha şık durur */
+  border-bottom: 1px solid var(--border-dark);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  animation: headerFadeIn 0.5s ease;
+}
+
+.header__logo {
+  font-size: 1.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  /* Düzeltme: Logo için en açık metin rengi */
+  color: var(--text-white); 
+}
+
+.header__logo::before {
+  content: "🥗";
+  margin-right: 0.5rem;
+  animation: logoBounce 1s infinite alternate;
+}
+
+.header__user {
+  display: flex;
+  align-items: center;
+}
+
+.header__user span {
+  margin-right: 1rem;
+  font-size: 0.95rem;
+}
+
+.header__user button {
+  padding: 0.5rem 1rem;
+  border: none;
+  /* Düzeltme: Çıkış butonu için vurgu rengi */
+  background: var(--accent-color);
+  color: var(--text-on-accent);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.header__user button:hover {
+  background: var(--accent-color-hover);
+  transform: translateY(-1px);
+}
+
+@keyframes logoBounce {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-5px); }
+}
+
+@keyframes headerFadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive Ayarlar */
+@media (max-width: 768px) {
+  .header {
+    padding: 15px 20px;
+  }
+
+  .header__logo {
+    font-size: 1.5rem;
+  }
+}

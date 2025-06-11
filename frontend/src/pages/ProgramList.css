@@ -1,0 +1,375 @@
+/* frontend/src/pages/ProgramList.css */
+
+/* ---- Yeni Renk Paleti ---- */
+:root {
+  --accent-color: #2dd4bf;                  /* Ana Vurgu Rengi (Teal) */
+  --accent-color-hover: hsl(168, 65%, 45%);   /* Vurgu Renginin Koyu Tonu */
+  --bg-dark-primary: hsl(0, 0%, 16%);         /* Ana Arka Plan */
+  --bg-dark-secondary: hsl(0, 0%, 22%);       /* İkincil Arka Plan (Kartlar, Modal) */
+  --border-dark: hsl(0, 0%, 30%);            /* Kenarlık Rengi */
+  --text-white: #f0f0f0;                      /* En Açık Metin Rengi */
+  --text-primary: #f0f0f0;                    /* Ana Metin Rengi */
+  --text-secondary: #b3b3b3;                 /* İkincil, daha soluk metin rengi */
+  --text-on-accent: hsl(0, 0%, 10%);          /* Vurgu rengi üzerindeki metin için */
+
+  /* Diğer semantik renkler korunuyor */
+  --danger-color: #e74c3c;
+  --blue-color: #3498db;
+  --pink-color: #e83e8c;
+  --radius-lg: 12px;
+  --radius-md: 8px;
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideInUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+/* --- ANA KAPSAYICI --- */
+.program-list-section {
+  padding: 1.5rem 2rem;
+  background-color: var(--bg-dark-primary);
+  border: 1px solid var(--border-dark);
+  border-radius: var(--radius-lg);
+  min-height: 100vh;
+}
+
+/* --- BAŞLIK ve YENİ EKLE BUTONU --- */
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-dark);
+}
+.list-header h2 {
+  font-size: 1.8rem;
+  color: var(--text-white);
+  margin: 0;
+}
+.btn-add {
+  background: var(--accent-color);
+  color: var(--text-on-accent);
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.btn-add:hover {
+  background: var(--accent-color-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(45, 212, 191, 0.2);
+}
+
+/* --- YÜKLENİYOR / HATA / BİLDİRİM MESAJLARI --- */
+.list-message {
+  text-align: center;
+  padding: 4rem 2rem;
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  background-color: var(--bg-dark-secondary);
+  border: 1px dashed var(--border-dark);
+  border-radius: var(--radius-lg);
+}
+
+.notification {
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border-radius: var(--radius-md);
+  color: #fff;
+  text-align: center;
+  font-weight: 500;
+}
+.notification.success { background-color: var(--accent-color-hover); color: var(--text-on-accent);}
+.notification.error { background-color: var(--danger-color); }
+
+
+/* --- PROGRAM KARTLARI GRID YAPISI --- */
+.program-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.program-card {
+  background: var(--bg-dark-secondary);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-dark);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+}
+.program-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--accent-color);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+.card-header h3 {
+  margin: 0;
+  font-size: 1.3rem;
+  color: var(--text-white);
+}
+.gender-tag {
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  flex-shrink: 0;
+  text-transform: capitalize;
+}
+.gender-tag.male { background-color: rgba(52, 152, 219, 0.15); color: var(--blue-color); }
+.gender-tag.female { background-color: rgba(232, 62, 140, 0.15); color: var(--pink-color); }
+
+.card-description {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  flex-grow: 1;
+}
+
+.card-details {
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  border-top: 1px solid var(--border-dark);
+  padding-top: 1rem;
+  margin-bottom: 1.5rem;
+}
+.card-details p { margin: 0.5rem 0; }
+.card-details strong { color: var(--text-secondary); margin-right: 0.5rem; }
+
+.card-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+.btn-action {
+  flex: 1;
+  padding: 0.6rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-dark);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.btn-action.edit:hover {
+  background-color: var(--blue-color);
+  border-color: var(--blue-color);
+  color: #fff;
+}
+.btn-action.delete:hover {
+  background-color: var(--danger-color);
+  border-color: var(--danger-color);
+  color: #fff;
+}
+
+/* --- YENİ/DÜZENLEME MODALI --- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: hsla(0, 0%, 16%, 0.8);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  animation: fadeIn 0.3s ease;
+}
+.form-modal {
+  background: var(--bg-dark-secondary);
+  border-radius: var(--radius-lg);
+  padding: 2.5rem;
+  max-width: 650px;
+  width: 100%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-dark);
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideInUp 0.4s ease-out;
+}
+.form-modal h2 {
+  text-align: center;
+  color: var(--text-white);
+  margin: 0 0 2rem 0;
+}
+.btn-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  line-height: 1;
+  padding: 0.5rem;
+  transition: all 0.2s ease;
+}
+.btn-close:hover {
+  color: var(--text-white);
+  transform: rotate(90deg);
+}
+
+/* --- MODAL İÇİNDEKİ FORM STILLERİ --- */
+.program-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.field-group:has(textarea[name="description"]),
+.field-group:has(textarea[name="weeklyMenu"]),
+.field-group:has(textarea[name="tips"]) {
+  grid-column: 1 / -1;
+}
+
+.field-group label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.field-group input,
+.field-group select,
+.field-group textarea {
+  width: 100%;
+  padding: 12px 10px;
+  border: 1px solid var(--border-dark);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  background-color: var(--bg-dark-primary);
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.field-group input:focus,
+.field-group select:focus,
+.field-group textarea:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.2);
+}
+
+.field-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.form-error {
+  grid-column: 1 / -1;
+  color: #ff8a80;
+  background-color: rgba(220, 53, 69, 0.1);
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  text-align: center;
+}
+
+.form-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-dark);
+}
+
+.btn-submit,
+.btn-cancel {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-submit {
+  background: var(--accent-color);
+  color: var(--text-on-accent);
+}
+.btn-submit:hover {
+  background: var(--accent-color-hover);
+  transform: translateY(-2px);
+}
+
+.btn-cancel {
+  background: var(--border-dark);
+  color: var(--text-primary);
+}
+.btn-cancel:hover {
+  background: hsl(210, 8%, 25%); /* border-dark'ın biraz daha açığı */
+}
+
+/* ================================================== */
+/*         YENİ EKLENEN STİLLER (AŞAĞIYA EKLE)         */
+/* ================================================== */
+
+/* Detaylar Butonu için ek stil */
+.btn-action.details {
+    color: #3498db; /* Mavi tonu */
+}
+.btn-action.details:hover {
+    background-color: var(--blue-color);
+    border-color: var(--blue-color);
+    color: #fff;
+}
+
+/* Kart genişletildiğinde açılan alanın stilleri */
+.card-expanded-details {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px dashed var(--border-dark);
+    animation: fadeInDetails 0.4s ease-out;
+    text-align: left;
+}
+
+@keyframes fadeInDetails {
+    from { opacity: 0; max-height: 0; }
+    to { opacity: 1; max-height: 500px; /* Genişleyebileceği maksimum yükseklik */}
+}
+
+.card-expanded-details h4 {
+    font-size: 1rem;
+    color: var(--text-white);
+    margin: 0 0 0.75rem 0;
+}
+
+/* Haftalık menü ve ipuçları için stil */
+.card-expanded-details pre,
+.card-expanded-details .tips-content {
+    background-color: var(--bg-dark-primary);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    font-family: inherit; /* Ana fontu kullansın */
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    white-space: pre-wrap; /* Satır sonlarını koru */
+    word-break: break-word; /* Uzun kelimeleri kır */
+    margin-bottom: 1rem;
+}

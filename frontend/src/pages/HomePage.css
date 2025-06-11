@@ -1,0 +1,596 @@
+/* HomePage.css (Yeni Renk Paleti ile Güncellenmiş) */
+
+/* --- 1. Temel Ayarlar ve Değişkenler --- */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+/* ---- İsteğiniz üzerine eklenen YENİ RENK PALETİ ---- */
+:root {
+  /* Ana Renkler */
+  --accent-color: #2dd4bf;               /* Ana Vurgu Rengi (Teal) */
+  --dark-accent-color: hsl(168, 65%, 45%);/* Vurgu Renginin Hover için Koyu Tonu */
+
+  /* Arka Plan ve Kart Renkleri */
+  --background-color: hsl(0, 0%, 16%);    /* Ana Arka Plan */
+  --card-bg-color: hsl(0, 0%, 22%);       /* Kartlar ve Alanlar için Arka Plan */
+
+  /* Metin Renkleri */
+  --text-color: #f0f0f0;                  /* Ana Metin Rengi (Açık) */
+  --text-secondary-color: #b3b3b3;       /* İkincil, daha soluk metin rengi */
+  --dark-text-for-light-bg: hsl(0, 0%, 10%); /* Açık renkli butonlar/alanlar için koyu metin */
+
+  /* Diğerleri */
+  --border-color: hsl(0, 0%, 30%);        /* İnce ve belirsiz kenarlıklar */
+  --shadow: 0 4px 15px rgba(0, 0, 0, 0.2);/* Gölgeler için güncellenmiş değer */
+  --popular-glow: rgba(45, 212, 191, 0.3);/* Popüler elemanlar için parlama efekti */
+  --font-family: 'Poppins', sans-serif;   /* Font ailesi korundu */
+}
+
+/* --- 2. Genel ve Sıfırlama Stilleri --- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--background-color);
+  color: var(--text-color); /* Ana metin rengi güncellendi */
+  line-height: 1.6;
+}
+
+.home-container {
+  overflow-x: hidden;
+  background: var(--background-color); /* Değişkenle değiştirildi */
+}
+
+a {
+  text-decoration: none;
+  color: var(--accent-color); /* Yeni vurgu rengi kullanıldı */
+}
+
+/* --- 3. Genel Bölüm (Section) ve Başlık Stilleri --- */
+section {
+  padding: 80px 5%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.section-tag {
+  display: inline-block;
+  background-color: rgba(45, 212, 191, 0.1); /* Vurgu renginin şeffaf hali */
+  color:  var(--text-color);
+  padding: 8px 16px;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.section-header h2 {
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color:  var(--text-color);
+}
+
+.section-header p {
+  font-size: 1.1rem;
+  color:  var(--text-secondary-color); /* Hiyerarşi için ikincil metin rengi */
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* --- 4. Buton Stilleri --- */
+.btn {
+  display: inline-block;
+  padding: 12px 28px;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.btn-primary {
+  background-color: var(--accent-color);
+  color: var(--dark-text-for-light-bg); /* Kontrast için koyu metin */
+}
+.btn-primary:hover {
+  background-color: var(--dark-accent-color);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px var(--popular-glow); /* Yeni parlama efekti */
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--accent-color);
+  border-color: var(--accent-color);
+}
+.btn-secondary:hover {
+  background-color: var(--accent-color);
+  color: var(--dark-text-for-light-bg);
+  border-color: var(--accent-color);
+  transform: translateY(-3px);
+}
+
+.btn-large {
+  padding: 18px 40px;
+  font-size: 1.1rem;
+}
+
+/* --- 5. Hero Bölümü --- */
+.hero {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  padding-top: 100px;
+  padding-bottom: 100px;
+  min-height: 90vh;
+}
+
+.hero-content {
+  flex: 1;
+}
+
+.hero-title {
+  font-size: 3.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color:  var(--text-color);
+}
+
+.hero-title span {
+  color: var(--accent-color);
+}
+
+.hero-subtitle {
+  font-size: 1.2rem;
+  color:  var(--text-secondary-color);
+  margin: 1.5rem 0 2.5rem;
+  max-width: 500px;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.hero-image-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero-image-container img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* --- 6. İstatistikler Bölümü --- */
+.stats-section {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: var(--card-bg-color); /* Kart rengi ile değiştirildi */
+  padding: 40px 5%;
+  border-radius: 15px;
+  margin: -60px auto 0;
+  position: relative;
+  z-index: 10;
+  box-shadow: var(--shadow);
+  max-width: 900px;
+}
+
+.stat-card {
+  text-align: center;
+}
+
+.stat-card h3 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color:  var(--text-color);
+}
+
+.stat-card p {
+  font-size: 1rem;
+  color:  var(--text-secondary-color);
+  font-weight: 500;
+}
+
+/* --- 7. Özellikler (Neden Biz?) Bölümü --- */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.feature-item {
+  background-color: var(--card-bg-color);
+  padding: 2.5rem 2rem;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: var(--shadow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-item:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+}
+
+.feature-icon {
+  font-size: 3rem;
+  line-height: 1;
+  margin-bottom: 1.5rem;
+  color: var(--accent-color); /* İkonlar vurgu rengiyle renklendirildi */
+}
+
+.feature-item h3 {
+  font-size: 1.4rem;
+  margin-bottom: 0.8rem;
+  color:  var(--text-color);
+}
+
+.feature-item p {
+  color:  var(--text-secondary-color);
+}
+
+/* --- 8. Nasıl Çalışır? Bölümü --- */
+.how-it-works-section {
+  background-color: var(--background-color);
+}
+
+.steps-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  position: relative;
+}
+
+.steps-container::before {
+  content: '';
+  position: absolute;
+  top: 25px;
+  left: 15%;
+  right: 15%;
+  height: 2px;
+  background: var(--border-color); /* Çizgi için yeni kenarlık rengi */
+  z-index: 0;
+}
+
+.step-item {
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.step-number {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: var(--card-bg-color);
+  border: 2px solid var(--accent-color);
+  color: var(--text-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 auto 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.step-item:hover .step-number {
+  background-color: var(--accent-color);
+  color: var(--dark-text-for-light-bg);
+  transform: scale(1.1);
+}
+
+.step-item h4 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  color: var(--accent-color);
+}
+
+.step-item p {
+  color: var(--text-secondary-color);
+}
+
+/* --- 9. "Bu Program Kimin İçin?" Bölümü --- */
+.persona-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+}
+
+.persona-card {
+    background: var(--card-bg-color);
+    padding: 2rem;
+    border-radius: 12px;
+    border-left: 5px solid var(--accent-color);
+    transition: transform 0.3s ease;
+}
+.persona-card:hover {
+  transform: translateY(-5px);
+}
+
+.persona-card h4 {
+    font-size: 1.3rem;
+    color: var(--text-color);
+    margin-bottom: 0.8rem;
+}
+
+/* --- 10. Başarı Hikayeleri (Testimonials) Bölümü --- */
+.testimonial-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.testimonial-card {
+  background-color: var(--card-bg-color); /* Koyu temaya uygun hale getirildi */
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  border: 1px solid var(--border-color); /* Yeni kenarlık rengi */
+}
+
+.testimonial-card img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 1.5rem;
+  border: 2px solid var(--accent-color);
+}
+
+.testimonial-card p {
+  font-style: italic;
+  color: var(--text-secondary-color); /* Koyu temaya uygun metin rengi */
+  margin-bottom: 1.5rem;
+  flex-grow: 1;
+}
+
+.testimonial-card h4 {
+  color: var(--text-color); /* Koyu temaya uygun metin rengi */
+  font-weight: 600;
+}
+
+.testimonial-card span {
+  font-size: 0.9rem;
+  color: var(--accent-color);
+  font-weight: 500;
+}
+
+/* --- 11. Fiyatlandırma Bölümü (Kopyası) --- */
+/* NOT: Bu bölüm PricingPage.css'teki ile benzer olduğu için oradaki mantıkla güncellendi. */
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  align-items: stretch; /* Kartların eşitlenmesi için stretch daha iyi */
+}
+
+.pricing-card {
+  display: flex; /* İçerik hizalaması için eklendi */
+  flex-direction: column; /* İçerik hizalaması için eklendi */
+  background-color: var(--card-bg-color);
+  padding: 2.5rem 2rem;
+  border-radius: 15px;
+  border: 1px solid var(--border-color);
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.pricing-card.popular {
+  border-color: var(--accent-color);
+  transform: scale(1.05);
+  position: relative;
+  box-shadow: 0 0 25px var(--popular-glow);
+}
+
+.popular-tag {
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--accent-color);
+  color: var(--dark-text-for-light-bg);
+  padding: 5px 15px;
+  border-radius: 50px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.pricing-card h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.pricing-card .price {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--accent-color);
+  margin: 1rem 0 2rem;
+}
+
+.pricing-card .price span {
+  font-size: 3.5rem;
+}
+
+.pricing-card ul {
+  list-style: none;
+  text-align: left;
+  margin-bottom: 2.5rem;
+  flex-grow: 1; /* Butonların en altta hizalanmasını sağlar */
+}
+
+.pricing-card li {
+  margin-bottom: 1rem;
+  color: var(--text-secondary-color);
+}
+.pricing-card li:last-child {
+  margin-bottom: 0;
+}
+
+/* --- 12. SSS (FAQ) Bölümü --- */
+.faq-list {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.faq-item {
+  background-color: var(--card-bg-color);
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+.faq-question {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--text-color);
+}
+
+.faq-toggle {
+  font-size: 1.8rem;
+  font-weight: 400;
+  color: var(--accent-color);
+  transition: transform 0.3s ease;
+}
+
+.faq-toggle.open {
+  transform: rotate(45deg);
+}
+
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease-in-out, padding 0.4s ease-in-out;
+}
+
+.faq-answer p {
+  padding: 0 1.5rem 1.5rem;
+  color: var(--text-secondary-color);
+}
+
+.faq-answer.open {
+  max-height: 300px;
+}
+
+/* --- 13. Son Çağrı (Final CTA) Bölümü --- */
+.final-cta-section {
+    background: var(--card-bg-color);
+    color: var(--text-color);
+    text-align: center;
+    padding: 60px 5%;
+    border-radius: 20px;
+    margin-top: 40px;
+}
+
+.final-cta-section h2 {
+    font-size: 2.5rem;
+    color: var(--text-color);
+    margin-bottom: 1rem;
+}
+
+.final-cta-section p {
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    color: var(--text-secondary-color);
+}
+
+.final-cta-section .btn-primary {
+    background-color: var(--accent-color);
+    color: var(--dark-text-for-light-bg);
+}
+.final-cta-section .btn-primary:hover {
+    background-color: var(--dark-accent-color);
+    color: var(--dark-text-for-light-bg);
+    box-shadow: 0 6px 20px var(--popular-glow);
+}
+
+/* --- 14. Duyarlılık (Responsiveness) --- */
+@media (max-width: 992px) {
+  .hero {
+    flex-direction: column;
+    text-align: center;
+  }
+  .hero-subtitle {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .hero-buttons {
+    justify-content: center;
+  }
+  .features-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+  .steps-container, .testimonial-grid, .pricing-grid, .persona-grid {
+    grid-template-columns: 1fr;
+  }
+  .pricing-card.popular {
+    transform: scale(1);
+  }
+  .steps-container::before {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  section {
+    padding: 60px 5%;
+  }
+  .section-header h2 {
+    font-size: 2.2rem;
+  }
+  .hero-title {
+    font-size: 2.5rem;
+  }
+  .stats-section {
+    flex-direction: column;
+    gap: 2rem;
+    padding: 30px;
+  }
+  .pricing-grid {
+    gap: 2rem;
+  }
+  .hero-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+  .btn {
+    width: 100%;
+    max-width: 300px;
+  }
+}

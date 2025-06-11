@@ -1,0 +1,53 @@
+/* frontend/src/styles/Dashboard.css (Yeni Renk Paleti ile Zaten Uyumlu) */
+
+:root {
+  --bg-dark-primary: hsl(0, 0%, 16%);         /* Ana Arka Plan */
+  --text-primary: #f0f0f0;                    /* Ana Metin Rengi */
+  --text-secondary: #b3b3b3;                 /* İkincil Metin Rengi */
+}
+
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  height: 100%; 
+  width: 100%;
+  background: var(--bg-dark-primary);
+  color: var(--text-primary); 
+}
+
+.dashboard__body {
+  display: flex;
+  flex: 1; /* Header'dan kalan tüm dikey alanı doldurur */
+  overflow: hidden; /* İçeriğin taşmasını engeller, scrollbar'ları iç kısımlara bırakır */
+}
+
+.dashboard__main {
+  flex: 1; /* Sidebar'dan kalan tüm yatay alanı doldurur */
+  padding: 2rem;
+  overflow-y: auto; /* Sadece bu alanın içeriği uzunsa scrollbar çıkar */
+  animation: fadeInUp 0.5s ease;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%; /* İçinde bulunduğu alanın tamamını kaplar */
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Mobil cihazlar için ek düzenlemeler */
+@media (max-width: 992px) {
+  .dashboard__body {
+    flex-direction: column;
+  }
+  .dashboard__main {
+    padding: 1rem;
+  }
+}

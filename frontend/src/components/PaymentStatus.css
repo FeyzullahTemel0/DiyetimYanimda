@@ -1,0 +1,42 @@
+.payment-status {
+  display: grid;
+  gap: 0.75rem;
+  background: #FAFAFA;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  animation: contentFadeIn 0.5s ease;
+}
+
+.payment-status h3 {
+  margin-top: 0;
+  color: #2E7D32;
+}
+
+.payment-status p {
+  display: flex;
+  align-items: center;
+  font-size: 0.95rem;
+  color: #333;
+}
+.payment-status p:nth-of-type(1)::before {
+  content: "💳";
+  margin-right: 0.5rem;
+  font-size: 1.1rem;
+}
+.payment-status p:nth-of-type(2)::before {
+  content: "📅";
+  margin-right: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.payment-status .btn-small::before {
+  content: "💰";
+  margin-right: 0.5rem;
+  animation: iconPulse 1s infinite alternate;
+}
+
+@keyframes iconPulse {
+  from { transform: scale(1); }
+  to   { transform: scale(1.1); }
+}
