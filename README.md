@@ -1,16 +1,21 @@
-# DiyetimYanimda
+# Diyetim Yanımda
 
+Kişiselleştirilmiş diyet, fitness ve sohbet deneyimi sunan gelişmiş bir yapay zeka destekli platformdur.
+
+## 🔧 Kurulum
+
+Projeyi başlatmak için aşağıdaki adımları takip edin:
+
+### 1. Gerekli Kurulumlar
+
+#### Backend
+
+```bash
 cd backend
 npm install
 
-cd frontend 
+cd frontend
 npm install
 
-backend starting code with:
-npm run dev
-
-frontend starting code with: 
-npm start
-
-
-thank you for develop this project. :-*
+backend start with: npm run dev
+frontend start with: npm start
