@@ -14,8 +14,13 @@ router.use(verifyToken);
 // GET /api/profile -> Giriş yapmış kullanıcının kendi profilini getirir.
 router.get("/", async (req, res) => {
   try {
+    console.log("user",req.user); // Kullanıcı bilgilerini kontrol et
+    console.log("userid",req.user.uid); // Kullanıcı bilgilerini kontrol et
+    
     const uid = req.user.uid;
     const doc = await firestore.collection("users").doc(uid).get();
+    console.log("doc", doc);
+    
     if (!doc.exists) return res.status(404).json({ error: "Kullanıcı profili bulunamadı." });
     
     const profileData = doc.data();
@@ -24,7 +29,7 @@ router.get("/", async (req, res) => {
     }
     res.status(200).json(profileData);
   } catch (err) {
-    res.status(500).json({ error: "Profil bilgileri getirilirken bir hata oluştu." });
+    res.status(400).json({ error: "Profil bilgileri getirilirken bir hata oluştu." });
   }
 });
 
