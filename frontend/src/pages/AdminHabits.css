@@ -1,0 +1,500 @@
+/* frontend/src/pages/AdminHabits.css */
+
+.dashboard-content {
+  display: flex;
+  min-height: calc(100vh - 80px);
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+}
+
+.admin-habits-panel {
+  background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+  flex: 1;
+  min-height: calc(100vh - 80px);
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem;
+  border-bottom: 1px solid rgba(76, 161, 117, 0.2);
+  background: rgba(25, 35, 60, 0.6);
+  backdrop-filter: blur(12px);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.panel-header h1 {
+  margin: 0.2rem 0;
+  font-size: 2rem;
+  background: linear-gradient(135deg, #4ca175 0%, #2dd4bf 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.panel-header .sub {
+  color: #9ab3c9;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.eyebrow {
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  color: #7ee0b5;
+  margin: 0;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #4ca175 0%, #2dd4bf 100%);
+  color: #fff;
+  border: none;
+  padding: 0.9rem 1.6rem;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 8px 25px rgba(76, 161, 117, 0.35);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background: rgba(76, 161, 117, 0.12);
+  color: #7ee0b5;
+  border: 1px solid rgba(76, 161, 117, 0.4);
+  padding: 0.85rem 1.4rem;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.btn-secondary:hover {
+  background: rgba(76, 161, 117, 0.2);
+}
+
+.habit-form {
+  margin: 1.5rem 2rem;
+  background: rgba(25, 35, 60, 0.6);
+  border: 1px solid rgba(76, 161, 117, 0.25);
+  border-radius: 16px;
+  padding: 1.5rem;
+  backdrop-filter: blur(10px);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.form-group label {
+  color: #cfe6f5;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(76, 161, 117, 0.25);
+  color: #f4f8fb;
+  padding: 0.8rem 0.9rem;
+  border-radius: 10px;
+  font-size: 0.95rem;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.chip {
+  padding: 0.55rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid rgba(76, 161, 117, 0.35);
+  background: rgba(76, 161, 117, 0.08);
+  color: #cfe6f5;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 600;
+}
+
+.chip.active {
+  background: rgba(76, 161, 117, 0.2);
+  color: #7ee0b5;
+}
+
+.form-actions {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.8rem;
+}
+
+.habits-list {
+  padding: 1.5rem 2rem 3rem;
+}
+
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1rem;
+}
+
+.habit-card {
+  background: rgba(25, 35, 60, 0.6);
+  border: 1px solid rgba(76, 161, 117, 0.2);
+  border-radius: 14px;
+  padding: 1.4rem;
+  color: #e7f0f7;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.card-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  align-items: flex-start;
+}
+
+.card-head h4 {
+  margin: 0.1rem 0;
+  font-size: 1.15rem;
+}
+
+.meta {
+  margin: 0;
+  color: #a2b6c8;
+  font-size: 0.95rem;
+}
+
+.pill {
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #cfe6f5;
+}
+
+.pill.success {
+  background: rgba(76, 161, 117, 0.2);
+  border-color: rgba(76, 161, 117, 0.5);
+  color: #7ee0b5;
+}
+
+.pill.muted {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.desc {
+  margin: 0;
+  color: #c3d4e0;
+  line-height: 1.5;
+}
+
+.stats {
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  color: #9ab3c9;
+  font-weight: 600;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.tags .tag {
+  padding: 0.35rem 0.7rem;
+  border-radius: 10px;
+  border: 1px solid rgba(76, 161, 117, 0.35);
+  background: rgba(76, 161, 117, 0.08);
+  color: #cfe6f5;
+  font-size: 0.85rem;
+}
+
+.card-actions {
+  display: flex;
+  gap: 0.8rem;
+  margin-top: 0.4rem;
+}
+
+.text-btn {
+  background: none;
+  border: none;
+  color: #7ee0b5;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.text-btn.danger {
+  color: #ff8b8b;
+}
+
+.loading, .empty {
+  color: #cfe6f5;
+  padding: 1rem 0;
+}
+
+/* ========== RESPONSIVE DESIGN ========== */
+
+/* Large Desktop (1200px+) */
+@media (min-width: 1200px) {
+  .admin-habits-container {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .form-row {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Tablet & Medium Screens (768px - 1199px) */
+@media (max-width: 1199px) {
+  .admin-habits-container {
+    padding: 1.5rem 1rem;
+  }
+
+  .panel-header h1 {
+    font-size: 2rem;
+  }
+
+  .form-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .habits-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Small Tablet (768px - 991px) */
+@media (max-width: 991px) {
+  .admin-habits-container {
+    padding: 1.25rem 0.75rem;
+  }
+
+  .panel-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .panel-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .btn-add {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .habits-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Mobile Portrait (768px and below) */
+@media (max-width: 768px) {
+  .admin-habits-container {
+    padding: 1rem 0.5rem;
+  }
+
+  .panel-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.25rem;
+  }
+
+  .panel-header h1 {
+    font-size: 1.6rem;
+  }
+
+  .btn-add {
+    width: 100%;
+    padding: 0.875rem 1.5rem;
+    font-size: 0.95rem;
+  }
+
+  .habit-form {
+    padding: 1.25rem;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .form-group label {
+    font-size: 0.9rem;
+  }
+
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    padding: 0.875rem 1rem;
+    font-size: 0.95rem;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .form-actions button {
+    width: 100%;
+    padding: 0.875rem;
+    font-size: 0.95rem;
+  }
+
+  .habits-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .habit-card {
+    padding: 1.25rem;
+  }
+
+  .habit-card h3 {
+    font-size: 1.1rem;
+  }
+
+  .habit-card p {
+    font-size: 0.875rem;
+  }
+
+  .habit-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .habit-actions button {
+    width: 100%;
+    padding: 0.625rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* Small Mobile (576px and below) */
+@media (max-width: 576px) {
+  .admin-habits-container {
+    padding: 0.75rem 0.25rem;
+  }
+
+  .panel-header {
+    padding: 1rem;
+  }
+
+  .panel-header h1 {
+    font-size: 1.4rem;
+  }
+
+  .btn-add {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.9rem;
+  }
+
+  .habit-form {
+    padding: 1rem;
+  }
+
+  .form-group label {
+    font-size: 0.85rem;
+  }
+
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    padding: 0.75rem 0.875rem;
+    font-size: 0.9rem;
+  }
+
+  .form-actions button {
+    padding: 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  .habit-card {
+    padding: 1rem;
+  }
+
+  .habit-card h3 {
+    font-size: 1rem;
+  }
+
+  .habit-card p {
+    font-size: 0.8rem;
+  }
+
+  .habit-actions button {
+    padding: 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  .loading, .empty {
+    font-size: 0.9rem;
+  }
+}
+
+/* Extra Small Mobile (480px and below) */
+@media (max-width: 480px) {
+  .panel-header h1 {
+    font-size: 1.25rem;
+  }
+
+  .habit-card {
+    padding: 0.875rem;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    font-size: 0.875rem;
+  }
+}

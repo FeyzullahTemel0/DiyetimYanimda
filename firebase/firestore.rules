@@ -36,12 +36,28 @@ service cloud.firestore {
       }
     }
     
+    // Kullanıcı Sağlık Profili (Hastalık, Alerji, İlaçlar vb)
+    match /healthProfiles/{userId} {
+      allow read: if request.auth != null && 
+                     (userId == request.auth.uid || 
+                      (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+                       get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'));
+      allow write, create, update: if request.auth != null && userId == request.auth.uid;
+      allow delete: if request.auth != null && userId == request.auth.uid;
+    }
+    
     // Diyet Programları
     match /dietPrograms/{programId} {
       allow read: if isUser();
       allow write: if isAdmin();
       allow create: if isAdmin();
       allow delete: if isAdmin();
+    }
+
+    // Alışkanlık Programları
+    match /habitPrograms/{habitId} {
+      allow read: if isUser();
+      allow write, create, update, delete: if isAdmin();
     }
     
     // Kullanıcı Hikayeleri
@@ -135,10 +151,65 @@ service cloud.firestore {
                        (resource.data.userId == request.auth.uid || isAdmin());
     }
     
+    // Tarifler
+    match /recipes/{recipeId} {
+      allow read: if isUser();
+      allow create, write, update, delete: if isAdmin();
+    }
+    
     // Bildirimler - Kullanıcı sadece kendisine yazılan bildirimleri okuyabilir
     match /notifications/{notifId} {
       allow read, write: if request.auth != null;
       allow delete: if request.auth != null;
+    }
+
+    // AI Consultant - Konuşmalar
+    match /aiConversations/{conversationId} {
+      allow read: if request.auth != null && resource.data.userId == request.auth.uid;
+      allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
+      allow update: if request.auth != null && resource.data.userId == request.auth.uid;
+      allow delete: if request.auth != null && resource.data.userId == request.auth.uid;
+    }
+
+    // AI Consultant - Mesajlar
+    match /aiMessages/{messageId} {
+      allow read: if request.auth != null && 
+                     exists(/databases/$(database)/documents/aiConversations/$(resource.data.conversationId)) &&
+                     get(/databases/$(database)/documents/aiConversations/$(resource.data.conversationId)).data.userId == request.auth.uid;
+      allow create: if request.auth != null && 
+                       request.resource.data.userId == request.auth.uid;
+      allow delete: if request.auth != null && resource.data.userId == request.auth.uid;
+    }
+
+    // Live Chat - Diyetisyen Profilleri
+    match /dietitians/{dietitianId} {
+      allow read: if request.auth != null;
+      allow write: if isAdmin();
+      allow create: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // Live Chat - Sohbet Oturumları
+    match /liveChatSessions/{sessionId} {
+      allow read: if request.auth != null && 
+                     (resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if request.auth != null && 
+                       request.resource.data.userId == request.auth.uid;
+      allow update: if request.auth != null && 
+                       (resource.data.userId == request.auth.uid || isAdmin());
+      allow delete: if request.auth != null && 
+                       (resource.data.userId == request.auth.uid || isAdmin());
+    }
+
+    // Live Chat - Mesajlar
+    match /liveChatMessages/{messageId} {
+      allow read: if request.auth != null && 
+                     exists(/databases/$(database)/documents/liveChatSessions/$(resource.data.sessionId)) &&
+                     (get(/databases/$(database)/documents/liveChatSessions/$(resource.data.sessionId)).data.userId == request.auth.uid ||
+                      get(/databases/$(database)/documents/liveChatSessions/$(resource.data.sessionId)).data.dietitianId == request.auth.uid ||
+                      isAdmin());
+      allow create: if request.auth != null;
+      allow delete: if request.auth != null && isAdmin();
     }
     
     // Varsayılan - Tüm belgeler için

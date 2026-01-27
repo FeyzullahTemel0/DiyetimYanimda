@@ -21,9 +21,7 @@ import Motivation from "./pages/Motivation";
 import PersonalizedNutrition from "./pages/PersonalizedNutrition";
 import FavoritesTracking from "./pages/FavoritesTracking";
 import BodyAnalysis from "./pages/BodyAnalysis";
-import WeeklyPlanDownload from "./pages/WeeklyPlanDownload";
 import MonthlyProgress from "./pages/MonthlyProgress";
-import EmailSupport from "./pages/EmailSupport";
 import AiConsultant from "./pages/AiConsultant";
 import Recipes from "./pages/Recipes";
 import NutritionOptimization from "./pages/NutritionOptimization";
@@ -58,6 +56,12 @@ import PaymentPage from './pages/PaymentPage';
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import PersonalizedNutritionRecommendations from "./pages/PersonalizedNutritionRecommendations";
+import AdminRecipes from "./pages/AdminRecipes";
+import AdminHabits from "./pages/AdminHabits";
+import AdminPrograms from "./pages/AdminPrograms";
+import AdminQuotes from "./pages/AdminQuotes";
+import AdminUsers from "./pages/AdminUsers";
+import AdminPricing from "./pages/AdminPricing";
 
 // Yasal Sayfalar
 import Terms from "./pages/Terms";
@@ -91,9 +95,7 @@ export default function App() {
             <Route path="/personalized-nutrition" element={<PersonalizedNutrition />} />
             <Route path="/favorites-tracking" element={<FavoritesTracking />} />
             <Route path="/body-analysis" element={<BodyAnalysis />} />
-            <Route path="/weekly-plan" element={<WeeklyPlanDownload />} />
             <Route path="/monthly-progress" element={<MonthlyProgress />} />
-            <Route path="/email-support" element={<EmailSupport />} />
             <Route path="/ai-consultant" element={<AiConsultant />} />
             <Route path="/recipes" element={<Recipes />} />
             <Route path="/nutrition-optimization" element={<NutritionOptimization />} />
@@ -160,6 +162,72 @@ export default function App() {
                 <ProtectedRoute>
                   <AdminRoute>
                     <AdminNutritionDashboard />
+                  </AdminRoute>
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/admin/recipes"
+              element={
+                <ProtectedRoute>
+                  <AdminRoute>
+                    <AdminRecipes />
+                  </AdminRoute>
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/admin/habits"
+              element={
+                <ProtectedRoute>
+                  <AdminRoute>
+                    <AdminHabits />
+                  </AdminRoute>
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/admin/programs"
+              element={
+                <ProtectedRoute>
+                  <AdminRoute>
+                    <AdminPrograms />
+                  </AdminRoute>
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/admin/quotes"
+              element={
+                <ProtectedRoute>
+                  <AdminRoute>
+                    <AdminQuotes />
+                  </AdminRoute>
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/admin/users"
+              element={
+                <ProtectedRoute>
+                  <AdminRoute>
+                    <AdminUsers />
+                  </AdminRoute>
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/admin/pricing"
+              element={
+                <ProtectedRoute>
+                  <AdminRoute>
+                    <AdminPricing />
                   </AdminRoute>
                 </ProtectedRoute>
               }

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { auth } from "../services/firebase";
 import { useToastContext } from "../contexts/ToastContext";
+import Header from "../components/Header";
+import Sidebar from "../components/Sidebar";
 import "./AdminNutritionDashboard.css";
 
 export default function AdminNutritionDashboard() {
@@ -381,8 +383,13 @@ export default function AdminNutritionDashboard() {
   }
 
   return (
-    <div className="admin-dashboard">
-      <h1>📧 Beslenme İpuçları Yönetimi</h1>
+    <div className="dashboard-container">
+      <Header />
+      <div className="dashboard-content">
+        <Sidebar activeTab="nutrition-tips" />
+        <main className="main-content">
+          <div className="admin-nutrition-panel">
+            <h1>📧 Beslenme İpuçları Yönetimi</h1>
 
       <div className="admin-tabs">
         <button
@@ -745,6 +752,9 @@ export default function AdminNutritionDashboard() {
           </div>
         </div>
       )}
+          </div>
+        </main>
+      </div>
     </div>
   );
 }

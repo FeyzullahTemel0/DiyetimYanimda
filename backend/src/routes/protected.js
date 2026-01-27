@@ -37,8 +37,32 @@ router.get("/", async (req, res) => {
 router.put("/", async (req, res) => {
   try {
     const uid = req.user.uid;
-    const { name, surname, height, weight, targetWeight, gender } = req.body;
+    const { 
+      name, 
+      surname, 
+      height, 
+      weight, 
+      targetWeight, 
+      gender,
+      // Sağlık Bilgileri
+      allergies,
+      isDiabetic,
+      diabeticType,
+      isHypertensive,
+      bloodPressure,
+      hasHeartDisease,
+      hasKidneyDisease,
+      hasLiverDisease,
+      hasThyroidDisease,
+      otherDiseases,
+      medications,
+      dietaryRestrictions,
+      activityLevel
+    } = req.body;
+    
     const allowedUpdates = {};
+    
+    // Kişisel Bilgiler
     if (name !== undefined) allowedUpdates.name = name;
     if (surname !== undefined) allowedUpdates.surname = surname;
     if (height !== undefined) allowedUpdates.height = Number(height);
@@ -47,12 +71,31 @@ router.put("/", async (req, res) => {
     if (gender && ["male", "female", "not_specified"].includes(gender)) {
       allowedUpdates.gender = gender;
     }
+    if (activityLevel !== undefined) allowedUpdates.activityLevel = activityLevel;
+    
+    // Sağlık Bilgileri
+    if (allergies !== undefined) allowedUpdates.allergies = allergies;
+    if (isDiabetic !== undefined) allowedUpdates.isDiabetic = isDiabetic;
+    if (diabeticType !== undefined) allowedUpdates.diabeticType = diabeticType;
+    if (isHypertensive !== undefined) allowedUpdates.isHypertensive = isHypertensive;
+    if (bloodPressure !== undefined) allowedUpdates.bloodPressure = bloodPressure;
+    if (hasHeartDisease !== undefined) allowedUpdates.hasHeartDisease = hasHeartDisease;
+    if (hasKidneyDisease !== undefined) allowedUpdates.hasKidneyDisease = hasKidneyDisease;
+    if (hasLiverDisease !== undefined) allowedUpdates.hasLiverDisease = hasLiverDisease;
+    if (hasThyroidDisease !== undefined) allowedUpdates.hasThyroidDisease = hasThyroidDisease;
+    if (otherDiseases !== undefined) allowedUpdates.otherDiseases = otherDiseases;
+    if (medications !== undefined) allowedUpdates.medications = medications;
+    if (dietaryRestrictions !== undefined) allowedUpdates.dietaryRestrictions = dietaryRestrictions;
+    
     if (Object.keys(allowedUpdates).length === 0) {
       return res.status(400).json({ error: "Güncellenecek geçerli bir veri gönderilmedi." });
     }
+    
     await firestore.collection("users").doc(uid).update(allowedUpdates);
+    console.log(`✅ Profil güncellendi - UID: ${uid}`, allowedUpdates);
     res.status(200).json({ message: "Profil başarıyla güncellendi." });
   } catch (err) {
+    console.error("🚨 PUT /api/profile error:", err);
     res.status(500).json({ error: "Profil güncellenirken bir hata oluştu." });
   }
 });

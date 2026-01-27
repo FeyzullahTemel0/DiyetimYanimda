@@ -41,6 +41,7 @@ const quotesRoutes = require("./routes/quotes");
 const communityRoutes = require("./routes/community");
 const nutritionTipsRoutes = require("./routes/nutritionTips");
 const mealsRoutes = require("./routes/meals");
+const recipesRoutes = require("./routes/recipes");
 
 // 2. Rotaları Uygulamaya Bağlama
 // '/api/auth' ile başlayan tüm istekler (örn: /api/auth/register, /api/auth/google-sync)
@@ -76,6 +77,9 @@ app.use("/api/nutrition-tips", nutritionTipsRoutes);
 
 // '/api/meals' ile başlayan tüm istekler mealsRoutes'a yönlendirilir.
 app.use("/api/meals", mealsRoutes);
+
+// '/api/recipes' ile başlayan tüm istekler recipesRoutes'a yönlendirilir.
+app.use("/api/recipes", recipesRoutes);
 
 // Pricing endpoint - Firestore'daki pricing collection'ını döner
 app.get("/api/pricing", async (req, res) => {

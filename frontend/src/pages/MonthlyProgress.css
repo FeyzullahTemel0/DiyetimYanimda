@@ -1,0 +1,563 @@
+/* frontend/src/pages/MonthlyProgress.css */
+
+.monthly-progress-container {
+  min-height: calc(100vh - 120px);
+  background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+  padding: 2rem clamp(1rem, 3vw, 3rem);
+  color: #e7f0f7;
+}
+
+.progress-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.progress-header h1 {
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  margin: 0 0 0.5rem;
+  background: linear-gradient(135deg, #4ca175 0%, #2dd4bf 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.progress-header h1 i {
+  color: #4ca175;
+  -webkit-text-fill-color: #4ca175;
+}
+
+.subtitle {
+  color: #9ab3c9;
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+}
+
+.date-selector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.date-selector select {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  padding: 0.75rem 1.5rem;
+  color: #e7f0f7;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.date-selector select:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(76, 161, 117, 0.4);
+}
+
+.date-selector select:focus {
+  outline: none;
+  border-color: #4ca175;
+  box-shadow: 0 0 0 3px rgba(76, 161, 117, 0.2);
+}
+
+/* Summary Grid */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.summary-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  transition: all 0.3s ease;
+}
+
+.summary-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(76, 161, 117, 0.15);
+}
+
+.summary-card.weight-change {
+  border-color: rgba(45, 212, 191, 0.3);
+}
+
+.summary-card.goal-progress {
+  border-color: rgba(76, 161, 117, 0.3);
+}
+
+.summary-card.avg-calories {
+  border-color: rgba(251, 146, 60, 0.3);
+}
+
+.summary-card.est-time {
+  border-color: rgba(168, 85, 247, 0.3);
+}
+
+.card-icon {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  font-size: 1.8rem;
+  flex-shrink: 0;
+}
+
+.weight-change .card-icon {
+  background: linear-gradient(135deg, rgba(45, 212, 191, 0.15), rgba(45, 212, 191, 0.05));
+  color: #2dd4bf;
+}
+
+.goal-progress .card-icon {
+  background: linear-gradient(135deg, rgba(76, 161, 117, 0.15), rgba(76, 161, 117, 0.05));
+  color: #4ca175;
+}
+
+.avg-calories .card-icon {
+  background: linear-gradient(135deg, rgba(251, 146, 60, 0.15), rgba(251, 146, 60, 0.05));
+  color: #fb923c;
+}
+
+.est-time .card-icon {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(168, 85, 247, 0.05));
+  color: #a855f7;
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.card-label {
+  font-size: 0.9rem;
+  color: #9ab3c9;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.card-value {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.card-value.success {
+  color: #22c55e;
+}
+
+.card-value.warning {
+  color: #fb923c;
+}
+
+.card-desc {
+  font-size: 0.85rem;
+  color: #7ee0b5;
+}
+
+/* Progress Card */
+.progress-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.progress-card .card-header {
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid rgba(76, 161, 117, 0.2);
+}
+
+.progress-card .card-header h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.4rem;
+  color: #7ee0b5;
+  margin: 0;
+}
+
+/* Weight Chart */
+.weight-chart {
+  padding: 1rem 0;
+}
+
+.chart-grid {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  gap: 1.5rem;
+  height: 250px;
+  padding: 1rem 0 2rem;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.chart-bar-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.chart-bar {
+  width: 100%;
+  min-height: 50px;
+  background: linear-gradient(180deg, #4ca175 0%, #2dd4bf 100%);
+  border-radius: 8px 8px 0 0;
+  position: relative;
+  transition: all 0.5s ease;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 0.5rem;
+}
+
+.bar-value {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #0a0e27;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+}
+
+.bar-label {
+  font-size: 0.9rem;
+  color: #9ab3c9;
+  font-weight: 600;
+}
+
+.chart-legend {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  color: #cfe6f5;
+}
+
+.legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.legend-dot.start {
+  background: #fb923c;
+}
+
+.legend-dot.current {
+  background: #4ca175;
+}
+
+.legend-dot.target {
+  background: #2dd4bf;
+}
+
+/* Macros Grid */
+.macros-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  align-items: stretch;
+}
+
+.macro-stat {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+
+.macro-stat.protein {
+  border-color: rgba(244, 63, 94, 0.2);
+}
+
+.macro-stat.carbs {
+  border-color: rgba(250, 204, 21, 0.2);
+}
+
+.macro-stat.fat {
+  border-color: rgba(59, 130, 246, 0.2);
+}
+
+.macro-icon {
+  font-size: 2.5rem;
+  width: 60px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.macro-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.macro-label {
+  font-size: 0.9rem;
+  color: #9ab3c9;
+  font-weight: 600;
+}
+
+.macro-value {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.macro-percentage {
+  font-size: 0.9rem;
+  color: #7ee0b5;
+  font-weight: 600;
+}
+
+.macro-bar {
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  overflow: hidden;
+  flex: 1 1 100%;
+  min-width: 0;
+}
+
+.macro-bar .macro-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.5s ease;
+}
+
+.macro-bar .macro-fill.protein {
+  background: linear-gradient(90deg, #f43f5e 0%, #fb7185 100%);
+}
+
+.macro-bar .macro-fill.carbs {
+  background: linear-gradient(90deg, #facc15 0%, #fde047 100%);
+}
+
+.macro-bar .macro-fill.fat {
+  background: linear-gradient(90deg, #3b82f6 0%, #60a5fa 100%);
+}
+
+/* Insights Grid */
+.insights-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.insight-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 4px solid;
+  border-radius: 10px;
+  padding: 1.25rem;
+  transition: all 0.25s ease;
+}
+
+.insight-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+  transform: translateX(5px);
+}
+
+.insight-item.success {
+  border-color: #22c55e;
+  background: rgba(34, 197, 94, 0.08);
+}
+
+.insight-item.warning {
+  border-color: #fb923c;
+  background: rgba(251, 146, 60, 0.08);
+}
+
+.insight-item.info {
+  border-color: #3b82f6;
+  background: rgba(59, 130, 246, 0.08);
+}
+
+.insight-item.tip {
+  border-color: #a855f7;
+  background: rgba(168, 85, 247, 0.08);
+}
+
+.insight-item i {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  margin-top: 0.25rem;
+}
+
+.insight-item.success i {
+  color: #22c55e;
+}
+
+.insight-item.warning i {
+  color: #fb923c;
+}
+
+.insight-item.info i {
+  color: #3b82f6;
+}
+
+.insight-item.tip i {
+  color: #a855f7;
+}
+
+.insight-item p {
+  margin: 0;
+  color: #cfe6f5;
+  line-height: 1.6;
+  font-size: 1rem;
+}
+
+.insight-item strong {
+  color: #fff;
+  font-weight: 700;
+}
+
+/* Loading & Empty States */
+.loading-state,
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 20px;
+  max-width: 600px;
+  margin: 3rem auto;
+}
+
+.loading-state i {
+  font-size: 3rem;
+  color: #4ca175;
+  margin-bottom: 1rem;
+}
+
+.empty-state i {
+  font-size: 4rem;
+  color: #9ab3c9;
+  margin-bottom: 1rem;
+}
+
+.empty-state h3 {
+  font-size: 1.8rem;
+  margin: 1rem 0 0.5rem;
+}
+
+.empty-state p {
+  color: #9ab3c9;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, #4ca175 0%, #2dd4bf 100%);
+  color: #0b1429;
+  border: none;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 25px rgba(76, 161, 117, 0.3);
+}
+
+.cta-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 35px rgba(76, 161, 117, 0.4);
+}
+
+@media (max-width: 768px) {
+  .progress-card {
+    padding: 1.5rem;
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .chart-grid {
+    gap: 0.75rem;
+    height: 200px;
+  }
+
+  .chart-bar {
+    border-radius: 6px 6px 0 0;
+  }
+
+  .bar-value {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.4rem;
+  }
+
+  .chart-legend {
+    gap: 1rem;
+  }
+
+  .legend-item {
+    font-size: 0.85rem;
+  }
+
+  .macros-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .macro-stat {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .macro-bar {
+    margin-top: 0.5rem;
+  }
+
+  .date-selector {
+    flex-direction: column;
+  }
+
+  .date-selector select {
+    width: 100%;
+  }
+}

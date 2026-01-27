@@ -8,10 +8,10 @@ import { useToastContext } from "../contexts/ToastContext";
 import "../styles/Dashboard.css";
 import "./AdminPanel.css";
 
-export default function Dashboard() {
+export default function Dashboard({ initialTab = "admin-programs" }) {
   const { showToast } = useToastContext();
   const [profile, setProfile] = useState(null);
-  const [activeTab, setActiveTab] = useState("admin-programs");
+  const [activeTab, setActiveTab] = useState(initialTab);
   
   // Admin panel states
   const [programs, setPrograms] = useState([]);

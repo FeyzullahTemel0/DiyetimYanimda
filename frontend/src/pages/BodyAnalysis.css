@@ -1,0 +1,565 @@
+/* frontend/src/pages/BodyAnalysis.css */
+
+.body-analysis-container {
+  min-height: calc(100vh - 120px);
+  background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+  padding: 2rem clamp(1rem, 3vw, 3rem);
+  color: #e7f0f7;
+}
+
+.analysis-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.analysis-header h1 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  margin: 0 0 0.5rem;
+  background: linear-gradient(135deg, #4ca175 0%, #2dd4bf 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.analysis-header h1 i {
+  color: #4ca175;
+  -webkit-text-fill-color: #4ca175;
+}
+
+.subtitle {
+  color: #9ab3c9;
+  font-size: 1.1rem;
+}
+
+.analysis-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.analysis-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.analysis-card.highlight {
+  background: linear-gradient(135deg, rgba(76, 161, 117, 0.1) 0%, rgba(45, 212, 191, 0.05) 100%);
+  border-color: rgba(76, 161, 117, 0.3);
+}
+
+.analysis-card.full-width {
+  grid-column: 1 / -1;
+}
+
+.analysis-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(76, 161, 117, 0.15);
+}
+
+.card-header {
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid rgba(76, 161, 117, 0.2);
+}
+
+.card-header h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.3rem;
+  color: #7ee0b5;
+  margin: 0;
+}
+
+/* BMI Display */
+.bmi-display {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.bmi-value {
+  font-size: 4rem;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.bmi-category {
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.bmi-scale {
+  margin-top: 2rem;
+}
+
+.bmi-bar {
+  position: relative;
+  height: 30px;
+  border-radius: 15px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.bmi-sections {
+  display: flex;
+  height: 100%;
+}
+
+.bmi-sections .section {
+  flex: 1;
+  height: 100%;
+}
+
+.section.underweight {
+  background: linear-gradient(90deg, #3b82f6 0%, #60a5fa 100%);
+}
+
+.section.normal {
+  background: linear-gradient(90deg, #22c55e 0%, #4ade80 100%);
+}
+
+.section.overweight {
+  background: linear-gradient(90deg, #f59e0b 0%, #fbbf24 100%);
+}
+
+.section.obese {
+  background: linear-gradient(90deg, #ef4444 0%, #f87171 100%);
+}
+
+.bmi-indicator {
+  position: absolute;
+  top: -5px;
+  transform: translateX(-50%);
+  transition: left 0.5s ease;
+}
+
+.indicator-dot {
+  width: 16px;
+  height: 40px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.bmi-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: #9ab3c9;
+  font-weight: 600;
+  padding: 0 0.5rem;
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.stat-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 1rem;
+  text-align: center;
+}
+
+.stat-label {
+  display: block;
+  font-size: 0.9rem;
+  color: #9ab3c9;
+  margin-bottom: 0.5rem;
+}
+
+.stat-value {
+  display: block;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.stat-value.success {
+  color: #22c55e;
+}
+
+.stat-value.warning {
+  color: #f59e0b;
+}
+
+/* Composition Display */
+.composition-display {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.circular-progress {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  flex-shrink: 0;
+}
+
+.progress-ring {
+  transform: rotate(-90deg);
+}
+
+.progress-ring-bg {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.1);
+  stroke-width: 8;
+}
+
+.progress-ring-fill {
+  fill: none;
+  stroke-width: 8;
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.5s ease;
+}
+
+.progress-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.progress-value {
+  display: block;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.progress-label {
+  display: block;
+  font-size: 0.8rem;
+  color: #9ab3c9;
+}
+
+.composition-info {
+  flex: 1;
+}
+
+.composition-info p {
+  margin: 0.75rem 0;
+  color: #cfe6f5;
+  font-size: 1rem;
+}
+
+.composition-info strong {
+  color: #fff;
+  font-size: 1.2rem;
+}
+
+/* Calorie Breakdown */
+.calorie-breakdown {
+  margin-top: 1rem;
+}
+
+.calorie-main {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.calorie-box {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.25rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.calorie-box:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(76, 161, 117, 0.2);
+}
+
+.calorie-box.bmr {
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.calorie-box.tdee {
+  border-color: rgba(168, 85, 247, 0.3);
+}
+
+.calorie-box.target {
+  border-color: rgba(76, 161, 117, 0.4);
+  background: rgba(76, 161, 117, 0.08);
+}
+
+.calorie-label {
+  font-size: 0.85rem;
+  color: #9ab3c9;
+  font-weight: 600;
+}
+
+.calorie-value {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.calorie-desc {
+  font-size: 0.8rem;
+  color: #7ee0b5;
+}
+
+/* Macros Display */
+.macros-display {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.macro-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.macro-card.protein {
+  border-color: rgba(244, 63, 94, 0.3);
+}
+
+.macro-card.carbs {
+  border-color: rgba(250, 204, 21, 0.3);
+}
+
+.macro-card.fat {
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.macro-icon {
+  font-size: 2.5rem;
+  text-align: center;
+}
+
+.macro-card.protein .macro-icon {
+  color: #f43f5e;
+}
+
+.macro-card.carbs .macro-icon {
+  color: #facc15;
+}
+
+.macro-card.fat .macro-icon {
+  color: #3b82f6;
+}
+
+.macro-info {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.macro-name {
+  font-size: 1.1rem;
+  color: #9ab3c9;
+  font-weight: 600;
+}
+
+.macro-amount {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #fff;
+  margin: 0.25rem 0;
+}
+
+.macro-calories {
+  font-size: 0.9rem;
+  color: #7ee0b5;
+}
+
+.macro-bar {
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.macro-bar .macro-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4ca175 0%, #2dd4bf 100%);
+  border-radius: 999px;
+  transition: width 0.5s ease;
+}
+
+/* Hydration Display */
+.hydration-display {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 1rem;
+}
+
+.water-icon {
+  font-size: 4rem;
+  color: #2dd4bf;
+}
+
+.hydration-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.hydration-amount {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #2dd4bf;
+}
+
+.hydration-desc {
+  font-size: 1.1rem;
+  color: #cfe6f5;
+  font-weight: 600;
+}
+
+.hydration-note {
+  margin: 0.5rem 0 0;
+  color: #9ab3c9;
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+/* Recommendations */
+.recommendations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.recommendation-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  background: rgba(76, 161, 117, 0.08);
+  border: 1px solid rgba(76, 161, 117, 0.2);
+  border-radius: 12px;
+  padding: 1rem;
+  transition: all 0.25s ease;
+}
+
+.recommendation-item:hover {
+  background: rgba(76, 161, 117, 0.12);
+  transform: translateX(5px);
+}
+
+.recommendation-item i {
+  font-size: 1.5rem;
+  color: #7ee0b5;
+  flex-shrink: 0;
+}
+
+.recommendation-item p {
+  margin: 0;
+  color: #cfe6f5;
+  line-height: 1.5;
+}
+
+/* Empty State & Loading */
+.loading-state, .empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 20px;
+  max-width: 600px;
+  margin: 3rem auto;
+}
+
+.loading-state i {
+  font-size: 3rem;
+  color: #4ca175;
+  margin-bottom: 1rem;
+}
+
+.empty-state i {
+  font-size: 4rem;
+  color: #9ab3c9;
+  margin-bottom: 1rem;
+}
+
+.empty-state h3 {
+  font-size: 1.8rem;
+  margin: 1rem 0 0.5rem;
+}
+
+.empty-state p {
+  color: #9ab3c9;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, #4ca175 0%, #2dd4bf 100%);
+  color: #0b1429;
+  border: none;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 25px rgba(76, 161, 117, 0.3);
+}
+
+.cta-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 35px rgba(76, 161, 117, 0.4);
+}
+
+@media (max-width: 768px) {
+  .analysis-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .composition-display {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .calorie-main {
+    grid-template-columns: 1fr;
+  }
+
+  .macros-display {
+    grid-template-columns: 1fr;
+  }
+
+  .hydration-display {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .recommendations-grid {
+    grid-template-columns: 1fr;
+  }
+}

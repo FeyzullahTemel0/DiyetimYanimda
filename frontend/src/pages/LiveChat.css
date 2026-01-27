@@ -1,0 +1,589 @@
+.live-chat-container {
+  background: linear-gradient(135deg, rgba(45, 212, 191, 0.05) 0%, rgba(76, 161, 117, 0.05) 100%),
+    radial-gradient(circle at 20% 50%, rgba(45, 212, 191, 0.03) 0%, transparent 50%);
+  background-attachment: fixed;
+  min-height: calc(100vh - 80px);
+  padding: 2rem;
+  color: #e7f0f7;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Header Section */
+.lc-header {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.lc-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #2dd4bf 0%, #4ca175 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.5rem;
+}
+
+.lc-header p {
+  font-size: 1.1rem;
+  color: #9ab3c9;
+}
+
+/* Dietitians Grid */
+.dietitians-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.dietitian-card {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(45, 212, 191, 0.2);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.dietitian-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(45, 212, 191, 0.4);
+  box-shadow: 0 8px 32px rgba(45, 212, 191, 0.15);
+  transform: translateY(-4px);
+}
+
+/* Card Header with Avatar */
+.card-header {
+  position: relative;
+  height: 160px;
+  background: linear-gradient(135deg, rgba(45, 212, 191, 0.1) 0%, rgba(76, 161, 117, 0.1) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dietitian-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 3px solid #2dd4bf;
+  object-fit: cover;
+}
+
+.status-indicator {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 3px solid #0a0e27;
+}
+
+.status-indicator.online {
+  background: #22c55e;
+  box-shadow: 0 0 12px rgba(34, 197, 94, 0.6);
+}
+
+.status-indicator.busy {
+  background: #f59e0b;
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.6);
+}
+
+.status-indicator.offline {
+  background: #6b7280;
+}
+
+/* Card Body */
+.card-body {
+  padding: 1.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.card-body h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #e7f0f7;
+  margin: 0;
+}
+
+.specialty {
+  font-size: 0.9rem;
+  color: #9ab3c9;
+  margin: 0;
+  margin-bottom: 0.5rem;
+}
+
+/* Status Info */
+.status-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.status-badge.online {
+  background: rgba(34, 197, 94, 0.2);
+  color: #86efac;
+  border: 1px solid rgba(34, 197, 94, 0.4);
+}
+
+.status-badge.busy {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fcd34d;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+}
+
+.status-badge.offline {
+  background: rgba(107, 114, 128, 0.2);
+  color: #d1d5db;
+  border: 1px solid rgba(107, 114, 128, 0.4);
+}
+
+.status-badge.active {
+  background: rgba(34, 197, 94, 0.2);
+  color: #86efac;
+}
+
+.response-time {
+  font-size: 0.85rem;
+  color: #9ab3c9;
+}
+
+/* Rating */
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+}
+
+.rating-text {
+  font-size: 0.85rem;
+  color: #9ab3c9;
+}
+
+/* Card Actions */
+.card-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: auto;
+}
+
+.btn-start-chat,
+.btn-whatsapp,
+.btn-close-chat {
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex: 1;
+}
+
+.btn-start-chat {
+  background: linear-gradient(135deg, #2dd4bf 0%, #4ca175 100%);
+  color: #0a0e27;
+}
+
+.btn-start-chat:hover:not(.disabled) {
+  filter: brightness(1.1);
+  box-shadow: 0 4px 12px rgba(45, 212, 191, 0.3);
+}
+
+.btn-start-chat.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-whatsapp {
+  background: rgba(34, 197, 94, 0.15);
+  color: #86efac;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.btn-whatsapp:hover {
+  background: rgba(34, 197, 94, 0.25);
+  border-color: rgba(34, 197, 94, 0.6);
+}
+
+/* Chat Interface */
+.chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(45, 212, 191, 0.2);
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.dietitian-info-mini {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.avatar-small {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid #2dd4bf;
+  object-fit: cover;
+}
+
+.info-text h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #e7f0f7;
+}
+
+.btn-close-chat {
+  background: rgba(244, 63, 95, 0.15);
+  color: #fca5a5;
+  border: 1px solid rgba(244, 63, 95, 0.3);
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+
+.btn-close-chat:hover {
+  background: rgba(244, 63, 95, 0.25);
+  border-color: rgba(244, 63, 95, 0.6);
+}
+
+/* Messages Container */
+.messages-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 12px;
+  border: 1px solid rgba(45, 212, 191, 0.1);
+  overflow-y: auto;
+  max-height: 500px;
+}
+
+.messages-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.messages-container::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.messages-container::-webkit-scrollbar-thumb {
+  background: rgba(45, 212, 191, 0.3);
+  border-radius: 3px;
+}
+
+.messages-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(45, 212, 191, 0.5);
+}
+
+.welcome-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  text-align: center;
+  padding: 2rem;
+  opacity: 0.7;
+}
+
+.welcome-message h3 {
+  margin: 0;
+  color: #2dd4bf;
+}
+
+.welcome-message p {
+  margin: 0;
+  color: #9ab3c9;
+}
+
+/* Messages */
+.message {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.75rem;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.user-message {
+  justify-content: flex-end;
+}
+
+.user-message .message-bubble {
+  background: linear-gradient(135deg, #2dd4bf 0%, #4ca175 100%);
+  color: #0a0e27;
+}
+
+.dietitian-message {
+  justify-content: flex-start;
+}
+
+.dietitian-message .message-bubble {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(45, 212, 191, 0.2);
+  color: #e7f0f7;
+}
+
+.message-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.message-bubble {
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  max-width: 70%;
+  word-wrap: break-word;
+  line-height: 1.4;
+}
+
+/* Message Input Form */
+.message-input-form {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.message-input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(45, 212, 191, 0.2);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  color: #e7f0f7;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.message-input::placeholder {
+  color: #6b7280;
+}
+
+.message-input:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(45, 212, 191, 0.4);
+  box-shadow: 0 0 12px rgba(45, 212, 191, 0.15);
+}
+
+.btn-send {
+  background: linear-gradient(135deg, #2dd4bf 0%, #4ca175 100%);
+  color: #0a0e27;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-send:hover {
+  filter: brightness(1.1);
+  box-shadow: 0 4px 12px rgba(45, 212, 191, 0.3);
+}
+
+.btn-send:active {
+  transform: scale(0.98);
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.modal-content {
+  background: linear-gradient(135deg, rgba(10, 14, 39, 0.95) 0%, rgba(18, 26, 51, 0.95) 100%);
+  border: 1px solid rgba(45, 212, 191, 0.2);
+  border-radius: 16px;
+  padding: 2rem;
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+}
+
+.modal-content h2 {
+  color: #2dd4bf;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.modal-content p {
+  color: #9ab3c9;
+  margin-bottom: 1.5rem;
+}
+
+.whatsapp-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.btn-whatsapp-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  border-radius: 8px;
+  color: #86efac;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  font-weight: 600;
+}
+
+.btn-whatsapp-link:hover {
+  background: rgba(34, 197, 94, 0.25);
+  border-color: rgba(34, 197, 94, 0.6);
+  transform: translateX(4px);
+}
+
+.btn-close-modal {
+  width: 100%;
+  padding: 0.75rem;
+  background: rgba(107, 114, 128, 0.2);
+  border: 1px solid rgba(107, 114, 128, 0.4);
+  border-radius: 8px;
+  color: #d1d5db;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btn-close-modal:hover {
+  background: rgba(107, 114, 128, 0.3);
+}
+
+/* Loading State */
+.loading-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  font-size: 1.2rem;
+  color: #9ab3c9;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .live-chat-container {
+    padding: 1rem;
+  }
+
+  .lc-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .dietitians-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .message-bubble {
+    max-width: 85%;
+  }
+
+  .card-actions {
+    flex-direction: column;
+  }
+
+  .btn-start-chat,
+  .btn-whatsapp {
+    flex: 1;
+  }
+
+  .messages-container {
+    max-height: 400px;
+  }
+}
+
+@media (max-width: 480px) {
+  .lc-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .lc-header p {
+    font-size: 0.95rem;
+  }
+
+  .dietitian-card {
+    border-radius: 12px;
+  }
+
+  .chat-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .btn-close-chat {
+    align-self: flex-end;
+  }
+
+  .message-bubble {
+    max-width: 90%;
+    font-size: 0.9rem;
+  }
+
+  .modal-content {
+    padding: 1.5rem;
+  }
+}

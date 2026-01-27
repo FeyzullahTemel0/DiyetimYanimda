@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { auth } from '../services/firebase';
+import { auth, db } from '../services/firebase';
+import { doc, getDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import { getApiUrl } from '../config/apiConfig';
+import { useHealthProfile, getDiabeticMacroRecommendations, getHypertensionRecommendations } from '../hooks/useHealthProfile';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, Area, AreaChart } from 'recharts';
 import '../styles/PersonalizedNutritionRecommendations.css';
 
@@ -30,6 +32,7 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 export default function PersonalizedNutritionRecommendations() {
+  const { healthProfile, isDiabetic, isHypertensive, diabeticType, allergies } = useHealthProfile();
   const [userProfile, setUserProfile] = useState(null);
   const [mealData, setMealData] = useState(null);
   const [recommendations, setRecommendations] = useState(null);
@@ -685,6 +688,39 @@ export default function PersonalizedNutritionRecommendations() {
           <h1>🥗 Kişiselleştirilmiş Beslenme Önerileri</h1>
           <p>Sizin için hazırlanmış özel beslenme analizi ve önerileri</p>
         </div>
+
+        {/* SAĞLIK DURUMU UYARILARI */}
+        {(isDiabetic || isHypertensive || allergies) && (
+          <div className="health-alerts">
+            {isDiabetic && (
+              <div className="alert alert-diabetic">
+                <span className="alert-icon">🩺</span>
+                <div className="alert-content">
+                  <strong>Diyabet Profili Algılandı!</strong>
+                  <p>Tavsiyelerimiz {diabeticType === 'type1' ? 'Tip 1 Diyabet' : diabeticType === 'type2' ? 'Tip 2 Diyabet' : 'Prediabetik'} durumunuz için özelleştirilmiştir.</p>
+                </div>
+              </div>
+            )}
+            {isHypertensive && (
+              <div className="alert alert-hypertension">
+                <span className="alert-icon">❤️</span>
+                <div className="alert-content">
+                  <strong>Hipertansiyon (Yüksek Tansiyon) Profili Algılandı!</strong>
+                  <p>DASH diyeti ilkeleri doğrultusunda öneriler sunulmaktadır. Sodyum tüketiminizi sınırlandırın.</p>
+                </div>
+              </div>
+            )}
+            {allergies && (
+              <div className="alert alert-allergy">
+                <span className="alert-icon">⚠️</span>
+                <div className="alert-content">
+                  <strong>Alerji Profili Algılandı!</strong>
+                  <p>Aşağıdaki alerjileriniz için öneriler verilmektedir: <em>{allergies}</em></p>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* TAB SEÇİCİ */}
         <div className="prn-tabs">

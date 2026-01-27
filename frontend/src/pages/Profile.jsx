@@ -556,9 +556,7 @@ function ServiceHub({ profile }) {
     { to: "/nutrition-recommendations", title: "🥗 Kişiselleştirilmiş Beslenme Önerileri", desc: "Yemek analizinize dayalı kişisel öneriler", requiredPlan: "basic" },
     { to: "/favorites-tracking", title: "Favori Programları Kaydet & Takip", desc: "Favorilerinizi yönetin ve takip edin", requiredPlan: "basic" },
     { to: "/body-analysis", title: "Detaylı Vücut Analizi", desc: "Ölçümlerinizi ve BMI bilgilerinizi görün", requiredPlan: "basic" },
-    { to: "/weekly-plan", title: "Haftalık Beslenme Planı İndir", desc: "Örnek PDF ile haftalık plan", requiredPlan: "basic" },
     { to: "/monthly-progress", title: "Aylık İlerleme Raporu", desc: "Aylık özet ve grafikler (demo)", requiredPlan: "basic" },
-    { to: "/email-support", title: "Email Desteği", desc: "Destek formu (demo)", requiredPlan: "basic" },
     { to: "/ai-consultant", title: "Yapay Zeka Beslenme Danışmanı", desc: "Premium AI destekli öneriler", requiredPlan: "premium" },
     { to: "/recipes", title: "Tarif Kütüphanesi & Özelleştirme", desc: "Premium tarif erişimi", requiredPlan: "premium" },
     { to: "/nutrition-optimization", title: "Beslenme İhtiyaç Analizi", desc: "Makro/mikro optimizasyonu", requiredPlan: "premium" },
@@ -601,7 +599,29 @@ export default function Profile() {
 
   const [profile, setProfile] = useState(null);
   const [tab, setTab] = useState("info");
-  const [form, setForm] = useState({ name: "", surname: "", email: "", height: "", weight: "", targetWeight: "", gender: "female" });
+  const [form, setForm] = useState({ 
+    name: "", 
+    surname: "", 
+    email: "", 
+    height: "", 
+    weight: "", 
+    targetWeight: "", 
+    gender: "female",
+    // Sağlık Bilgileri
+    allergies: "",
+    isDiabetic: false,
+    diabeticType: "", // Type 1, Type 2, Prediabetic
+    isHypertensive: false,
+    bloodPressure: "",
+    hasHeartDisease: false,
+    hasKidneyDisease: false,
+    hasLiverDisease: false,
+    hasThyroidDisease: false,
+    otherDiseases: "",
+    medications: "",
+    dietaryRestrictions: "", // vegan, vegetarian, keto, gluten-free, etc.
+    activityLevel: "moderate" // sedentary, light, moderate, active, very active
+  });
   const [msg, setMsg] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
@@ -627,6 +647,20 @@ export default function Profile() {
           weight: data.weight || "",
           targetWeight: data.targetWeight || "",
           gender: data.gender || "female",
+          // Sağlık Bilgileri
+          allergies: data.allergies || "",
+          isDiabetic: data.isDiabetic || false,
+          diabeticType: data.diabeticType || "",
+          isHypertensive: data.isHypertensive || false,
+          bloodPressure: data.bloodPressure || "",
+          hasHeartDisease: data.hasHeartDisease || false,
+          hasKidneyDisease: data.hasKidneyDisease || false,
+          hasLiverDisease: data.hasLiverDisease || false,
+          hasThyroidDisease: data.hasThyroidDisease || false,
+          otherDiseases: data.otherDiseases || "",
+          medications: data.medications || "",
+          dietaryRestrictions: data.dietaryRestrictions || "",
+          activityLevel: data.activityLevel || "moderate"
         });
       } catch (error) {
         setMsg("Profil yüklenirken bir hata oluştu: " + error.message);
@@ -707,7 +741,6 @@ export default function Profile() {
     { key: "info", label: "Profil Bilgileri", type: "tab" },
     { key: "subscription", label: "Aboneliğim", type: "tab" },
     { key: "diet", label: "Favori Programlarım", type: "tab" },
-    { key: "assistant", label: "Diyet Asistanım", type: "tab" },
     { key: "request", label: "Geri Bildirim & Talep", type: "tab" },
     { key: "community", label: "Topluluk Forumları", to: "/community", type: "route" },
     ...FREE_FEATURES,
@@ -718,9 +751,7 @@ export default function Profile() {
     { key: "svc-nutrition-recommendations", label: "🥗 Kişiselleştirilmiş Beslenme Önerileri", to: "/nutrition-recommendations", requiredPlan: "basic", type: "route" },
     { key: "svc-favorites-tracking", label: "Favori Programları Kaydetme ve Takip Etme", to: "/favorites-tracking", requiredPlan: "basic", type: "route" },
     { key: "svc-body-analysis", label: "Detaylı Vücut Analizi ve Grafikleri", to: "/body-analysis", requiredPlan: "basic", type: "route" },
-    { key: "svc-weekly-plan", label: "Haftalık Beslenme Planı İndirme", to: "/weekly-plan", requiredPlan: "basic", type: "route" },
     { key: "svc-monthly-progress", label: "Aylık İlerleme Raporu", to: "/monthly-progress", requiredPlan: "basic", type: "route" },
-    { key: "svc-email-support", label: "Email Desteği (12-24 saat)", to: "/email-support", requiredPlan: "basic", type: "route" },
     // PREMIUM PLAN
     { key: "svc-ai-consultant", label: "Yapay Zeka Destekli Kişisel Beslenme Danışmanı", to: "/ai-consultant", requiredPlan: "premium", type: "route" },
     { key: "svc-recipes", label: "Yemek Tariflerine Erişim ve Özelleştirme", to: "/recipes", requiredPlan: "premium", type: "route" },
@@ -773,19 +804,252 @@ export default function Profile() {
         {tab === "info" && (
             <form className="tab-section info-tab" onSubmit={handleSave}>
               <h2>Profil Bilgileri</h2>
-              <div className="info-form-grid">
-                <div className="form-group"><label>Ad</label><input type="text" name="name" value={form.name} onChange={handleChange} /></div>
-                <div className="form-group"><label>Soyad</label><input type="text" name="surname" value={form.surname} onChange={handleChange} /></div>
-                <div className="form-group full-width"><label>E-posta</label><input type="email" name="email" value={form.email} disabled /></div>
-                <div className="form-group"><label>Cinsiyet</label><select name="gender" value={form.gender} onChange={handleChange}><option value="female">Kadın</option><option value="male">Erkek</option></select></div>
-                <div className="form-group"><label>Boy (cm)</label><input type="number" name="height" value={form.height} onChange={handleChange} /></div>
-                <div className="form-group"><label>Kilo (kg)</label><input type="number" name="weight" value={form.weight} onChange={handleChange} /></div>
-                <div className="form-group"><label>Hedef Kilo (kg)</label><input type="number" name="targetWeight" value={form.targetWeight} onChange={handleChange} /></div>
+              
+              {/* Kişisel Bilgiler */}
+              <div className="form-section">
+                <h3>👤 Kişisel Bilgiler</h3>
+                <div className="info-form-grid">
+                  <div className="form-group"><label>Ad</label><input type="text" name="name" value={form.name} onChange={handleChange} /></div>
+                  <div className="form-group"><label>Soyad</label><input type="text" name="surname" value={form.surname} onChange={handleChange} /></div>
+                  <div className="form-group full-width"><label>E-posta</label><input type="email" name="email" value={form.email} disabled /></div>
+                  <div className="form-group"><label>Cinsiyet</label><select name="gender" value={form.gender} onChange={handleChange}><option value="female">Kadın</option><option value="male">Erkek</option></select></div>
+                  <div className="form-group"><label>Boy (cm)</label><input type="number" name="height" value={form.height} onChange={handleChange} /></div>
+                  <div className="form-group"><label>Kilo (kg)</label><input type="number" name="weight" value={form.weight} onChange={handleChange} /></div>
+                  <div className="form-group"><label>Hedef Kilo (kg)</label><input type="number" name="targetWeight" value={form.targetWeight} onChange={handleChange} /></div>
+                  <div className="form-group"><label>Aktivite Seviyesi</label><select name="activityLevel" value={form.activityLevel} onChange={handleChange}>
+                    <option value="sedentary">Hareketsiz</option>
+                    <option value="light">Hafif</option>
+                    <option value="moderate">Orta</option>
+                    <option value="active">Aktif</option>
+                    <option value="very active">Çok Aktif</option>
+                  </select></div>
+                </div>
               </div>
-              <button type="submit">Değişiklikleri Kaydet</button>
+
+              {/* Sağlık Bilgileri */}
+              <div className="form-section health-section">
+                <h3>🏥 Sağlık Bilgileri</h3>
+                <p className="section-note">Bu bilgiler, size uygun beslenme önerileri sunabilmemiz için gereklidir. Tüm bilgiler gizli tutulur.</p>
+                
+                {/* Alerjiler */}
+                <div className="form-group full-width">
+                  <label>Alerji ve Gıda İntoleransı *</label>
+                  <textarea 
+                    name="allergies" 
+                    value={form.allergies} 
+                    onChange={handleChange}
+                    placeholder="Örnek: Süt alerjisi, fistık alerjisi, gluten intoleransı, vb..."
+                    rows="3"
+                  />
+                </div>
+
+                {/* Beslenme Kısıtlamaları */}
+                <div className="form-group full-width">
+                  <label>Beslenme Tercihleri ve Kısıtlamalar</label>
+                  <div className="checkbox-group">
+                    <label className="checkbox-label">
+                      <input 
+                        type="checkbox" 
+                        name="veggie-vegan" 
+                        checked={form.dietaryRestrictions?.includes('vegan')} 
+                        onChange={(e) => {
+                          const restrictions = form.dietaryRestrictions || '';
+                          const isChecked = e.target.checked;
+                          const updated = isChecked 
+                            ? restrictions + (restrictions ? ', vegan' : 'vegan')
+                            : restrictions.replace(', vegan', '').replace('vegan', '');
+                          setForm(prev => ({ ...prev, dietaryRestrictions: updated }));
+                        }}
+                      />
+                      Vegan
+                    </label>
+                    <label className="checkbox-label">
+                      <input 
+                        type="checkbox" 
+                        checked={form.dietaryRestrictions?.includes('vegetarian')} 
+                        onChange={(e) => {
+                          const restrictions = form.dietaryRestrictions || '';
+                          const isChecked = e.target.checked;
+                          const updated = isChecked 
+                            ? restrictions + (restrictions ? ', vegetarian' : 'vegetarian')
+                            : restrictions.replace(', vegetarian', '').replace('vegetarian', '');
+                          setForm(prev => ({ ...prev, dietaryRestrictions: updated }));
+                        }}
+                      />
+                      Vejetaryen
+                    </label>
+                    <label className="checkbox-label">
+                      <input 
+                        type="checkbox" 
+                        checked={form.dietaryRestrictions?.includes('keto')} 
+                        onChange={(e) => {
+                          const restrictions = form.dietaryRestrictions || '';
+                          const isChecked = e.target.checked;
+                          const updated = isChecked 
+                            ? restrictions + (restrictions ? ', keto' : 'keto')
+                            : restrictions.replace(', keto', '').replace('keto', '');
+                          setForm(prev => ({ ...prev, dietaryRestrictions: updated }));
+                        }}
+                      />
+                      Keto
+                    </label>
+                    <label className="checkbox-label">
+                      <input 
+                        type="checkbox" 
+                        checked={form.dietaryRestrictions?.includes('gluten-free')} 
+                        onChange={(e) => {
+                          const restrictions = form.dietaryRestrictions || '';
+                          const isChecked = e.target.checked;
+                          const updated = isChecked 
+                            ? restrictions + (restrictions ? ', gluten-free' : 'gluten-free')
+                            : restrictions.replace(', gluten-free', '').replace('gluten-free', '');
+                          setForm(prev => ({ ...prev, dietaryRestrictions: updated }));
+                        }}
+                      />
+                      Glutensiz
+                    </label>
+                  </div>
+                </div>
+
+                {/* Diyabet Bilgisi */}
+                <div className="form-group full-width">
+                  <label className="checkbox-label checkbox-large">
+                    <input 
+                      type="checkbox" 
+                      name="isDiabetic" 
+                      checked={form.isDiabetic} 
+                      onChange={(e) => setForm(prev => ({ ...prev, isDiabetic: e.target.checked, diabeticType: "" }))}
+                    />
+                    <strong>Diyabet hastasıyım</strong>
+                  </label>
+                </div>
+
+                {form.isDiabetic && (
+                  <div className="form-group full-width nested-group">
+                    <label>Diyabet Türü *</label>
+                    <select 
+                      name="diabeticType" 
+                      value={form.diabeticType} 
+                      onChange={handleChange}
+                      required={form.isDiabetic}
+                    >
+                      <option value="">-- Seçin --</option>
+                      <option value="type1">Tip 1 Diyabet</option>
+                      <option value="type2">Tip 2 Diyabet</option>
+                      <option value="prediabetic">Prediabetik</option>
+                      <option value="gestational">Gestasyonel Diyabet</option>
+                    </select>
+                    <p className="info-text">💡 <strong>Tip 1:</strong> Pankreas insülin üretmiyor. <strong>Tip 2:</strong> Vücut insülini verimli kullanmıyor.</p>
+                  </div>
+                )}
+
+                {/* Tansiyon Bilgisi */}
+                <div className="form-group full-width">
+                  <label className="checkbox-label checkbox-large">
+                    <input 
+                      type="checkbox" 
+                      name="isHypertensive" 
+                      checked={form.isHypertensive} 
+                      onChange={(e) => setForm(prev => ({ ...prev, isHypertensive: e.target.checked, bloodPressure: "" }))}
+                    />
+                    <strong>Hipertansiyon (Yüksek Tansiyon) hastasıyım</strong>
+                  </label>
+                </div>
+
+                {form.isHypertensive && (
+                  <div className="form-group full-width nested-group">
+                    <label>Kan Basıncı Ölçümü (Sistol/Diyastol)</label>
+                    <input 
+                      type="text" 
+                      name="bloodPressure" 
+                      value={form.bloodPressure} 
+                      onChange={handleChange}
+                      placeholder="Örnek: 140/90"
+                    />
+                  </div>
+                )}
+
+                {/* Kalp Hastalığı */}
+                <div className="form-group full-width">
+                  <label className="checkbox-label checkbox-large">
+                    <input 
+                      type="checkbox" 
+                      name="hasHeartDisease" 
+                      checked={form.hasHeartDisease} 
+                      onChange={(e) => setForm(prev => ({ ...prev, hasHeartDisease: e.target.checked }))}
+                    />
+                    <strong>Kalp hastalığım var</strong>
+                  </label>
+                </div>
+
+                {/* Böbrek Hastalığı */}
+                <div className="form-group full-width">
+                  <label className="checkbox-label checkbox-large">
+                    <input 
+                      type="checkbox" 
+                      name="hasKidneyDisease" 
+                      checked={form.hasKidneyDisease} 
+                      onChange={(e) => setForm(prev => ({ ...prev, hasKidneyDisease: e.target.checked }))}
+                    />
+                    <strong>Böbrek hastalığım var</strong>
+                  </label>
+                </div>
+
+                {/* Karaciğer Hastalığı */}
+                <div className="form-group full-width">
+                  <label className="checkbox-label checkbox-large">
+                    <input 
+                      type="checkbox" 
+                      name="hasLiverDisease" 
+                      checked={form.hasLiverDisease} 
+                      onChange={(e) => setForm(prev => ({ ...prev, hasLiverDisease: e.target.checked }))}
+                    />
+                    <strong>Karaciğer hastalığım var</strong>
+                  </label>
+                </div>
+
+                {/* Tiroid Hastalığı */}
+                <div className="form-group full-width">
+                  <label className="checkbox-label checkbox-large">
+                    <input 
+                      type="checkbox" 
+                      name="hasThyroidDisease" 
+                      checked={form.hasThyroidDisease} 
+                      onChange={(e) => setForm(prev => ({ ...prev, hasThyroidDisease: e.target.checked }))}
+                    />
+                    <strong>Tiroid hastalığım var</strong>
+                  </label>
+                </div>
+
+                {/* Diğer Hastalıklar */}
+                <div className="form-group full-width">
+                  <label>Diğer Hastalıklar veya Durumlar</label>
+                  <textarea 
+                    name="otherDiseases" 
+                    value={form.otherDiseases} 
+                    onChange={handleChange}
+                    placeholder="Örnek: Artrit, KOAH, GIS rahatsızlığı, vb..."
+                    rows="3"
+                  />
+                </div>
+
+                {/* Kullanılan İlaçlar */}
+                <div className="form-group full-width">
+                  <label>Kullanılan İlaçlar</label>
+                  <textarea 
+                    name="medications" 
+                    value={form.medications} 
+                    onChange={handleChange}
+                    placeholder="Örnek: Metformin 500mg 2x günde, Amlodipine 5mg günde 1x, vb..."
+                    rows="3"
+                  />
+                </div>
+              </div>
+
+              <button type="submit" className="btn-save-profile">Değişiklikleri Kaydet</button>
               {analysis.bmi && (
                 <div className="analysis-box">
-                  <h3>Vücut Analizi</h3>
+                  <h3>📊 Vücut Analizi</h3>
                   <p><strong>BMI:</strong> {analysis.bmi} ({analysis.bmiStatus})</p>
                   <p><strong>İdeal Kilo:</strong> {analysis.idealWeight} kg</p>
                   <p><strong>Kilo Farkı:</strong> {analysis.diff > 0 ? `${analysis.diff} kg fazlanız var` : analysis.diff < 0 ? `${Math.abs(analysis.diff)} kg eksiksiniz` : "İdeal kilodasınız."}</p>

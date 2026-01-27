@@ -44,6 +44,27 @@ img {
   height: auto;
 }
 
+/* SELECT ve OPTION elementleri için global stil - tüm sitede geçerli */
+select {
+  color: var(--text-primary, #f0f0f0) !important;
+  background-color: var(--bg-dark-primary, #292929) !important;
+}
+
+select option {
+  background-color: #1a1a1a !important;
+  color: #f0f0f0 !important;
+  padding: 8px 12px !important;
+}
+
+select option:hover {
+  background-color: #2a2a2a !important;
+}
+
+select option:checked {
+  background-color: #2dd4bf !important;
+  color: #0a0a0a !important;
+}
+
 /* Responsive font scale */
 html {
   font-size: 16px;

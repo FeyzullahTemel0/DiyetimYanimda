@@ -1,0 +1,559 @@
+/* frontend/src/pages/NutritionOptimization.css */
+
+.nutrition-optimization-container {
+  min-height: calc(100vh - 120px);
+  background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+  padding: 2rem clamp(1rem, 3vw, 3rem);
+  color: #e7f0f7;
+}
+
+.optimization-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.optimization-header h1 {
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  margin: 0 0 0.5rem;
+  background: linear-gradient(135deg, #4ca175 0%, #2dd4bf 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.optimization-header h1 i {
+  color: #4ca175;
+  -webkit-text-fill-color: #4ca175;
+}
+
+.subtitle {
+  color: #9ab3c9;
+  font-size: 1.1rem;
+}
+
+/* Macro Summary Grid */
+.macro-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.macro-summary-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  transition: all 0.3s ease;
+}
+
+.macro-summary-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(76, 161, 117, 0.15);
+}
+
+.macro-summary-card.calories {
+  border-color: rgba(251, 146, 60, 0.3);
+}
+
+.macro-summary-card.protein {
+  border-color: rgba(244, 63, 94, 0.3);
+}
+
+.macro-summary-card.carbs {
+  border-color: rgba(250, 204, 21, 0.3);
+}
+
+.macro-summary-card.fat {
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.card-icon {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.macro-summary-card.calories .card-icon {
+  background: linear-gradient(135deg, rgba(251, 146, 60, 0.15), rgba(251, 146, 60, 0.05));
+  color: #fb923c;
+}
+
+.macro-summary-card.protein .card-icon {
+  font-size: 2.5rem;
+}
+
+.macro-summary-card.carbs .card-icon {
+  font-size: 2.5rem;
+}
+
+.macro-summary-card.fat .card-icon {
+  font-size: 2.5rem;
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.card-label {
+  font-size: 0.9rem;
+  color: #9ab3c9;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.card-value {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.card-desc {
+  font-size: 0.9rem;
+  color: #7ee0b5;
+  font-weight: 600;
+}
+
+/* Optimization Card */
+.optimization-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.optimization-card .card-header {
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid rgba(76, 161, 117, 0.2);
+}
+
+.optimization-card .card-header h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.4rem;
+  color: #7ee0b5;
+  margin: 0;
+}
+
+/* Micronutrients */
+.micronutrients-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+
+.micronutrient-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+
+.micro-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.micro-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.micro-amount {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #4ca175;
+}
+
+.micro-sources {
+  font-size: 0.9rem;
+  color: #9ab3c9;
+  line-height: 1.5;
+}
+
+.micro-sources strong {
+  color: #cfe6f5;
+}
+
+/* Meal Timing */
+.meal-timing-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.meal-timing-item {
+  display: flex;
+  align-items: stretch;
+  gap: 1.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 1.25rem;
+  transition: all 0.25s ease;
+}
+
+.meal-timing-item:hover {
+  background: rgba(76, 161, 117, 0.08);
+  transform: translateX(5px);
+}
+
+.meal-time {
+  min-width: 120px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #4ca175;
+  display: flex;
+  align-items: center;
+}
+
+.meal-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.meal-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.meal-calories {
+  font-size: 1rem;
+  color: #fb923c;
+  font-weight: 600;
+}
+
+.meal-description {
+  font-size: 0.9rem;
+  color: #9ab3c9;
+}
+
+.meal-timing-note {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: rgba(76, 161, 117, 0.08);
+  border-left: 4px solid #4ca175;
+  border-radius: 8px;
+}
+
+.meal-timing-note i {
+  font-size: 1.2rem;
+  color: #4ca175;
+}
+
+.meal-timing-note p {
+  margin: 0;
+  color: #cfe6f5;
+  line-height: 1.5;
+}
+
+/* Supplements */
+.supplements-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+
+.supplement-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 1.25rem;
+  transition: all 0.3s ease;
+}
+
+.supplement-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(76, 161, 117, 0.15);
+}
+
+.supp-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.supp-icon {
+  font-size: 2rem;
+}
+
+.supp-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.supp-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.supp-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.95rem;
+}
+
+.supp-label {
+  color: #9ab3c9;
+}
+
+.supp-value {
+  color: #4ca175;
+  font-weight: 600;
+}
+
+.supp-benefit {
+  margin-top: 0.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.9rem;
+  color: #7ee0b5;
+  font-style: italic;
+}
+
+.supplements-note {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: rgba(251, 146, 60, 0.08);
+  border-left: 4px solid #fb923c;
+  border-radius: 8px;
+}
+
+.supplements-note i {
+  font-size: 1.2rem;
+  color: #fb923c;
+}
+
+.supplements-note p {
+  margin: 0;
+  color: #cfe6f5;
+  line-height: 1.5;
+}
+
+/* Hydration */
+.hydration-card {
+  background: linear-gradient(135deg, rgba(45, 212, 191, 0.08) 0%, rgba(59, 130, 246, 0.05) 100%);
+  border-color: rgba(45, 212, 191, 0.2);
+}
+
+.hydration-content {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.water-visual {
+  font-size: 5rem;
+  color: #2dd4bf;
+  flex-shrink: 0;
+}
+
+.hydration-info {
+  flex: 1;
+}
+
+.water-amount {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #2dd4bf;
+  margin-bottom: 1rem;
+}
+
+.water-desc {
+  margin: 0 0 1.5rem;
+  color: #cfe6f5;
+  line-height: 1.6;
+}
+
+.water-desc strong {
+  color: #fff;
+  font-weight: 700;
+}
+
+.water-tips {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.water-tip {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #cfe6f5;
+}
+
+.water-tip i {
+  color: #22c55e;
+  font-size: 1rem;
+}
+
+/* Insights */
+.insights-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.insight-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 4px solid #4ca175;
+  border-radius: 10px;
+  padding: 1.25rem;
+  transition: all 0.25s ease;
+}
+
+.insight-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+  transform: translateX(5px);
+}
+
+.insight-item i {
+  font-size: 1.5rem;
+  color: #4ca175;
+  flex-shrink: 0;
+  margin-top: 0.25rem;
+}
+
+.insight-item p {
+  margin: 0;
+  color: #cfe6f5;
+  line-height: 1.6;
+  font-size: 1rem;
+}
+
+.insight-item strong {
+  color: #fff;
+  font-weight: 700;
+}
+
+/* Loading & Empty States */
+.loading-state,
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 20px;
+  max-width: 600px;
+  margin: 3rem auto;
+}
+
+.loading-state i {
+  font-size: 3rem;
+  color: #4ca175;
+  margin-bottom: 1rem;
+}
+
+.empty-state i {
+  font-size: 4rem;
+  color: #9ab3c9;
+  margin-bottom: 1rem;
+}
+
+.empty-state h3 {
+  font-size: 1.8rem;
+  margin: 1rem 0 0.5rem;
+}
+
+.empty-state p {
+  color: #9ab3c9;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, #4ca175 0%, #2dd4bf 100%);
+  color: #0b1429;
+  border: none;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 25px rgba(76, 161, 117, 0.3);
+}
+
+.cta-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 35px rgba(76, 161, 117, 0.4);
+}
+
+@media (max-width: 768px) {
+  .macro-summary-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .micronutrients-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .meal-timing-item {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .meal-time {
+    min-width: auto;
+  }
+
+  .supplements-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hydration-content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .water-tips {
+    align-items: center;
+  }
+}

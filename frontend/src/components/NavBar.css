@@ -36,14 +36,14 @@
 }
 
 .navbar-container {
-  max-width: 1180px;
+  max-width: 1260px;
   width: 100%;
   margin: 0 auto;
-  padding: 0 0.4rem;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
+  padding: 0 1.25rem;
+  display: flex;
   align-items: center;
-  column-gap: 1rem;
+  justify-content: space-between;
+  gap: 1.5rem;
   min-height: 72px;
   box-sizing: border-box;
   overflow: visible;
@@ -80,20 +80,23 @@
   letter-spacing: 0.35px;
   color: var(--text-white);
   margin: 0;
+  line-height: 1.1;
 }
 
 /* --- Navigasyon Linkleri --- */
 .navbar-nav {
-  display: grid;
-  grid-template-columns: 1fr auto;
+  display: flex;
   align-items: center;
-  gap: 1rem;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex: 1;
   overflow: visible;
   position: relative;
 }
 .navbar-links {
   display: inline-flex;
   gap: 1.15rem;
+  align-items: center;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -146,6 +149,7 @@
   justify-content: flex-end;
   position: relative;
   overflow: visible;
+  align-self: stretch;
 }
 .navbar-notif {
   display: inline-flex;
@@ -159,7 +163,7 @@
   z-index: 1001;
 }
 .btn-nav {
-  padding: 0.5rem 1.15rem;
+  padding: 0.65rem 1.25rem;
   border-radius: 14px;
   text-decoration: none;
   font-weight: 650;
@@ -167,8 +171,11 @@
   border: 1px solid rgba(255, 255, 255, 0.12);
   cursor: pointer;
   font-size: 0.93rem;
-  min-height: 40px;
+  min-height: 44px;
   letter-spacing: 0.2px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 .btn-primary {
   background: linear-gradient(135deg, #2dd4bf 0%, #22c1a3 100%);
