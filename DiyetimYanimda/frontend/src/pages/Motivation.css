@@ -1,0 +1,421 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Roboto:wght@300;400&display=swap');
+
+/* --- TEMEL AYARLAR (YENİ RENK PALETİ İLE GÜNCELLENDİ) --- */
+:root {
+  --background-color: hsl(0, 0%, 16%);
+  --card-background-color: hsl(0, 0%, 22%);
+  --text-color: #f0f0f0;
+  --text-secondary-color: #b3b3b3;
+  --accent-color: #2dd4bf; /* Ana Vurgu Rengi (Teal) */
+  --dark-accent-color: hsl(168, 65%, 45%); /* Vurgu Renginin Koyu Tonu */
+  --border-color: hsl(0, 0%, 30%);
+  --popular-glow: rgba(45, 212, 191, 0.2); /* Parlama Efekti */
+  --text-on-accent: hsl(0, 0%, 10%); /* Vurgu rengi üzerindeki metin için */
+}
+
+.motivation-page {
+  font-family: 'Roboto', sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  overflow-x: hidden;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+.motivation-page.loaded {
+  opacity: 1;
+}
+
+/* --- BÖLÜM STİLLERİ --- */
+.motivation-page section {
+  padding: 80px 20px;
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.motivation-page h2 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin-bottom: 30px;
+  color: var(--text-color);
+}
+
+/* --- BÖLÜM 1: GÜNÜN SÖZÜ (YENİ) --- */
+.daily-quote-section {
+  padding: 60px 20px;
+  max-width: 800px;
+  margin: 0 auto;
+  border-bottom: none;
+}
+
+.daily-quote-container {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  border: 2px solid #2dd4bf;
+  border-radius: 16px;
+  padding: 3rem 2rem;
+  box-shadow: 0 10px 40px rgba(45, 212, 191, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.daily-quote-container::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #2dd4bf, #14b8a6, #0ea5e9, #2dd4bf);
+  border-radius: 16px;
+  z-index: -1;
+  opacity: 0.3;
+  filter: blur(20px);
+}
+
+.daily-quote-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2dd4bf;
+  margin-bottom: 2rem;
+  text-transform: none;
+  letter-spacing: 1px;
+}
+
+.daily-quote-text {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.8rem;
+  font-style: italic;
+  font-weight: 600;
+  margin: 0 auto 1.5rem;
+  padding: 0;
+  border: none;
+  max-width: 700px;
+  text-align: center;
+  color: #e2e8f0;
+  line-height: 1.6;
+}
+
+.daily-quote-author {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 500;
+  font-style: normal;
+  color: #94a3b8;
+  margin: 0;
+  text-align: right;
+}
+
+/* --- BÖLÜM 2: HERO --- */
+.hero-section {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.9)), url('https://images.unsplash.com/photo-1587620962725-abab7fe55159?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1631&q=80') no-repeat center center/cover;
+  border-bottom: none;
+}
+
+.hero-tag {
+  display: inline-block;
+  background-color: rgba(45, 212, 191, 0.1);
+  color: var(--accent-color);
+  padding: 8px 16px;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+.hero-content h1 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8rem;
+  font-weight: 900;
+  color: var(--text-color);
+  margin: 0;
+  line-height: 1;
+}
+
+.hero-content .sub-text {
+  max-width: 600px;
+  margin: 20px auto;
+  font-size: 1.2rem;
+  line-height: 1.7;
+}
+
+/* --- BÖLÜM 2: DÖNGÜ --- */
+.cycle-section { background-color: var(--card-background-color); }
+.cycle-steps {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  margin: 40px 0;
+}
+.step {
+  background: var(--background-color);
+  padding: 15px 25px;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  width: 80%;
+  max-width: 500px;
+  border-left: 5px solid var(--accent-color);
+}
+.step span {
+  background-color: var(--accent-color);
+  color: var(--text-on-accent);
+  border-radius: 50%;
+  padding: 5px 12px;
+  margin-right: 15px;
+  font-weight: 700;
+}
+.arrow {
+  font-size: 2rem;
+  color: var(--accent-color);
+  font-weight: 700;
+}
+.cycle-conclusion {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-top: 30px;
+}
+
+/* --- BÖLÜM 3: FELSEFİ ALINTI --- */
+.quote-section { background-color: var(--background-color); }
+.quote-section blockquote {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.8rem;
+  font-style: italic;
+  font-weight: 700;
+  margin: 0 auto 1rem;
+  padding: 20px;
+  border-left: 5px solid var(--accent-color);
+  max-width: 700px;
+  text-align: left;
+}
+.quote-section blockquote footer {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 400;
+  margin-top: 1rem;
+  color: var(--text-secondary-color);
+}
+.quote-section > p {
+    font-size: 1.1rem;
+    max-width: 700px;
+    margin: 2rem auto 0;
+}
+
+
+/* --- BÖLÜM 4: NEDEN --- */
+.why-section { background-color: var(--card-background-color); }
+.why-section > p { font-size: 1.2rem; margin-bottom: 40px; }
+.why-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+}
+.why-card {
+  background-color: var(--background-color);
+  padding: 30px;
+  border-radius: 10px;
+  border-top: 5px solid var(--accent-color);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-align: left;
+}
+.why-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px var(--popular-glow);
+}
+.why-card h3 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.5rem;
+  color: var(--text-color);
+  margin-bottom: 15px;
+}
+.why-footer { font-size: 1.2rem; margin-top: 40px; font-weight: 400; text-align: center; }
+
+/* --- BÖLÜM 5: YAPAY ZEKA GÜCÜ (EKLENEN BÖLÜM) --- */
+.ai-power-section { background-color: var(--background-color); }
+.ai-features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+  margin-top: 40px;
+}
+.ai-feature-card {
+  background-color: var(--card-background-color);
+  padding: 30px;
+  border-radius: 10px;
+}
+.feature-icon {
+  background-color: rgba(45, 212, 191, 0.1);
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+}
+/* İKON BOYUTLANDIRMA BURADA YAPILIYOR AŞKO :) */
+.feature-icon svg {
+  width: 40px;
+  height: 40px;
+  stroke: var(--accent-color);
+}
+.ai-feature-card h3 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.3rem;
+  color: var(--text-color);
+  margin-bottom: 15px;
+}
+.ai-feature-card p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-secondary-color);
+}
+
+/* --- BÖLÜM 6: BİLİMSEL DAYANAK --- */
+.science-section { background-color: var(--card-background-color); }
+.science-content {
+  max-width: 700px;
+  margin: 20px auto;
+  text-align: left;
+}
+.science-content p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  margin-bottom: 2rem;
+}
+.science-content ul {
+  list-style: none;
+  padding: 0;
+}
+.science-content ul li {
+  background: var(--background-color);
+  padding: 20px;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  border-left: 4px solid var(--accent-color);
+}
+.science-content ul li strong {
+  display: block;
+  font-family: 'Montserrat', sans-serif;
+  color: var(--text-color);
+  margin-bottom: 8px;
+}
+
+/* --- BÖLÜM 7: HİKAYELER --- */
+.stories-section { background-color: var(--background-color); }
+.stories-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  margin-top: 50px;
+}
+.story-card {
+  background: var(--card-background-color);
+  border-radius: 15px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row; /* Yan yana olması için */
+  text-align: left;
+}
+.story-images {
+  display: flex;
+  flex-shrink: 0; /* Küçülmesini engelle */
+}
+.img-container {
+  position: relative;
+  width: 200px; /* Sabit genişlik */
+}
+.img-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Resmin orantısını bozmadan kaplamasını sağlar */
+}
+.img-container span {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  padding: 5px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-align: center;
+}
+.story-content {
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.story-content h3 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.4rem;
+  margin: 0 0 10px 0;
+}
+.story-content h3 span {
+  font-weight: 400;
+  color: var(--accent-color);
+  font-size: 1.1rem;
+  display: block;
+  margin-top: 5px;
+}
+.story-content p { font-style: italic; font-size: 1.1rem; line-height: 1.6; }
+
+/* --- BÖLÜM 8: SON ÇAĞRI (CTA) --- */
+.cta-section {
+  background: linear-gradient(135deg, var(--accent-color) 0%, var(--dark-accent-color) 100%);
+  color: var(--text-on-accent);
+  border-bottom: none; /* Son bölüm olduğu için alt çizgiyi kaldır */
+}
+.cta-section h2 { color: var(--text-on-accent); }
+.cta-bold { font-family: 'Montserrat', sans-serif; font-size: 1.8rem; font-weight: 700; margin: 30px 0; }
+.cta-button {
+  background: var(--text-color);
+  color: var(--accent-color);
+  border: none;
+  padding: 20px 50px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  font-family: 'Montserrat', sans-serif;
+  border-radius: 50px;
+  cursor: pointer;
+  margin-top: 30px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: pulse 2s infinite;
+}
+.cta-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+.cta-footer { font-size: 1rem; margin-top: 20px; opacity: 0.8; }
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(45, 212, 191, 0.5); }
+  70% { box-shadow: 0 0 0 20px rgba(45, 212, 191, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(45, 212, 191, 0); }
+}
+
+
+/* --- RESPONSIVE TASARIM --- */
+@media (max-width: 768px) {
+  .hero-content h1 { font-size: 4rem; }
+  .hero-content p { font-size: 1.2rem; }
+  .motivation-page h2 { font-size: 2rem; }
+  .step { width: 100%; }
+  .story-card { flex-direction: column; }
+  .img-container { width: 50%; } /* mobilde yan yana durması için */
+}
+
+@media (max-width: 480px) {
+    .story-images { flex-direction: column; }
+    .img-container { width: 100%; height: 250px; }
+}

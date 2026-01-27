@@ -1,0 +1,127 @@
+/* frontend/src/components/ProgramForm.css */
+
+/* :root değişkenlerini global bir CSS dosyasından aldığını varsayıyoruz. */
+
+.program-form {
+  display: grid;
+  /* İki sütunlu bir grid yapısı oluşturuyoruz */
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem; /* Sütunlar ve satırlar arası boşluk */
+  color: var(--text-primary);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* 
+  Tek başına tam genişlik kaplaması gereken alanlar için 
+  (örn: Başlık, Açıklama, Haftalık Menü)
+*/
+.form-group.full-width {
+  grid-column: 1 / -1; /* Grid'in 1. sütunundan son sütununa kadar uzan */
+}
+
+.form-group label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--bg-dark-primary);
+  border: 1px solid var(--border-dark);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-family: 'Poppins', sans-serif; /* Projenin ana fontu */
+  transition: all 0.2s ease-in-out;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--green-main);
+  box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.2);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+/* --- FORM AKSİYONLARI (Butonlar) --- */
+.form-actions {
+  grid-column: 1 / -1; /* Butonların da tam genişlik kaplamasını sağlıyoruz */
+  display: flex;
+  justify-content: flex-end; /* Butonları sağa yasla */
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-dark);
+}
+
+/* Genel Buton Stilleri */
+.btn-submit,
+.btn-cancel {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-submit {
+  background: var(--green-main);
+  color: var(--bg-dark-primary);
+}
+
+.btn-submit:hover {
+  background: #27ae60;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(46, 204, 113, 0.2);
+}
+
+.btn-cancel {
+  background: var(--border-dark);
+  color: var(--text-primary);
+}
+
+.btn-cancel:hover {
+  background: #4e5b69;
+}
+
+/* --- HATA MESAJI --- */
+.form-error {
+  grid-column: 1 / -1; /* Hata mesajının tam genişlik kaplaması */
+  color: #ff8a80;
+  background-color: rgba(220, 53, 69, 0.1);
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  text-align: center;
+  border: 1px solid rgba(220, 53, 69, 0.3);
+}
+
+
+/* --- MOBİL UYUMLULUK --- */
+@media (max-width: 768px) {
+  .program-form {
+    /* Mobilde tek sütuna düşür */
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  /* Mobilde tüm alanların tam genişlik kaplamasını sağla */
+  .form-group.full-width {
+    grid-column: auto;
+  }
+}
