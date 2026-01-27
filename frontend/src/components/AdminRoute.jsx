@@ -5,14 +5,14 @@ import { Navigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 
 export default function AdminRoute({ children }) {
-  const { profile, loading } = useAuth();
+  const { profile, isAdmin, loading } = useAuth();
 
   if (loading) {
     return <div>Yetkiler kontrol ediliyor...</div>;
   }
 
-  // Eğer profil yüklendiyse ve rol 'admin' ise, sayfayı göster
-  if (profile && profile.role === 'admin') {
+  // Profil rolü 'admin' veya custom claim admin ise erişime izin ver
+  if ((profile && profile.role === 'admin') || isAdmin) {
     return children;
   }
   

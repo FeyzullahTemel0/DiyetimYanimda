@@ -31,6 +31,11 @@ router.get("/", async (req, res) => {
         calories: data.calories || 0,
         macros: data.macros || { proteinPercent: 0, carbPercent: 0, fatPercent: 0 },
         accessLevel: data.accessLevel || 'free',
+        difficulty: data.difficulty || 'beginner',
+        dietType: data.dietType || 'balanced',
+        category: data.category || 'fat_loss',
+        goal: data.goal || 'fat_loss',
+        durationWeeks: data.durationWeeks || 0,
       };
     });
     res.status(200).json(programs);

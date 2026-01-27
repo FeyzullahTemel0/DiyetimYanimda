@@ -1,0 +1,480 @@
+/* ======================================================================= */
+/* ADMIN PANEL STİLLERİ */
+/* ======================================================================= */
+
+.admin-panel {
+  width: 100%;
+  max-width: min(1400px, 100% - 2rem);
+  margin: 1rem auto;
+  padding: 0 1rem;
+  min-height: 70vh;
+}
+
+/* Header */
+.admin-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  padding: 1.2rem;
+  background: linear-gradient(135deg, #2dd4bf 0%, #1fb891 100%);
+  border-radius: 1rem;
+  color: #0a1f1f;
+}
+
+.admin-header h1 {
+  font-size: 2rem;
+  margin-bottom: 0.3rem;
+  font-weight: 700;
+}
+
+.admin-header p {
+  font-size: 1rem;
+  opacity: 0.95;
+}
+
+/* Tab Navigation */
+.admin-tabs {
+  display: flex;
+  gap: 0.8rem;
+  margin-bottom: 1.2rem;
+  border-bottom: 2px solid #1a1a1a;
+  flex-wrap: wrap;
+}
+
+.tab-btn {
+  padding: 0.7rem 1.2rem;
+  background: transparent;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-bottom: 3px solid transparent;
+  transition: all 0.3s ease;
+  position: relative;
+  bottom: -2px;
+}
+
+.tab-btn:hover {
+  color: #2dd4bf;
+}
+
+.tab-btn.active {
+  color: #2dd4bf;
+  border-bottom-color: #2dd4bf;
+}
+
+/* Tab Content */
+.tab-content {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tab-content h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1.2rem;
+  color: #2dd4bf;
+}
+
+.tab-content h3 {
+  font-size: 1.2rem;
+  margin-top: 1.2rem;
+  margin-bottom: 0.8rem;
+  color: #ddd;
+}
+
+/* Forms */
+.admin-form {
+  background: linear-gradient(135deg, #1a1a1a 0%, #121212 100%);
+  padding: 1.2rem;
+  border-radius: 1rem;
+  border: 1px solid #2a2a2a;
+  margin-bottom: 2rem;
+}
+
+.form-section {
+  border: 1px solid #222;
+  border-radius: 0.8rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.section-title {
+  margin: 0 0 1rem 0;
+  font-size: 1.1rem;
+  color: #fff;
+  font-weight: 700;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #2dd4bf;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.range-inputs {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.range-inputs span {
+  color: #666;
+  font-weight: 700;
+}
+
+.chip-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.chip {
+  padding: 0.55rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid #2a2a2a;
+  background: #0f1f1f;
+  color: #b3b3b3;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 600;
+}
+
+.chip:hover {
+  border-color: #2dd4bf;
+  color: #fff;
+}
+
+.chip.active {
+  background: rgba(45, 212, 191, 0.15);
+  border-color: #2dd4bf;
+  color: #2dd4bf;
+  box-shadow: 0 4px 12px rgba(45, 212, 191, 0.2);
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 0.75rem;
+  background: #0f1f1f;
+  border: 1px solid #2a2a2a;
+  color: #fff;
+  border-radius: 0.5rem;
+  font-family: inherit;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #2dd4bf;
+  box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.1);
+}
+
+/* Buttons */
+.btn-primary {
+  background: linear-gradient(135deg, #2dd4bf 0%, #1fb891 100%);
+  color: #0a1f1f;
+  padding: 0.75rem 2rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(45, 212, 191, 0.3);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-danger {
+  background: #dc3545;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.4rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-danger:hover {
+  background: #c82333;
+  transform: translateY(-1px);
+}
+
+.btn-warning {
+  background: #ff9800;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.4rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-warning:hover {
+  background: #e68900;
+}
+
+.btn-success {
+  background: #4caf50;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.4rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-success:hover {
+  background: #45a049;
+}
+
+/* List Items */
+.admin-list {
+  background: linear-gradient(135deg, #1a1a1a 0%, #121212 100%);
+  padding: 2rem;
+  border-radius: 1rem;
+  border: 1px solid #2a2a2a;
+}
+
+.list-items {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  background: #0f1f1f;
+  border: 1px solid #2a2a2a;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.list-item:hover {
+  border-color: #2dd4bf;
+  background: rgba(45, 212, 191, 0.05);
+}
+
+.item-info h4 {
+  color: #2dd4bf;
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.item-info p {
+  color: #999;
+  margin-bottom: 0.5rem;
+}
+
+.item-info small {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.quote-text {
+  font-style: italic;
+  color: #ddd !important;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Pricing Cards */
+.pricing-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.pricing-card {
+  background: linear-gradient(135deg, #1a1a1a 0%, #121212 100%);
+  padding: 1.5rem;
+  border: 1px solid #2a2a2a;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.pricing-card:hover {
+  border-color: #2dd4bf;
+}
+
+.pricing-card h3 {
+  color: #2dd4bf;
+  margin-bottom: 1rem;
+}
+
+/* Info Box */
+.info-box {
+  background: rgba(45, 212, 191, 0.1);
+  border-left: 4px solid #2dd4bf;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  margin-top: 2rem;
+}
+
+.info-box h4 {
+  color: #2dd4bf;
+  margin-bottom: 0.5rem;
+}
+
+.info-box p {
+  color: #999;
+}
+
+/* Large desktop optimization (e.g., 27" screens) */
+@media (min-width: 1440px) {
+  .admin-panel {
+    max-width: min(1600px, 100% - 4rem);
+  }
+
+  .admin-tabs {
+    flex-wrap: nowrap;
+    gap: 0.75rem;
+  }
+
+  .tab-btn {
+    padding: 0.85rem 1.1rem;
+    font-size: 0.95rem;
+  }
+
+  .form-row {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  }
+
+  .admin-form,
+  .admin-list {
+    padding: 2.25rem;
+  }
+
+  .list-item {
+    padding: 1.25rem 1.75rem;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .admin-panel {
+    padding: 0 0.5rem;
+  }
+
+  .admin-header {
+    padding: 1.5rem;
+  }
+
+  .admin-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .admin-tabs {
+    flex-direction: column;
+    gap: 0;
+    border-bottom: none;
+    border-right: 2px solid #1a1a1a;
+  }
+
+  .tab-btn {
+    padding: 1rem;
+    border-bottom: none;
+    border-right: 3px solid transparent;
+    text-align: left;
+  }
+
+  .tab-btn.active {
+    border-right-color: #2dd4bf;
+    border-bottom: none;
+  }
+
+  .admin-form {
+    padding: 1.5rem;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .list-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .list-item button {
+    width: 100%;
+  }
+
+  .pricing-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .tab-content h2 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .admin-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .admin-tabs {
+    overflow-x: auto;
+    border-right: none;
+    border-bottom: 2px solid #1a1a1a;
+    flex-direction: row;
+  }
+
+  .tab-btn {
+    padding: 1rem;
+    border-right: none;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+  }
+
+  .tab-btn.active {
+    border-bottom-color: #2dd4bf;
+    border-right: none;
+  }
+}

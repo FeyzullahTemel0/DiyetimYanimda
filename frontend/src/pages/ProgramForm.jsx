@@ -111,7 +111,7 @@ export default function ProgramForm({ initialData, onSuccess, onCancel }) {
         <select id="accessLevel" name="accessLevel" value={form.accessLevel} onChange={handleChange}>
             <option value="free">Ücretsiz (Herkes)</option>
             <option value="basic">Temel Plan</option>
-            <option value="premium">Premium AI</option>
+            <option value="premium">Premium Plan</option>
             <option value="plus">Profesyonel Plus+</option>
         </select>
       </div>

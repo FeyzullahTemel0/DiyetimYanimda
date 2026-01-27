@@ -1,8 +1,11 @@
 const express = require("express");
 const router  = express.Router();
-const jwt = require("jsonwebtoken"); // JWT kütüphanesini ekliyoruz
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+const crypto = require("crypto");
 const { auth, firestore, FieldValue } = require("../services/firebaseAdmin");
 const verifyToken = require('../middleware/verifyToken');
+const { sendEmail, getPasswordResetEmailTemplate, getPasswordResetSuccessEmailTemplate } = require("../services/emailService");
 
 // --- Kullanıcı Kaydı Endpoint'i (Mevcut kodun, değişiklik yok) ---
 router.post("/register", async (req, res) => {
@@ -167,6 +170,155 @@ router.post("/refresh-token", async (req, res) => {
     } catch (error) {
         // Token'ın süresi dolmuş veya tamamen geçersiz
         return res.status(403).json({ error: "Oturum süresi dolmuş. Lütfen tekrar giriş yapın." });
+    }
+});
+
+
+// --- ŞIFRE UNUTTUM ENDPOINT'İ (YENİ EKLENDİ) ---
+router.post("/forgot-password", async (req, res) => {
+    const { email } = req.body;
+
+    if (!email) {
+        return res.status(400).json({ error: "Email adresi gereklidir." });
+    }
+
+    try {
+        // Email'e göre kullanıcıyı bul
+        const usersSnapshot = await firestore
+            .collection('users')
+            .where('email', '==', email)
+            .get();
+
+        if (usersSnapshot.empty) {
+            // Güvenlik nedeniyle aynı mesajı döndür (var olmayan email'leri gizle)
+            return res.status(200).json({ 
+                message: "Eğer bu email'e kayıtlı bir hesap varsa, şifre sıfırlama linki gönderilecektir." 
+            });
+        }
+
+        const userDoc = usersSnapshot.docs[0];
+        const userData = userDoc.data();
+        const userId = userDoc.id;
+        const userName = userData.name || 'Kullanıcı';
+
+        // Şifre sıfırlama token'ı oluştur (1 saat geçerli)
+        const resetToken = crypto.randomBytes(32).toString('hex');
+        const resetTokenHash = crypto.createHash('sha256').update(resetToken).digest('hex');
+        const resetTokenExpiry = Date.now() + (60 * 60 * 1000); // 1 saat
+
+        // Token'ı Firestore'a kaydet
+        await firestore.collection('users').doc(userId).update({
+            resetToken: resetTokenHash,
+            resetTokenExpiry: resetTokenExpiry
+        });
+
+        // Şifre sıfırlama linki oluştur
+        const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+        const resetLink = `${frontendUrl}/reset-password?token=${resetToken}&email=${email}`;
+
+        // Email gönder
+        const emailTemplate = getPasswordResetEmailTemplate(resetLink, userName);
+        const emailSent = await sendEmail(
+            email,
+            '🔐 Şifre Sıfırlama İsteği - Diyetim Yanımda',
+            emailTemplate
+        );
+
+        if (!emailSent) {
+            console.error('Email gönderme başarısız:', email);
+            return res.status(500).json({ error: "Email gönderilemedi. Lütfen daha sonra tekrar deneyin." });
+        }
+
+        res.status(200).json({ 
+            message: "Şifre sıfırlama linki email adresinize gönderilmiştir.",
+            success: true
+        });
+
+    } catch (error) {
+        console.error('Forgot password hatası:', error);
+        res.status(500).json({ error: "Bir hata oluştu. Lütfen daha sonra tekrar deneyin." });
+    }
+});
+
+
+// --- ŞIFRE SIFIRLA ENDPOINT'İ (YENİ EKLENDİ) ---
+router.post("/reset-password", async (req, res) => {
+    const { token, email, newPassword } = req.body;
+
+    if (!token || !email || !newPassword) {
+        return res.status(400).json({ error: "Token, email ve yeni şifre gereklidir." });
+    }
+
+    if (newPassword.length < 6) {
+        return res.status(400).json({ error: "Şifre en az 6 karakter olmalıdır." });
+    }
+
+    try {
+        // Email'e göre kullanıcıyı bul
+        const usersSnapshot = await firestore
+            .collection('users')
+            .where('email', '==', email)
+            .get();
+
+        if (usersSnapshot.empty) {
+            return res.status(404).json({ error: "Kullanıcı bulunamadı." });
+        }
+
+        const userDoc = usersSnapshot.docs[0];
+        const userData = userDoc.data();
+        const userId = userDoc.id;
+        const userName = userData.name || 'Kullanıcı';
+
+        // Token kontrol et
+        const resetTokenHash = crypto.createHash('sha256').update(token).digest('hex');
+        
+        if (userData.resetToken !== resetTokenHash) {
+            return res.status(401).json({ error: "Geçersiz sıfırlama linki." });
+        }
+
+        // Token'ın süresi dolmadığını kontrol et
+        if (!userData.resetTokenExpiry || userData.resetTokenExpiry < Date.now()) {
+            return res.status(401).json({ error: "Sıfırlama linki süresi dolmuştur. Yeni bir istek gönderin." });
+        }
+
+        // Şifreyi hash'le ve kaydet
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+
+        // Firestore'da şifreyi ve token'ı güncelle
+        await firestore.collection('users').doc(userId).update({
+            password: hashedPassword,
+            resetToken: null,
+            resetTokenExpiry: null,
+            updatedAt: FieldValue.serverTimestamp()
+        });
+
+        // Firebase Auth'ta da şifreyi güncelle
+        try {
+            await auth.updateUser(userId, {
+                password: newPassword
+            });
+        } catch (authError) {
+            console.error('Firebase auth şifre güncelleme hatası:', authError);
+            // Firestore'daki değişiklik zaten yapıldı, devam et
+        }
+
+        // Başarılı email gönder
+        const successEmailTemplate = getPasswordResetSuccessEmailTemplate(userName);
+        await sendEmail(
+            email,
+            '✅ Şifre Değiştirildi - Diyetim Yanımda',
+            successEmailTemplate
+        );
+
+        res.status(200).json({ 
+            message: "Şifreniz başarıyla değiştirilmiştir. Giriş sayfasında yeni şifrenizle giriş yapabilirsiniz.",
+            success: true
+        });
+
+    } catch (error) {
+        console.error('Reset password hatası:', error);
+        res.status(500).json({ error: "Bir hata oluştu. Lütfen daha sonra tekrar deneyin." });
     }
 });
 

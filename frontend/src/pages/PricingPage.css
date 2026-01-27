@@ -4,7 +4,7 @@
   --card-background-color: hsl(0, 0%, 22%);
   --text-color: #f0f0f0;
   --text-secondary-color: #b3b3b3;
-  --accent-color: #2dd4bf; /* Göz alıcı bir yeşil tonu (teal) */
+  --accent-color: #4ca175; /* Göz alıcı bir yeşil tonu (teal) */
   --border-color: hsl(0, 0%, 30%);
   --popular-glow: rgba(45, 212, 191, 0.3);
   --btn-disabled-bg: hsl(0, 0%, 40%);
@@ -155,21 +155,33 @@
 .btn-select-plan {
   margin-top: auto; /* Bu, butonu kartın en altına iter ve kart yüksekliklerini eşitler */
   width: 100%;
-  padding: 1rem;
+  padding: 0.875rem 1rem;
   background-color: var(--accent-color);
   color: var(--background-color);
   border: none;
   border-radius: 8px;
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 700;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  transition: all 0.3s ease;
   text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-select-plan:hover:not(:disabled) {
-  background-color: hsl(168, 65%, 60%); /* Vurgu renginin biraz daha açığı */
-  transform: scale(1.02);
+  background-color: hsl(168, 65%, 60%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(45, 212, 191, 0.3);
+}
+
+.btn-select-plan:active:not(:disabled) {
+  transform: translateY(0);
 }
 
 .btn-select-plan:disabled {
@@ -177,6 +189,7 @@
   color: var(--btn-disabled-text);
   cursor: not-allowed;
   transform: none;
+  opacity: 0.8;
 }
 
 /* --- RESPONSIVE TASARIM (Profesyonel Sıralama) --- */
@@ -200,33 +213,153 @@
   }
   
   .pricing-grid {
-    /* 2'li düzenden tekli, alt alta düzene geçiş */
-    grid-template-columns: 1fr;
+    /* Tablet'de 2 kolon */
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
   }
   
   .plan-card {
-    /* Hover efektini mobil için daha az belirgin yapalım */
-    transform: none; 
+    padding: 1.5rem;
+  }
+  
+  .plan-name {
+    font-size: 1.5rem;
+  }
+  
+  .plan-price {
+    font-size: 1.75rem;
+  }
+  
+  .plan-description {
+    font-size: 0.95rem;
+  }
+  
+  .plan-features {
+    font-size: 0.9rem;
+  }
+}
+
+/* Mobil Cihazlar (768px altı) */
+@media (max-width: 768px) {
+  .pricing-page {
+    padding: 2.5rem 1.5rem;
+  }
+  
+  .pricing-header {
+    margin-bottom: 3rem;
+  }
+  
+  .pricing-header h1 {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .pricing-header p {
+    font-size: 1rem;
+  }
+  
+  .pricing-grid {
+    /* Mobil'de 1 kolon */
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .plan-card {
+    padding: 1.5rem;
+    border-radius: 10px;
   }
 
   .plan-card:hover {
     transform: none; /* Mobil cihazlarda hover'a bağlı büyüme efektini kaldır */
     box-shadow: none;
   }
+  
+  .popular-badge {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.8rem;
+  }
+  
+  .plan-name {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .plan-price {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .plan-description {
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+  
+  .plan-features {
+    font-size: 0.9rem;
+  }
+  
+  .plan-features li {
+    padding: 0.4rem 0;
+  }
+  
+  .check-icon {
+    width: 18px;
+    height: 18px;
+    margin-right: 0.5rem;
+  }
+  
+  .btn-select-plan {
+    font-size: 0.9rem;
+    padding: 0.75rem 1rem;
+    min-height: 40px;
+  }
 }
 
-/* Küçük Telefonlar (480px altı) */
-@media (max-width: 480px) {
+/* Küçük Telefonlar (576px altı) */
+@media (max-width: 576px) {
     .pricing-page {
-        padding: 2rem 1rem;
+        padding: 1.5rem 1rem;
     }
+    
+    .pricing-header {
+        margin-bottom: 2rem;
+    }
+    
     .pricing-header h1 {
-        font-size: 2rem;
+        font-size: 1.5rem;
     }
+    
     .pricing-header p {
-        font-size: 1rem;
+        font-size: 0.95rem;
     }
+    
+    .pricing-grid {
+      gap: 1rem;
+    }
+    
     .plan-card {
-        padding: 1.5rem;
+        padding: 1.25rem;
+    }
+    
+    .plan-name {
+        font-size: 1.25rem;
+    }
+    
+    .plan-price {
+        font-size: 1.25rem;
+    }
+    
+    .plan-description {
+        font-size: 0.85rem;
+    }
+    
+    .plan-features {
+        font-size: 0.85rem;
+    }
+
+    .btn-select-plan {
+        font-size: 0.85rem;
+        padding: 0.75rem 1rem;
+        min-height: 40px;
     }
 }

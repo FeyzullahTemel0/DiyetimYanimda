@@ -2,7 +2,8 @@
 
 const express = require("express");
 const router = express.Router();
-const { firestore, auth } = require("../services/firebaseAdmin");
+const bcrypt = require("bcrypt");
+const { firestore, auth, FieldValue } = require("../services/firebaseAdmin");
 const verifyToken = require("../middleware/verifyToken");
 const checkAdmin = require("../middleware/checkAdmin");
 
@@ -122,5 +123,208 @@ router.delete("/:uid", async (req, res) => {
     res.status(500).json({ error: "Kullanıcı silinirken bir hata oluştu." });
   }
 });
+
+
+// --- KULLANICININ TÜM VERİLERİNİ GETİRME (Profil + Abonelik + Kalori Tracker) ---
+// GET /api/admin/users/:uid/full
+router.get("/:uid/full", async (req, res) => {
+  try {
+    const { uid } = req.params;
+
+    const [authRecord, userDoc, calorieSnapshot] = await Promise.all([
+      auth.getUser(uid),
+      firestore.collection('users').doc(uid).get(),
+      firestore.collection('calorieTracker').where('userId', '==', uid).get(),
+    ]);
+
+    if (!userDoc.exists) {
+      return res.status(404).json({ error: "Kullanıcı profili bulunamadı." });
+    }
+
+    const calorieHistory = calorieSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+
+    res.status(200).json({
+      auth: authRecord.toJSON(),
+      profile: userDoc.data(),
+      subscription: userDoc.data().subscription || { plan: 'free', status: 'active' },
+      calorieTracker: calorieHistory,
+    });
+  } catch (error) {
+    console.error("🚨 GET /api/admin/users/:uid/full hatası:", error);
+    if (error.code === 'auth/user-not-found') {
+      return res.status(404).json({ error: 'Bu ID ile bir kullanıcı bulunamadı.' });
+    }
+    res.status(500).json({ error: "Kullanıcı verileri getirilirken bir hata oluştu." });
+  }
+});
+
+
+// --- ADMİN: ABONELİK İPTAL ---
+// POST /api/admin/users/:uid/subscription/cancel
+router.post("/:uid/subscription/cancel", async (req, res) => {
+  try {
+    const { uid } = req.params;
+    const updatedSubscription = {
+      plan: 'free',
+      planName: 'Ücretsiz',
+      price: 0,
+      status: 'cancelled',
+      startDate: null,
+      endDate: null,
+      paymentId: null,
+      lastUpdatedAt: FieldValue.serverTimestamp(),
+    };
+
+    await firestore.collection('users').doc(uid).update({ subscription: updatedSubscription });
+
+    res.status(200).json({
+      message: 'Abonelik iptal edildi ve free plana alındı.',
+      subscription: updatedSubscription,
+    });
+  } catch (error) {
+    console.error("🚨 POST /api/admin/users/:uid/subscription/cancel hatası:", error);
+    res.status(500).json({ error: "Abonelik iptal edilirken bir hata oluştu." });
+  }
+});
+
+
+// --- ADMİN: SEÇİLEN PLANI HEDİYE ET ---
+// POST /api/admin/users/:uid/subscription/gift
+// body: { plan: string, planName?: string, price?: number, durationMonths?: number }
+router.post("/:uid/subscription/gift", async (req, res) => {
+  try {
+    const { uid } = req.params;
+    const { plan, planName, price, durationMonths } = req.body || {};
+
+    const allowedPlans = ['free', 'basic', 'premium', 'plus', 'starter', 'pro'];
+    const safePlan = allowedPlans.includes(plan) ? plan : 'free';
+    const startDate = new Date();
+    const months = Number(durationMonths) > 0 ? Number(durationMonths) : 1;
+    const endDate = new Date(startDate);
+    endDate.setMonth(endDate.getMonth() + months);
+
+    const giftedSubscription = {
+      plan: safePlan,
+      planName: planName || safePlan,
+      price: Number.isFinite(Number(price)) ? Number(price) : 0,
+      status: 'active',
+      startDate: startDate.toISOString(),
+      endDate: endDate.toISOString(),
+      paymentId: 'gift',
+      lastUpdatedAt: FieldValue.serverTimestamp(),
+    };
+
+    await firestore.collection('users').doc(uid).update({ subscription: giftedSubscription });
+
+    res.status(200).json({
+      message: `Kullanıcıya '${giftedSubscription.planName}' planı hediye edildi.`,
+      subscription: giftedSubscription,
+    });
+  } catch (error) {
+    console.error("🚨 POST /api/admin/users/:uid/subscription/gift hatası:", error);
+    res.status(500).json({ error: "Abonelik hediye edilirken bir hata oluştu." });
+  }
+});
+
+
+// --- KULLANICI ŞİFRESİNİ GÜNCELLEME ENDPOINT'İ (YENİ) ---
+// POST /api/admin/users/:uid/update-password
+router.post("/:uid/update-password", async (req, res) => {
+  try {
+    const { uid } = req.params;
+    const { newPassword } = req.body;
+
+    if (!newPassword || newPassword.length < 6) {
+      return res.status(400).json({ error: "Şifre en az 6 karakter olmalıdır." });
+    }
+
+    // Firebase Auth'ta şifreyi güncelle
+    await auth.updateUser(uid, {
+      password: newPassword
+    });
+
+    // Firestore'da hash'lenmiş şifreyi kaydet (admin tarafından görüntüleme için)
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+    
+    await firestore.collection('users').doc(uid).update({
+      password: hashedPassword,
+      passwordUpdatedAt: FieldValue.serverTimestamp(),
+      passwordUpdatedBy: req.user.uid // Admin'in UID'si
+    });
+
+    res.status(200).json({ 
+      message: "Kullanıcı şifresi başarıyla güncellendi.",
+      success: true 
+    });
+  } catch (error) {
+    console.error("🚨 POST /api/admin/users/:uid/update-password hatası:", error);
+    
+    if (error.code === 'auth/user-not-found') {
+      return res.status(404).json({ error: "Kullanıcı bulunamadı." });
+    }
+    
+    res.status(500).json({ error: "Şifre güncellenirken bir hata oluştu." });
+  }
+});
+
+
+// --- KULLANICI EMAIL ADRESİNİ GÜNCELLEME ENDPOINT'İ (YENİ) ---
+// POST /api/admin/users/:uid/update-email
+router.post("/:uid/update-email", async (req, res) => {
+  try {
+    const { uid } = req.params;
+    const { newEmail } = req.body;
+
+    if (!newEmail || !newEmail.includes('@')) {
+      return res.status(400).json({ error: "Geçerli bir email adresi girin." });
+    }
+
+    // Email'in başka bir kullanıcı tarafından kullanılıp kullanılmadığını kontrol et
+    try {
+      const existingUser = await auth.getUserByEmail(newEmail);
+      if (existingUser && existingUser.uid !== uid) {
+        return res.status(400).json({ error: "Bu email adresi başka bir kullanıcı tarafından kullanılıyor." });
+      }
+    } catch (error) {
+      // Email kullanılmıyor, devam et
+      if (error.code !== 'auth/user-not-found') {
+        throw error;
+      }
+    }
+
+    // Firebase Auth'ta email'i güncelle
+    await auth.updateUser(uid, {
+      email: newEmail,
+      emailVerified: false // Email değiştiğinde doğrulamayı sıfırla
+    });
+
+    // Firestore'da email'i güncelle
+    await firestore.collection('users').doc(uid).update({
+      email: newEmail,
+      emailUpdatedAt: FieldValue.serverTimestamp(),
+      emailUpdatedBy: req.user.uid // Admin'in UID'si
+    });
+
+    res.status(200).json({ 
+      message: "Kullanıcı email adresi başarıyla güncellendi.",
+      success: true,
+      newEmail: newEmail
+    });
+  } catch (error) {
+    console.error("🚨 POST /api/admin/users/:uid/update-email hatası:", error);
+    
+    if (error.code === 'auth/user-not-found') {
+      return res.status(404).json({ error: "Kullanıcı bulunamadı." });
+    }
+    
+    if (error.code === 'auth/email-already-exists') {
+      return res.status(400).json({ error: "Bu email adresi zaten kullanılıyor." });
+    }
+    
+    res.status(500).json({ error: "Email güncellenirken bir hata oluştu." });
+  }
+});
+
 
 module.exports = router;

@@ -43,7 +43,73 @@
   color: var(--text-color);
 }
 
-/* --- BÖLÜM 1: HERO --- */
+/* --- BÖLÜM 1: GÜNÜN SÖZÜ (YENİ) --- */
+.daily-quote-section {
+  padding: 60px 20px;
+  max-width: 800px;
+  margin: 0 auto;
+  border-bottom: none;
+}
+
+.daily-quote-container {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  border: 2px solid #2dd4bf;
+  border-radius: 16px;
+  padding: 3rem 2rem;
+  box-shadow: 0 10px 40px rgba(45, 212, 191, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.daily-quote-container::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #2dd4bf, #14b8a6, #0ea5e9, #2dd4bf);
+  border-radius: 16px;
+  z-index: -1;
+  opacity: 0.3;
+  filter: blur(20px);
+}
+
+.daily-quote-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2dd4bf;
+  margin-bottom: 2rem;
+  text-transform: none;
+  letter-spacing: 1px;
+}
+
+.daily-quote-text {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.8rem;
+  font-style: italic;
+  font-weight: 600;
+  margin: 0 auto 1.5rem;
+  padding: 0;
+  border: none;
+  max-width: 700px;
+  text-align: center;
+  color: #e2e8f0;
+  line-height: 1.6;
+}
+
+.daily-quote-author {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 500;
+  font-style: normal;
+  color: #94a3b8;
+  margin: 0;
+  text-align: right;
+}
+
+/* --- BÖLÜM 2: HERO --- */
 .hero-section {
   min-height: 100vh;
   display: flex;

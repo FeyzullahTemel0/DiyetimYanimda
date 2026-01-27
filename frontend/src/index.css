@@ -1,3 +1,6 @@
+/* Import Color Palette */
+@import './styles/colors.css';
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -19,11 +22,21 @@ code {
   box-sizing: border-box;
 }
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
 html, body {
   font-family: 'Segoe UI', 'Roboto', sans-serif;
-  background-color: #f9f9f9;
-  color: #333;
+  background-color: var(--broken-white, #F9FAF7);
+  color: var(--text-primary, #333333);
   scroll-behavior: smooth;
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100vw;
 }
 
 img {

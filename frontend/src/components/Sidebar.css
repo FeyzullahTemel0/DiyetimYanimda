@@ -1,9 +1,14 @@
 .sidebar {
-  width: 220px;
-  background: #F0FAF1;
-  padding: 2rem 1rem;
-  border-right: 1px solid #E0E0E0;
+  width: 250px;
+  background: linear-gradient(135deg, #1a1a1a 0%, #121212 100%);
+  padding: 2rem 0;
+  border-right: 1px solid #2a2a2a;
   animation: sidebarSlide 0.5s ease;
+  overflow-y: auto;
+  max-height: calc(100vh - 80px);
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: #4ca175 #1a1a1a;
 }
 
 .sidebar ul {
@@ -16,29 +21,126 @@
   position: relative;
   display: flex;
   align-items: center;
-  padding: 0.75rem 1rem;
-  margin-bottom: 0.5rem;
+  padding: 0.9rem 1.5rem;
+  margin: 0.25rem 0.5rem;
   cursor: pointer;
-  border-radius: 6px;
-  transition: background 0.3s, transform 0.2s;
-  color: #333;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  color: #b3b3b3;
+  font-weight: 500;
+  font-size: 0.95rem;
 }
-.sidebar li::before {
-  display: inline-block;
-  margin-right: 0.75rem;
-  font-size: 1.2rem;
-}
-.sidebar li:nth-child(1)::before { content: "👤"; }
-.sidebar li:nth-child(2)::before { content: "💳"; }
-.sidebar li:nth-child(3)::before { content: "✉️"; }
 
-.sidebar li:hover,
-.sidebar li.active {
-  background: #C8E6C9;
+.sidebar li:hover {
+  background: rgba(76, 161, 117, 0.1);
+  color: #4ca175;
   transform: translateX(4px);
+}
+
+.sidebar li.active {
+  background: linear-gradient(90deg, rgba(76, 161, 117, 0.2) 0%, rgba(76, 161, 117, 0.05) 100%);
+  color: #4ca175;
+  border-left: 3px solid #4ca175;
+  font-weight: 600;
+}
+
+.sidebar hr {
+  margin: 1rem 0.5rem;
+  border: none;
+  border-top: 1px solid #333;
 }
 
 @keyframes sidebarSlide {
   from { opacity: 0; transform: translateX(-20px); }
   to   { opacity: 1; transform: translateX(0); }
+}
+
+/* Custom Scrollbar Styling */
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: #4ca175;
+  border-radius: 3px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: #1dd4b8;
+}
+
+/* Responsive Tasarım */
+@media (min-width: 769px) and (max-width: 992px) {
+  .sidebar {
+    width: 200px;
+    padding: 1.5rem 0;
+    max-height: calc(100vh - 80px);
+  }
+  
+  .sidebar li {
+    padding: 0.75rem 1.2rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    max-height: auto;
+    max-height: 45vh;
+    padding: 1rem 0;
+    border-right: none;
+    border-bottom: 2px solid #4ca175;
+    overflow-y: auto;
+  }
+  
+  .sidebar ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0 0.5rem;
+  }
+  
+  .sidebar li {
+    flex: 0 1 auto;
+    padding: 0.65rem 1rem;
+    margin: 0;
+    font-size: 0.85rem;
+    white-space: nowrap;
+  }
+  
+  .sidebar li:hover {
+    transform: scale(1.02);
+  }
+  
+  .sidebar li.active {
+    border-left: none;
+    border-bottom: 3px solid #4ca175;
+  }
+  
+  .sidebar hr {
+    width: 100%;
+    margin: 0.5rem 0;
+  }
+}
+
+@media (max-width: 576px) {
+  .sidebar {
+    max-height: 40vh;
+    padding: 0.75rem 0;
+  }
+  
+  .sidebar li {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.8rem;
+    flex: 1 1 calc(50% - 0.5rem);
+    min-width: 120px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }

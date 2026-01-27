@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Motivation.css';
+import { db } from '../services/firebase';
+import { collection, query, limit, getDocs } from 'firebase/firestore';
+import { getApiUrl } from '../config/apiConfig';
 
 // ======================================================================
 // İKONLAR
@@ -10,12 +13,31 @@ const TargetIcon = () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" vie
 const ChartBarIcon = () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" /></svg>;
 
 // ======================================================================
-// BAŞARI HİKAYELERİ VERİSİ
+// GÜNLÜK MOTİVASYON SÖZLERİ
 // ======================================================================
-const storiesData = [
-    { name: "Ayşe K.", goal: "3 Ayda -15 KG", quote: "Her Pazartesi başlayıp Salı pes ediyordum. DiyetimYanımda'nın yapay zekası, 'kaçamak' anlarımı birer veri olarak görüp programımı buna göre adapte etti. Suçluluk duymak yerine öğrendim. Bu her şeyi değiştirdi!", before_img: "https://images.unsplash.com/photo-1614928228253-dc09cbc00f14?auto=format&fit=crop&q=80&w=400&h=400", after_img: "https://images.unsplash.com/photo-1571008887538-b36bb2494757?auto=format&fit=crop&q=80&w=400&h=400" },
-    { name: "Mehmet T.", goal: "Enerji ve Odaklanma", quote: "Sadece kilo vermek değil, gün içinde daha enerjik olmak istiyordum. AI asistanım, uyku düzenimden stres seviyeme kadar analiz yaparak bana özel bir beslenme planı sundu. Sonuç: Tartıdan çok daha fazlası.", before_img: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&q=80&w=400&h=400", after_img: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80&w=400&h=400" },
-    { name: "Elif S.", goal: "Sürdürülebilir Alışkanlıklar", quote: "Benim için en zoru istikrardı. DiyetimYanımda'nın 'Momentum Motoru' felsefesi ve küçük, kişiselleştirilmiş hedefler sayesinde ilk defa bir programı yarıda bırakmadım. Bu bir diyet değil, yeni yaşam tarzım.", before_img: "https://images.unsplash.com/photo-1615109398623-88346a601842?auto=format&fit=crop&q=80&w=400&h=400", after_img: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=400&h=400" }
+const MOTIVATION_QUOTES = [
+  "Başarı bir hedef değil, bir süreçtir. Her gün atılan adım, bir öncekisinden büyüktür.",
+  "Senin vücudun dün bıraktığın seçimlerin sonucu. Yarının vücudun, bugün verdiğin kararların sonucu olacak.",
+  "Vazgeçmek en kolay seçim. Bilerek o yolu seçmeyi bırak ve zor olan yolu seç.",
+  "Bu yolculuğunda sayfalarını yazmak sana düşüyor. Her gün, bir cümle daha yaz.",
+  "Motivasyon seni başlatır, disiplin seni devam ettirir. Disiplini bul, geri kalanı o halleder.",
+  "Senin hedefin başkalarının hedefi olmak zorunda değil. Senin 'neden'ini bul ve o yolda yürü.",
+  "Bir adım geri gidebilirsin, ama adımı attığın gerçeği kaybolmaz. Pes etme, devam et.",
+  "Değişim acı veriyor ama hiçbir şey yapmamak daha çok acı verir. Seç, hangisinin acısını kaldıracaksın?",
+  "Bugün yaptığın seçim, yarın olan vücudunun temeli. Ne dikersen, onu biçersin.",
+  "Başarısız olmaktan korkma. Asıl korkulacak şey, asla denememiş olmaktır.",
+  "Seni durdurabilecek tek engel sensin. Kendine engel olmayı bırak, kendine kapı aç.",
+  "Gün içinde yüzlerce fırsat geliyor. Hangisini seçeceğin sende. Her seçim, bir oy.",
+  "İnsan değişebilir. Değişim sadece bir karar ile başlar. Karar vermişsin, gerisi gelmek için sadece biraz zaman.",
+  "Türk usulü motivasyon: Seni desteklemek için buradayım. Sen nasıl olsan, sen benim için yeterlisin.",
+  "Yarın başlamayacaksın. Bugün başla. Şimdi başla. Bir bardak su içme zamanı kadar kısa bir hamle yap."
+];
+
+// ======================================================================
+// BAŞARI HİKAYELERİ VERİSİ (GERÇEKLEŞTİRİLMİŞ)
+// ======================================================================
+const DEFAULT_STORIES = [
+    { name: "Yükleniyor...", goal: "", quote: "Gerçek kullanıcı hikayelerini yüklüyoruz...", before_img: "", after_img: "" }
 ];
 
 // ======================================================================
@@ -23,6 +45,9 @@ const storiesData = [
 // ======================================================================
 export default function MotivationPage() {
   const [isLoaded, setIsLoaded] = useState(false);
+  const [todayQuote, setTodayQuote] = useState('');
+  const [quoteAuthor, setQuoteAuthor] = useState('');
+  const [userStories, setUserStories] = useState(DEFAULT_STORIES);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -31,6 +56,77 @@ export default function MotivationPage() {
     return () => clearTimeout(timer);
   }, []);
 
+  // Günlük motivasyon sözü yükleme - Veritabanından
+  useEffect(() => {
+    const loadDailyQuote = async () => {
+      try {
+        const response = await fetch(getApiUrl('/api/admin/quotes/daily'));
+        if (response.ok) {
+          const quote = await response.json();
+          setTodayQuote(quote.text || '');
+          setQuoteAuthor(quote.author || 'Anonim');
+        } else {
+          // Veritabanında söz yoksa yerel listeden seç
+          const today = new Date().toDateString();
+          const storedQuote = localStorage.getItem(`quote_${today}`);
+          
+          if (storedQuote) {
+            setTodayQuote(storedQuote);
+            setQuoteAuthor('Anonim');
+          } else {
+            const randomQuote = MOTIVATION_QUOTES[Math.floor(Math.random() * MOTIVATION_QUOTES.length)];
+            localStorage.setItem(`quote_${today}`, randomQuote);
+            setTodayQuote(randomQuote);
+            setQuoteAuthor('Anonim');
+          }
+        }
+      } catch (error) {
+        console.error('Günün sözü yüklenirken hata:', error);
+        // Hata durumunda yerel listeden seç
+        const today = new Date().toDateString();
+        const storedQuote = localStorage.getItem(`quote_${today}`);
+        
+        if (storedQuote) {
+          setTodayQuote(storedQuote);
+          setQuoteAuthor('Anonim');
+        } else {
+          const randomQuote = MOTIVATION_QUOTES[Math.floor(Math.random() * MOTIVATION_QUOTES.length)];
+          localStorage.setItem(`quote_${today}`, randomQuote);
+          setTodayQuote(randomQuote);
+          setQuoteAuthor('Anonim');
+        }
+      }
+    };
+    
+    loadDailyQuote();
+  }, []);
+
+  // Gerçek kullanıcı hikayelerini Firestore'dan yükleme
+  useEffect(() => {
+    const loadStories = async () => {
+      try {
+        const q = query(collection(db, 'userStories'), limit(3));
+        const snapshot = await getDocs(q);
+        
+        if (snapshot.docs.length > 0) {
+          const stories = snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+          }));
+          setUserStories(stories);
+        }
+      } catch (error) {
+        console.log('Hikayeler yüklenmedi, varsayılan veriler kullanılıyor:', error);
+      }
+    };
+    
+    loadStories();
+  }, []);
+
+  const handleViewAllStories = () => {
+    navigate('/user-stories');
+  };
+
   const handleStartJourneyClick = () => {
     navigate('/pricing'); 
   };
@@ -38,7 +134,18 @@ export default function MotivationPage() {
   return (
     <div className={`motivation-page ${isLoaded ? 'loaded' : ''}`}>
       
-      {/* BÖLÜM 1: GİRİŞ - DUYGUSAL BAĞLANTI */}
+      {/* BÖLÜM 1: GÜNÜN MOTİVASYON SÖZÜ */}
+      <section className="daily-quote-section">
+        <div className="daily-quote-container">
+          <h3 className="daily-quote-title">Günün Sözü</h3>
+          <blockquote className="daily-quote-text">
+            "{todayQuote}"
+          </blockquote>
+          <p className="daily-quote-author">- {quoteAuthor}</p>
+        </div>
+      </section>
+
+      {/* BÖLÜM 2: GİRİŞ - DUYGUSAL BAĞLANTI */}
       <section className="hero-section">
         <div className="hero-content">
           <span className="hero-tag">DiyetimYanımda Felsefesi</span>
@@ -64,16 +171,7 @@ export default function MotivationPage() {
         <p className="cycle-conclusion">Bu senin iradesizliğin değil. Bu, kişiselleştirilmemiş, statik ve insan psikolojisini hiçe sayan planların kaçınılmaz sonucu. Biz bu oyunu değiştiriyoruz.</p>
       </section>
 
-      {/* BÖLÜM 3: FELSEFİ ALINTI - DÜŞÜNCELERE YÖN VERME */}
-      <section className="quote-section">
-        <blockquote>
-          "En büyük zafer, kendine karşı kazandığındır."
-          <footer>— Platon</footer>
-        </blockquote>
-        <p>Değişim, tabaktakilerle değil, zihindekilerle başlar. Bedenini dönüştürmeden önce, düşüncelerini dönüştürmelisin. Sana bu yolculukta rehberlik etmek için buradayız.</p>
-      </section>
-
-      {/* BÖLÜM 4: DERİN MOTİVASYON - "NEDEN"İ BULMA */}
+      {/* BÖLÜM 3: DERİN MOTİVASYON - "NEDEN"İ BULMA */}
       <section className="why-section">
         <h2>Her Şeyden Önce: O Derindeki 'NEDEN'i Hatırla</h2>
         <p>Gözlerini kapat ve bir an düşün. Seni ilk başta bu yola çıkaran o güçlü kıvılcım neydi? Sadece kilo vermek mi, yoksa ardında yatan daha derin bir arzu mu?</p>
@@ -135,19 +233,56 @@ export default function MotivationPage() {
         <h2>Onlar Başardı. Senin Hikayen Şimdi Başlıyor.</h2>
         <p>Bunlar süper kahramanlar değil. Bunlar, doğru teknoloji ve doğru yaklaşımla hedeflerine ulaşan, tıpkı senin gibi, döngüyü kırmaya karar veren insanlar.</p>
         <div className="stories-grid">
-          {storiesData.map((story, index) => (
-            <div className="story-card" key={index}>
-              <div className="story-images">
-                <div className="img-container before"><img src={story.before_img} alt={`${story.name} öncesi`} /><span>ÖNCE</span></div>
-                <div className="img-container after"><img src={story.after_img} alt={`${story.name} sonrası`} /><span>SONRA</span></div>
+          {userStories && userStories.length > 0 ? (
+            userStories.map((story) => (
+              <div className="story-card" key={story.id || Math.random()}>
+                <div className="story-images">
+                  {story.images && story.images[0] && story.images[2] && (
+                    <>
+                      <div className="img-container before">
+                        <img src={story.images[0]} alt={`${story.userName} öncesi`} />
+                        <span>ÖNCE</span>
+                      </div>
+                      <div className="img-container after">
+                        <img src={story.images[2]} alt={`${story.userName} sonrası`} />
+                        <span>SONRA</span>
+                      </div>
+                    </>
+                  )}
+                </div>
+                <div className="story-content">
+                  <h3>{story.userName} <span>{story.weight_before} → {story.weight_after} kg ({story.duration})</span></h3>
+                  <p>"{story.description}"</p>
+                </div>
               </div>
-              <div className="story-content">
-                <h3>{story.name} <span>{story.goal}</span></h3>
-                <p>"{story.quote}"</p>
-              </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <p style={{ gridColumn: '1 / -1', textAlign: 'center', color: '#999', padding: '2rem' }}>
+              Henüz kullanıcı hikayesi yok. <br />
+              <strong onClick={handleViewAllStories} style={{ color: '#2dd4bf', cursor: 'pointer' }}>
+                İlk hikaye sende mi?
+              </strong>
+            </p>
+          )}
         </div>
+        <button 
+          className="view-all-button" 
+          onClick={handleViewAllStories}
+          style={{
+            marginTop: '2rem',
+            padding: '0.75rem 2rem',
+            backgroundColor: '#2dd4bf',
+            color: '#0a1f1f',
+            border: 'none',
+            borderRadius: '0.5rem',
+            cursor: 'pointer',
+            fontWeight: '600',
+            display: 'block',
+            margin: '2rem auto 0'
+          }}
+        >
+          TÜM HİKAYELERİ GÖRDÜR
+        </button>
       </section>
 
       {/* BÖLÜM 8: SON ÇAĞRI (CTA) */}

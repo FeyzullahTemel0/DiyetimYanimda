@@ -51,3 +51,49 @@
 .modal-close-btn:hover {
   color: #333;
 }
+
+/* Responsive Tasarım */
+/* Tablet Cihazlar (769px - 992px) */
+@media (min-width: 769px) and (max-width: 992px) {
+  .modal-content {
+    max-width: 550px;
+    padding: 25px 35px;
+  }
+}
+
+/* Mobil Cihazlar (768px altı) */
+@media (max-width: 768px) {
+  .modal-content {
+    width: 95%;
+    max-width: none;
+    max-height: 85vh;
+    padding: 20px 25px;
+    border-radius: 10px;
+  }
+  
+  .modal-close-btn {
+    font-size: 24px;
+    top: 12px;
+    right: 12px;
+  }
+}
+
+/* Küçük Mobil Cihazlar (576px altı) */
+@media (max-width: 576px) {
+  .modal-overlay {
+    padding: 0.5rem;
+  }
+  
+  .modal-content {
+    width: 100%;
+    max-height: 90vh;
+    padding: 15px 20px;
+    border-radius: 8px;
+  }
+  
+  .modal-close-btn {
+    font-size: 22px;
+    top: 10px;
+    right: 10px;
+  }
+}

@@ -129,23 +129,33 @@ router.post("/select-program", async (req, res) => {
 router.post("/subscribe", async (req, res) => {
   try {
     const { uid } = req.user;
-    const { plan, paymentId } = req.body;
-    const validPlans = ["basic", "premium", "plus"];
-    if (!plan || !validPlans.includes(plan)) {
-      return res.status(400).json({ error: "Geçersiz bir üyelik planı seçildi." });
+    const { plan, planName, features } = req.body;
+    
+    // Ücretsiz plan için kontrol et
+    if (plan !== 'free') {
+      return res.status(400).json({ error: "Bu endpoint sadece ücretsiz plan için kullanılır." });
     }
+
     const startDate = new Date();
     const endDate = new Date();
     endDate.setMonth(endDate.getMonth() + 1);
+    
     const subscriptionData = {
       plan,
+      planName: planName || "Ücretsiz Plan",
+      price: 0,
+      features: features || [],
       status: "active",
       startDate: startDate.toISOString(),
       endDate: endDate.toISOString(),
-      paymentId: paymentId || null,
+      paymentId: null,
     };
+    
     await firestore.collection("users").doc(uid).update({ subscription: subscriptionData });
-    res.status(200).json({ message: `Üyelik planınız başarıyla '${plan}' olarak güncellendi!`, subscription: subscriptionData });
+    res.status(200).json({ 
+      message: `Üyelik planınız başarıyla '${planName || plan}' olarak güncellendi!`, 
+      subscription: subscriptionData 
+    });
   } catch (error) {
     res.status(500).json({ error: "Üyelik güncellenirken bir hata oluştu." });
   }

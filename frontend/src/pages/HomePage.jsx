@@ -1,17 +1,16 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../services/firebase"; // Firebase dosyanızın yolunu doğrulayın
+import { auth } from "../services/firebase";
+import { getFirestore, doc, getDoc } from "firebase/firestore";
 import { useState, useEffect } from "react";
 import "./HomePage.css";
-
-// İkonları ve görselleri import etmek en iyi pratiktir,
-// ancak kolaylık olması için URL veya emoji kullanacağız.
-import heroImageUrl from '../styles/karsilama.jpg'; // Kendi resim yolunuzu buraya yazın veya aşağıdakini kullanın
 
 export default function HomePage() {
   const [user] = useAuthState(auth);
   const [stats, setStats] = useState({ users: 0, plusUsers: 0 });
   const [openFaq, setOpenFaq] = useState(null);
+  const navigate = useNavigate();
+  const db = getFirestore();
 
   // Sayıların dinamik olarak artması efekti
   useEffect(() => {
@@ -39,6 +38,35 @@ export default function HomePage() {
 
     return () => clearInterval(interval);
   }, []);
+
+  // Son buton click handler
+  const handleCtaButtonClick = async (e) => {
+    e.preventDefault();
+
+    if (!user) {
+      // Kullanıcı giriş yapmamış → kayıt formuna git
+      navigate('/register');
+      return;
+    }
+
+    // Kullanıcı giriş yapmış, database'de kontrol et
+    try {
+      const userDocRef = doc(db, 'users', user.uid);
+      const userDocSnap = await getDoc(userDocRef);
+
+      if (!userDocSnap.exists()) {
+        // Kayıt olmamış → kayıt formuna git
+        navigate('/register');
+      } else {
+        // Kayıt yapmış → profile git
+        navigate('/profile');
+      }
+    } catch (error) {
+      console.error('Error checking user:', error);
+      // Hata durumunda profile'a yönlendir
+      navigate('/profile');
+    }
+  };
 
   const faqs = [
     { q: "15 günlük ücretsiz deneme süreci nasıl işliyor?", a: "Kayıt olduğunuz andan itibaren 15 gün boyunca tüm Plus+ özelliklerine hiçbir kısıtlama olmadan erişebilirsiniz. Süre sonunda memnun kalırsanız üyeliğinizi devam ettirebilirsiniz." },
@@ -75,8 +103,7 @@ export default function HomePage() {
           </div>
         </div>
         <div className="hero-image-container">
-          {/* Kendi görselinizi kullanmak için src'yi değiştirin: src={heroImageUrl} */}
-          <img src={heroImageUrl} alt="Karşılama Resmi" />
+          <img src="/logo.png" alt="DiyetimYanımda Logo" />
         </div>
       </section>
 
@@ -179,77 +206,80 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Başarı Hikayeleri Bölümü */}
-      <section className="testimonials-section">
+      {/* Başarı Hikayeleri Bölümü - Gerçek Kullanıcılar */}
+      <section className="success-stories-preview">
         <div className="section-header">
           <span className="section-tag">Gerçek Sonuçlar</span>
           <h2>Onlar Başardı, Sıra Sende!</h2>
+          <p>Binlerce kullanıcımız hedeflerine ulaştı. Sen de onlardan biri olabilirsin!</p>
         </div>
-        <div className="testimonial-grid">
-          <div className="testimonial-card">
-            <img src="https://randomuser.me/api/portraits/women/11.jpg" alt="Ayşe K." />
-            <p>"Defalarca tek başıma denedim ama hep yarım kaldı. Buradaki uzman desteği ve topluluk hissi her şeyi değiştirdi. 3 ayda 12 kilo verdim!"</p>
-            <h4>— Ayşe K.</h4>
-            <span>Plus+ Üye</span>
+        
+        <div className="success-stats">
+          <div className="success-stat-item">
+            <div className="stat-icon">🎯</div>
+            <h3>3,850+</h3>
+            <p>Başarılı Dönüşüm</p>
           </div>
-          <div className="testimonial-card">
-            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Mehmet T." />
-            <p>"Sadece kilo vermek değil, doğru beslenmeyi öğrendim. Enerjim o kadar arttı ki, artık spor yapmak bir zorunluluk değil, bir keyif."</p>
-            <h4>— Mehmet T.</h4>
-            <span>Premium Üye</span>
+          <div className="success-stat-item">
+            <div className="stat-icon">⚖️</div>
+            <h3>42,000+ KG</h3>
+            <p>Toplam Kaybedilen Ağırlık</p>
           </div>
-          <div className="testimonial-card">
-            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Elif S." />
-            <p>"Psikolojik destek seansları benim için bir dönüm noktası oldu. Yeme ataklarımın üstesinden geldim. Teşekkürler!"</p>
-            <h4>— Elif S.</h4>
-            <span>Premium Üye</span>
+          <div className="success-stat-item">
+            <div className="stat-icon">⭐</div>
+            <h3>4.9/5</h3>
+            <p>Ortalama Kullanıcı Puanı</p>
+          </div>
+        </div>
+
+        <div style={{ textAlign: 'center', marginTop: '3rem' }}>
+          <Link to="/success-stories" className="btn btn-primary btn-large">
+            🌟 Başarı Hikayelerini Keşfet
+          </Link>
+        </div>
+      </section>
+
+      {/* Değer Teklifi ve Güven İnşası */}
+      <section className="value-proposition-section">
+        <div className="section-header">
+          <span className="section-tag">Neden DiyetimYanımda?</span>
+          <h2>Başarınız İçin Her Şey Düşünüldü</h2>
+        </div>
+        
+        <div className="value-grid">
+          <div className="value-card">
+            <div className="value-icon">🔬</div>
+            <h4>Bilimsel Yaklaşım</h4>
+            <p>Güncel beslenme bilimi ve araştırmalar ışığında hazırlanan, kişiye özel programlar.</p>
+          </div>
+          <div className="value-card">
+            <div className="value-icon">👨‍⚕️</div>
+            <h4>Uzman Kadro</h4>
+            <p>10+ yıl deneyimli diyetisyen ve psikologlardan oluşan profesyonel ekip.</p>
+          </div>
+          <div className="value-card">
+            <div className="value-icon">💪</div>
+            <h4>Sürdürülebilir Sonuçlar</h4>
+            <p>Hızlı değil, kalıcı çözümler. Yaşam tarzı değişimi odaklı yaklaşım.</p>
+          </div>
+          <div className="value-card">
+            <div className="value-icon">🤝</div>
+            <h4>7/24 Destek</h4>
+            <p>Yolculuğunuzda hiç yalnız değilsiniz. Her an yanınızdayız.</p>
+          </div>
+          <div className="value-card">
+            <div className="value-icon">📱</div>
+            <h4>Teknoloji Entegrasyonu</h4>
+            <p>Kullanıcı dostu uygulama ile takip kolay, sonuçlar net.</p>
+          </div>
+          <div className="value-card">
+            <div className="value-icon">🎁</div>
+            <h4>15 Gün Ücretsiz</h4>
+            <p>Risk almadan tüm özellikleri deneyin, memnun kalın sonra karar verin.</p>
           </div>
         </div>
       </section>
 
-      {/* Fiyatlandırma Bölümü */}
-      <section className="pricing-section">
-        <div className="section-header">
-          <span className="section-tag">Yatırım Yap</span>
-          <h2>Kendin İçin En İyisini Seç</h2>
-        </div>
-        <div className="pricing-grid">
-          <div className="pricing-card">
-            <h3>Standart</h3>
-            <p className="price"><span>149</span>₺/ay</p>
-            <ul>
-              <li>✓ Kişiye Özel Beslenme Planı</li>
-              <li>✓ Akıllı İlerleme Takibi</li>
-              <li>✓ E-posta ile Destek</li>
-              <li> </li>
-            </ul>
-            <Link to="/register" className="btn btn-secondary">Planı Seç</Link>
-          </div>
-          <div className="pricing-card popular">
-            <span className="popular-tag">En Popüler</span>
-            <h3>Plus+</h3>
-            <p className="price"><span>299</span>₺/ay</p>
-            <ul>
-              <li>✓ Kişiye Özel Beslenme Planı</li>
-              <li>✓ Haftalık 1:1 Diyetisyen Görüşmesi</li>
-              <li>✓ 7/24 Anlık Mesajlaşma Desteği</li>
-              <li>✓ Kişiye Özel Egzersiz Önerileri</li>
-            </ul>
-            <Link to="/register" className="btn btn-primary">Ücretsiz Dene</Link>
-          </div>
-          <div className="pricing-card">
-            <h3>Premium</h3>
-            <p className="price"><span>499</span>₺/ay</p>
-            <ul>
-              <li>✓ Tüm Plus+ Özellikleri</li>
-              <li>✓ Haftalık Psikolojik Destek Seansı</li>
-              <li>✓ Aylık Canlı Grup Antrenmanı</li>
-              <li>✓ Öncelikli Destek Hattı</li>
-            </ul>
-            <Link to="/register" className="btn btn-secondary">Planı Seç</Link>
-          </div>
-        </div>
-      </section>
 
       {/* SSS Bölümü */}
       <section className="faq-section">
@@ -279,9 +309,12 @@ export default function HomePage() {
       <section className="final-cta-section">
         <h2>Değişime Hazır Mısın?</h2>
         <p>Ertelemeyi bırak. Kendine yapacağın en büyük iyilik için ilk adımı bugün at. <br/>15 günlük ücretsiz deneme ile hiçbir risk almadan aramıza katıl.</p>
-        <Link to="/register" className="btn btn-primary btn-large">
+        <button 
+          onClick={handleCtaButtonClick}
+          className="btn btn-primary btn-large"
+        >
             Yolculuğuma Şimdi Başlıyorum!
-        </Link>
+        </button>
       </section>
 
 

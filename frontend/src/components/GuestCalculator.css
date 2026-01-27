@@ -131,7 +131,182 @@
   line-height: 1.7;
 }
 
+/* Responsive Tasarım */
+/* Tablet Cihazlar (769px - 992px) */
+@media (min-width: 769px) and (max-width: 992px) {
+  .calculator-card {
+    padding: 2rem;
+  }
+  
+  .calculator-card h2 {
+    font-size: 1.75rem;
+  }
+  
+  .form-row {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1.25rem;
+  }
+  
+  .result-item strong {
+    font-size: 2rem;
+  }
+}
+
+/* Mobil Cihazlar (768px altı) */
+@media (max-width: 768px) {
+  .guest-calculator-container {
+    padding: 1.5rem;
+  }
+  
+  .calculator-card {
+    padding: 1.75rem;
+  }
+  
+  .calculator-card h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.4rem;
+  }
+  
+  .calculator-card > p {
+    font-size: 1rem;
+    margin-bottom: 2rem;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+  }
+  
+  .form-group label {
+    font-size: 0.85rem;
+  }
+  
+  .form-group input,
+  .form-group select {
+    padding: 10px;
+    font-size: 0.95rem;
+  }
+  
+  .calculate-btn,
+  .register-btn {
+    padding: 12px;
+    font-size: 1rem;
+  }
+  
+  .result-box {
+    margin-top: 2rem;
+    padding-top: 2rem;
+  }
+  
+  .result-box h3 {
+    font-size: 1.3rem;
+    margin-bottom: 1.25rem;
+  }
+  
+  .result-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .result-item {
+    padding: 1.25rem;
+  }
+  
+  .result-item strong {
+    font-size: 1.8rem;
+  }
+  
+  .result-cta {
+    margin-top: 1.5rem;
+  }
+  
+  .result-cta p {
+    font-size: 0.95rem;
+    margin-bottom: 1.25rem;
+  }
+}
+
+/* Küçük Mobil Cihazlar (576px altı) */
 @media (max-width: 576px) {
-  .calculator-card { padding: 1.5rem; }
-  .result-grid { grid-template-columns: 1fr; }
+  .guest-calculator-container {
+    padding: 1rem;
+  }
+  
+  .calculator-card {
+    padding: 1.25rem;
+  }
+  
+  .calculator-card h2 {
+    font-size: 1.3rem;
+  }
+  
+  .calculator-card > p {
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-row {
+    gap: 0.85rem;
+    margin-bottom: 1rem;
+  }
+  
+  .form-group label {
+    font-size: 0.8rem;
+    margin-bottom: 0.4rem;
+  }
+  
+  .form-group input,
+  .form-group select {
+    padding: 9px;
+    font-size: 0.9rem;
+  }
+  
+  .calculate-btn,
+  .register-btn {
+    padding: 11px;
+    font-size: 0.95rem;
+  }
+  
+  .result-box {
+    margin-top: 1.75rem;
+    padding-top: 1.75rem;
+  }
+  
+  .result-box h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .result-grid {
+    gap: 0.85rem;
+    margin-bottom: 1.25rem;
+  }
+  
+  .result-item {
+    padding: 1rem;
+  }
+  
+  .result-item span {
+    font-size: 0.85rem;
+  }
+  
+  .result-item strong {
+    font-size: 1.6rem;
+  }
+  
+  .result-item small {
+    font-size: 0.85rem;
+  }
+  
+  .result-cta {
+    margin-top: 1.25rem;
+  }
+  
+  .result-cta p {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+  }
 }

@@ -26,11 +26,19 @@ if (!admin.apps.length) {
     const serviceAccount = require(serviceAccountKeyPath);
 
     console.log('✅ Firebase Admin SDK, yerel firebaseAdminKey.json dosyası kullanılarak başlatıldı.');
-    admin.initializeApp({
+    const appConfig = {
       credential: admin.credential.cert(serviceAccount),
-      // Not: Realtime Database kullanıyorsanız, databaseURL'i de ekleyebilirsiniz.
-      // databaseURL: 'https://<proje-id-niz>.firebaseio.com'
-    });
+    };
+    // storageBucket öncelik: env var > serviceAccount > project_id.appspot.com
+    if (process.env.STORAGE_BUCKET) {
+      appConfig.storageBucket = process.env.STORAGE_BUCKET;
+    } else if (serviceAccount.storage_bucket) {
+      appConfig.storageBucket = serviceAccount.storage_bucket;
+    } else {
+      appConfig.storageBucket = serviceAccount.project_id + '.appspot.com';
+    }
+    admin.initializeApp(appConfig);
+    console.log('📦 Storage Bucket:', appConfig.storageBucket);
 
   } catch (error) {
     // Yerel anahtar dosyası bulunamazsa, bir production ortamında olduğumuzu varsayarız

@@ -4,6 +4,7 @@ import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 // GÜNCELLENDİ: Google Provider'ı 'firebase.js' dosyasından import ediyoruz
 import { auth, googleProvider } from "../services/firebase.js";
 import { useNavigate, Link } from "react-router-dom";
+import { getApiUrl } from "../config/apiConfig";
 import "./Login.css";
 
 // İkonu tekrar ekliyorum, bir değişiklik yok
@@ -21,7 +22,7 @@ export default function Login() {
   const handleSuccessfulLogin = async () => {
     try {
       const token = await auth.currentUser.getIdToken();
-      const res = await fetch("http://localhost:5000/api/profile", {
+      const res = await fetch(getApiUrl("/api/profile"), {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -101,6 +102,9 @@ export default function Login() {
             <button type="submit" className="btn-login" disabled={isLoading}>
               {isLoading ? 'Giriş Yapılıyor...' : 'Giriş Yap'}
             </button>
+            <div className="forgot-password-link">
+              <Link to="/forgot-password">🔐 Şifremi Unuttum?</Link>
+            </div>
             <div className="separator"><span>veya</span></div>
             <div className="social-logins">
               {/* GÜNCELLENDİ: Butona onClick ve disabled özellikleri eklendi */}

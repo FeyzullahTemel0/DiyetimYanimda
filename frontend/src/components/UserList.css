@@ -2,7 +2,7 @@
 
 /* ---- Yeni Renk Paleti ---- */
 :root {
-  --accent-color: #2dd4bf;                  /* Ana Vurgu Rengi (Teal) */
+  --accent-color: #4ca175;                  /* Ana Vurgu Rengi (Teal) */
   --bg-dark-primary: hsl(0, 0%, 16%);         /* Ana Arka Plan */
   --bg-dark-secondary: hsl(0, 0%, 22%);       /* İkincil Arka Plan */
   --border-dark: hsl(0, 0%, 30%);            /* Kenarlık Rengi */

@@ -71,3 +71,90 @@
 .footer-bottom p {
     margin: 0.25rem 0;
 }
+
+/* Responsive Tasarım */
+/* Tablet Cihazlar (769px - 992px) */
+@media (min-width: 769px) and (max-width: 992px) {
+  .site-footer {
+    padding: 2.5rem 1.5rem 1.5rem;
+  }
+  
+  .footer-top {
+    gap: 2rem;
+  }
+  
+  .footer-section h4 {
+    font-size: 1rem;
+  }
+}
+
+/* Mobil Cihazlar (768px altı) */
+@media (max-width: 768px) {
+  .site-footer {
+    padding: 2rem 1.5rem 1.5rem;
+    font-size: 0.85rem;
+  }
+  
+  .footer-top {
+    flex-direction: column;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .footer-section {
+    text-align: left;
+  }
+  
+  .footer-section h4 {
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .footer-section ul li {
+    margin-bottom: 0.6rem;
+  }
+  
+  .footer-bottom {
+    padding-top: 1.5rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* Küçük Mobil Cihazlar (576px altı) */
+@media (max-width: 576px) {
+  .site-footer {
+    padding: 1.5rem 1rem 1rem;
+    font-size: 0.8rem;
+  }
+  
+  .footer-top {
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .footer-section h4 {
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .footer-section ul li {
+    margin-bottom: 0.5rem;
+  }
+  
+  .footer-section ul li a {
+    font-size: 0.85rem;
+  }
+  
+  .footer-section p {
+    font-size: 0.85rem;
+  }
+  
+  .footer-bottom {
+    padding-top: 1rem;
+    font-size: 0.8rem;
+  }
+  
+  .footer-bottom p {
+    margin: 0.2rem 0;
+  }
+}

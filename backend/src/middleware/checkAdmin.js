@@ -7,9 +7,11 @@ async function checkAdmin(req, res, next) {
     // Bu middleware'in verifyToken'dan sonra çalıştığını varsayıyoruz,
     // bu yüzden req.user.uid bilgisine erişebilmeliyiz.
     const uid = req.user.uid;
+    const hasClaimAdmin = !!req.user?.admin;
     const userDoc = await firestore.collection("users").doc(uid).get();
+    const roleAdmin = userDoc.exists && userDoc.data().role === "admin";
 
-    if (!userDoc.exists || userDoc.data().role !== "admin") {
+    if (!(roleAdmin || hasClaimAdmin)) {
       return res.status(403).json({ error: "Yetkisiz erişim. Sadece adminler bu işlemi yapabilir." });
     }
     // Her şey yolundaysa, bir sonraki işleme devam et.

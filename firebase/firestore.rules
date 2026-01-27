@@ -1,8 +1,150 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
+    
+    // Yardımcı fonksiyon: Kullanıcının admin olup olmadığını kontrol et
+    function isAdmin() {
+      return request.auth != null && 
+             exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    function isUser() {
+      return request.auth != null;
+    }
+    
+    // Kullanıcı koleksiyonu
+    match /users/{userId} {
+      // Okuma: herkes kendi kaydını okuyabilir, adminler herkesi okuyabilir
+      allow read: if request.auth != null && 
+                     (userId == request.auth.uid || 
+                      (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+                       get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'));
+      // Yazma: adminler veya kullanıcı kendi kaydını güncelleyebilir
+      allow write: if request.auth != null && 
+                      (userId == request.auth.uid || 
+                       (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+                        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'));
+      allow create: if isUser();
+      
+      // Alt koleksiyon: Bildirimler
+      match /notifications/{notifId} {
+        allow read: if request.auth != null && userId == request.auth.uid;
+        allow write: if request.auth != null && userId == request.auth.uid;
+        allow create: if request.auth != null && (userId == request.auth.uid || isAdmin());
+        allow delete: if request.auth != null && userId == request.auth.uid;
+      }
+    }
+    
+    // Diyet Programları
+    match /dietPrograms/{programId} {
+      allow read: if isUser();
+      allow write: if isAdmin();
+      allow create: if isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // Kullanıcı Hikayeleri
+    match /userStories/{storyId} {
+      allow read: if isUser();
+      allow write: if isUser() && resource.data.userId == request.auth.uid;
+      allow create: if isUser();
+      allow delete: if isUser() && resource.data.userId == request.auth.uid;
+      allow update: if isUser() && (resource.data.userId == request.auth.uid || isAdmin());
+    }
+    
+    // Motivasyon Sözleri
+    match /motivationQuotes/{quoteId} {
+      allow read: if isUser();
+      allow write: if isAdmin();
+      allow create: if isAdmin();
+      allow delete: if isAdmin();
+      allow update: if isAdmin();
+    }
+    
+    // Fiyatlandırma İçerikleri
+    match /pricing/{priceId} {
+      allow read: if isUser();
+      allow write: if isAdmin();
+      allow create: if isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // Kalori Tracker - Kullanıcılar kendi verilerini kaydetmeli ve silebilmeli
+    match /calorieTracker/{trackerDoc} {
+      // TEST MODE: Tüm giriş yapmış kullanıcılar yazabilir (temporary)
+      allow read, write, delete: if request.auth != null;
+      
+      // PRODUCTION: Sadece kendi verilerini yazabilir
+      // allow read: if request.auth != null && 
+      //                (request.auth.uid == resource.data.userId || isAdmin());
+      // allow create, write, update: if request.auth != null && 
+      //                                 request.auth.uid == request.resource.data.userId;
+      // allow delete: if request.auth != null && 
+      //                  (request.auth.uid == resource.data.userId || isAdmin());
+    }
+    
+    // Topluluk Gönderileri
+    match /community_posts/{postId} {
+      allow read: if isUser();
+      allow create: if isUser() && 
+                       request.resource.data.userId == request.auth.uid &&
+                       request.resource.data.userName != null &&
+                       request.resource.data.title != null &&
+                       request.resource.data.description != null &&
+                       request.resource.data.createdAt != null;
+      allow update: if isUser() && 
+                       (resource.data.userId == request.auth.uid || isAdmin()) &&
+                       request.resource.data.userId == resource.data.userId;
+      allow delete: if isUser() && 
+                       (resource.data.userId == request.auth.uid || isAdmin());
+    }
+
+    // Topluluk Gönderileri -> Yorumlar (alt koleksiyon)
+    match /community_posts/{postId}/comments/{commentId} {
+      allow read: if isUser();
+      allow create: if isUser() &&
+                       request.resource.data.userId == request.auth.uid &&
+                       request.resource.data.userName != null &&
+                       request.resource.data.content != null &&
+                       request.resource.data.postId == postId &&
+                       request.resource.data.createdAt != null;
+
+      // Güncelleme sadece beğeni sayısı / beğenenler listesi gibi alanlarla sınırlı olsun
+      allow update: if isUser() &&
+                     request.resource.data.userId == resource.data.userId &&
+                     request.resource.data.postId == resource.data.postId &&
+                     request.resource.data.content == resource.data.content &&
+                     request.resource.data.userName == resource.data.userName;
+
+      allow delete: if isUser() &&
+                       (resource.data.userId == request.auth.uid || isAdmin());
+    }
+    
+    // Topluluk Yorumları
+    match /community_comments/{commentId} {
+      allow read: if isUser();
+      allow create: if isUser() && 
+                       request.resource.data.userId == request.auth.uid &&
+                       request.resource.data.userName != null &&
+                       request.resource.data.content != null &&
+                       request.resource.data.postId != null &&
+                       request.resource.data.createdAt != null;
+      allow update: if false; // Comments cannot be edited
+      allow delete: if isUser() && 
+                       (resource.data.userId == request.auth.uid || isAdmin());
+    }
+    
+    // Bildirimler - Kullanıcı sadece kendisine yazılan bildirimleri okuyabilir
+    match /notifications/{notifId} {
       allow read, write: if request.auth != null;
+      allow delete: if request.auth != null;
+    }
+    
+    // Varsayılan - Tüm belgeler için
+    match /{document=**} {
+      allow read: if isUser();
+      allow write: if false;
     }
   }
 }

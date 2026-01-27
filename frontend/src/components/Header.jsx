@@ -12,11 +12,6 @@ export default function Header({ userEmail }) {
 
   return (
     <header className="header">
-      <div className="header__logo">🥗 DietApp</div>
-      <div className="header__user">
-        <span>{userEmail}</span>
-        <button onClick={logout}>Çıkış</button>
-      </div>
     </header>
   );
 }

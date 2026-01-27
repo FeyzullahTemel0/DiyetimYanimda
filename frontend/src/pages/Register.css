@@ -177,6 +177,7 @@ body {
 .error-message { color: var(--error-text); background-color: var(--error-bg); border: 1px solid var(--error-border); text-align: center; padding: 10px; border-radius: 8px; margin-bottom: 1rem; }
 
 /* Responsive Tasarım */
+/* Tablet Cihazlar */
 @media (max-width: 900px) {
   .register-container {
     grid-template-columns: 1fr;
@@ -188,6 +189,105 @@ body {
     padding: 2rem;
   }
 }
+
+/* Mobil Cihazlar (768px altı) */
+@media (max-width: 768px) {
+  .register-page {
+    padding: 1.5rem;
+  }
+  
+  .register-container {
+    max-width: 100%;
+    border-radius: 12px;
+  }
+  
+  .register-form-container {
+    padding: 1.5rem;
+  }
+  
+  .register-form-container h2 {
+    font-size: 1.75rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .register-form-container p {
+    font-size: 0.9rem;
+  }
+  
+  .input-row {
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  .input-group label {
+    font-size: 0.9rem;
+  }
+  
+  .input-group input,
+  .input-group select {
+    padding: 0.75rem;
+    font-size: 0.95rem;
+  }
+  
+  .register-btn {
+    padding: 0.75rem;
+    font-size: 1rem;
+  }
+}
+
+/* Küçük Mobil Cihazlar (576px altı) */
+@media (max-width: 576px) {
+  .register-page {
+    padding: 1rem;
+  }
+  
+  .register-container {
+    border-radius: 10px;
+  }
+  
+  .register-form-container {
+    padding: 1rem;
+  }
+  
+  .register-form-container h2 {
+    font-size: 1.5rem;
+  }
+  
+  .register-form-container p {
+    font-size: 0.85rem;
+  }
+  
+  .input-group {
+    margin-bottom: 1rem;
+  }
+  
+  .input-group label,
+  .input-group .static-label {
+    font-size: 0.85rem;
+  }
+  
+  .input-group input,
+  .input-group select {
+    padding: 0.65rem;
+    font-size: 0.9rem;
+  }
+  
+  .register-btn {
+    padding: 0.65rem;
+    font-size: 0.95rem;
+  }
+  
+  .switch-auth {
+    font-size: 0.85rem;
+    margin-top: 1rem;
+  }
+  
+  .error-message {
+    padding: 0.75rem;
+    font-size: 0.85rem;
+  }
+}
+
 @media (max-width: 500px) {
     .input-row {
         flex-direction: column;

@@ -1,0 +1,81 @@
+/* ========================================
+   GLOBAL COLOR PALETTE - DiyetimYanimda
+   Tasarlanmış: Sağlık, Diyabet & Diyet
+   ======================================== */
+
+:root {
+  /* PRIMARY COLORS - Green (Health & Balance) */
+  --primary-50: #EEF6F3;    /* Lightest green */
+  --primary-100: #DFF3EA;   /* Light mint */
+  --primary-200: #C8E6DC;   /* Pastel green light */
+  --primary-400: #A8D5BA;   /* Main pastel green */
+  --primary-600: #6BA292;   /* Olive green accent */
+
+  /* SECONDARY COLORS - Blue (Trust & Professionalism) */
+  --secondary-50: #F0F7FC;   /* Lightest blue */
+  --secondary-100: #E6F2F8;  /* Light blue */
+  --secondary-200: #D0E8F2;  /* Soft blue */
+  --secondary-400: #8EC6E8;  /* Medium blue */
+  --secondary-600: #5B7C99;  /* Grayish blue */
+
+  /* ACCENT COLORS - Orange & Yellow (CTA & Energy) */
+  --accent-orange: #F4A261; /* Light orange - for CTAs */
+  --accent-yellow: #F6D365; /* Soft yellow - for highlights */
+
+  /* NEUTRAL COLORS */
+  --white: #FFFFFF;
+  --broken-white: #F9FAF7;   /* Off-white background */
+  --gray-light: #F1F5F9;     /* Light gray background */
+  --gray-50: #F8F9FA;        /* Very light gray */
+  --gray-100: #E8EAED;       /* Light border gray */
+  --gray-200: #D0D5DD;       /* Medium gray border */
+  --gray-300: #CBD5E1;       /* Gray border */
+  --gray-400: #94A3B8;       /* Medium gray text */
+  --gray-500: #64748B;       /* Gray text */
+  --gray-600: #475569;       /* Darker gray text */
+  --gray-700: #333333;       /* Dark gray text (main) */
+  --gray-900: #1A1A1A;       /* Almost black */
+
+  /* STATUS COLORS */
+  --success: #10B981;        /* Success green */
+  --warning: #F59E0B;        /* Warning amber */
+  --danger: #EF4444;         /* Danger red (use sparingly) */
+  --info: #3B82F6;           /* Info blue */
+
+  /* SEMANTIC COLORS */
+  --bg-primary: var(--white);
+  --bg-secondary: var(--broken-white);
+  --bg-tertiary: var(--gray-light);
+  
+  --text-primary: var(--gray-700);
+  --text-secondary: var(--gray-600);
+  --text-tertiary: var(--gray-500);
+  
+  --border-light: var(--gray-100);
+  --border-medium: var(--gray-300);
+  --border-dark: var(--gray-500);
+
+  /* SHADOWS */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1);
+
+  /* TRANSITIONS */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.5s ease;
+}
+
+/* ACCESSIBILITY: Dark mode support (optional) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-primary: #1A1A1A;
+    --bg-secondary: #2D2D2D;
+    --bg-tertiary: #3D3D3D;
+    
+    --text-primary: #F0F0F0;
+    --text-secondary: #D0D0D0;
+    --text-tertiary: #A0A0A0;
+  }
+}

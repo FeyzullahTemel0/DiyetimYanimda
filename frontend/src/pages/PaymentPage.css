@@ -1,0 +1,352 @@
+.payment-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, rgba(8, 15, 25, 0.95) 0%, rgba(20, 35, 55, 0.95) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.payment-container {
+  width: 100%;
+  max-width: 500px;
+}
+
+.payment-card {
+  background: rgba(20, 35, 55, 0.8);
+  border: 1px solid rgba(45, 212, 191, 0.2);
+  border-radius: 12px;
+  padding: 2.5rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(45, 212, 191, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.payment-card h1 {
+  color: #e0f2fe;
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.payment-card h2 {
+  color: #2dd4bf;
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid rgba(45, 212, 191, 0.3);
+  padding-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.payment-card h3 {
+  color: #7dd3fc;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.payment-summary {
+  background: rgba(30, 50, 75, 0.5);
+  border: 1px solid rgba(45, 212, 191, 0.15);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(45, 212, 191, 0.1);
+}
+
+.summary-item:last-child {
+  border-bottom: none;
+}
+
+.summary-item .label {
+  font-weight: 600;
+  color: #cbd5e1;
+  flex: 0 0 50%;
+}
+
+.summary-item .value {
+  color: #2dd4bf;
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-align: right;
+  flex: 1;
+}
+
+.payment-info {
+  background: rgba(15, 118, 110, 0.15);
+  border-left: 4px solid #2dd4bf;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border-radius: 6px;
+}
+
+.info-text {
+  color: #c7f0d8;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0.5rem 0;
+}
+
+.info-text:first-child {
+  margin-top: 0;
+}
+
+.error-message {
+  background: rgba(220, 38, 38, 0.15);
+  border: 1px solid rgba(220, 38, 38, 0.3);
+  color: #fca5a5;
+  padding: 1rem;
+  border-radius: 6px;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+}
+
+.payment-actions {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.btn-cancel,
+.btn-confirm {
+  flex: 1;
+  padding: 0.9rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-cancel {
+  background: rgba(148, 163, 184, 0.2);
+  color: #cbd5e1;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+}
+
+.btn-cancel:hover:not(:disabled) {
+  background: rgba(148, 163, 184, 0.3);
+  border-color: rgba(148, 163, 184, 0.5);
+  transform: translateY(-2px);
+}
+
+.btn-confirm {
+  background: linear-gradient(135deg, #2dd4bf 0%, #14b8a6 100%);
+  color: #082f2f;
+  font-weight: 700;
+}
+
+.btn-confirm:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(45, 212, 191, 0.3);
+}
+
+.btn-cancel:disabled,
+.btn-confirm:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.secure-notice {
+  text-align: center;
+  color: #94a3b8;
+  font-size: 0.9rem;
+  margin: 0;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(45, 212, 191, 0.1);
+}
+
+/* Plan Features Stilleri */
+.subscription-features {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(45, 212, 191, 0.2);
+}
+
+.subscription-features h3 {
+  color: #2dd4bf;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.features-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.features-list li {
+  display: flex;
+  align-items: center;
+  padding: 0.6rem 0;
+  color: #e2e8f0;
+  font-size: 0.95rem;
+}
+
+.features-list svg {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  color: #2dd4bf;
+  flex-shrink: 0;
+}
+
+/* Responsive Tasarım */
+/* Tablet Cihazlar (769px - 992px) */
+@media (min-width: 769px) and (max-width: 992px) {
+  .payment-page {
+    padding: 1.5rem;
+  }
+  
+  .payment-card {
+    padding: 2rem;
+  }
+  
+  .payment-card h1 {
+    font-size: 1.6rem;
+  }
+}
+
+/* Mobil Cihazlar (768px altı) */
+@media (max-width: 768px) {
+  .payment-page {
+    padding: 1.5rem;
+  }
+  
+  .payment-container {
+    max-width: 100%;
+  }
+  
+  .payment-card {
+    padding: 1.75rem;
+  }
+  
+  .payment-card h1 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .payment-card h2 {
+    font-size: 1.1rem;
+  }
+  
+  .payment-summary {
+    padding: 1.25rem;
+  }
+  
+  .summary-item {
+    padding: 0.7rem 0;
+  }
+  
+  .summary-item .label {
+    font-size: 0.95rem;
+  }
+  
+  .summary-item .value {
+    font-size: 1rem;
+  }
+  
+  .payment-info {
+    padding: 1.25rem;
+  }
+  
+  .info-text {
+    font-size: 0.9rem;
+  }
+  
+  .payment-actions {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .btn-cancel,
+  .btn-confirm {
+    padding: 0.8rem;
+    font-size: 0.95rem;
+  }
+}
+
+/* Küçük Mobil Cihazlar (576px altı) */
+@media (max-width: 576px) {
+  .payment-page {
+    padding: 1rem;
+  }
+  
+  .payment-card {
+    padding: 1.25rem;
+  }
+  
+  .payment-card h1 {
+    font-size: 1.3rem;
+    margin-bottom: 1.25rem;
+  }
+  
+  .payment-card h2 {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .payment-card h3 {
+    font-size: 0.95rem;
+  }
+  
+  .payment-summary {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .summary-item {
+    padding: 0.6rem 0;
+  }
+  
+  .summary-item .label {
+    font-size: 0.9rem;
+  }
+  
+  .summary-item .value {
+    font-size: 0.95rem;
+  }
+  
+  .payment-info {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .info-text {
+    font-size: 0.85rem;
+  }
+  
+  .error-message {
+    padding: 0.85rem;
+    font-size: 0.9rem;
+  }
+  
+  .payment-actions {
+    gap: 0.6rem;
+    margin-bottom: 1rem;
+  }
+  
+  .btn-cancel,
+  .btn-confirm {
+    padding: 0.7rem;
+    font-size: 0.9rem;
+  }
+  
+  .secure-notice {
+    font-size: 0.85rem;
+    padding-top: 0.75rem;
+  }
+
+  .features-list li {
+    font-size: 0.9rem;
+    padding: 0.5rem 0;
+  }
+}

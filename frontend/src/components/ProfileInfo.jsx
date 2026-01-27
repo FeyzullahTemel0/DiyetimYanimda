@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { auth } from "../services/firebase";
+import { getApiUrl } from "../config/apiConfig";
 import "./ProfileInfo.css";
 
 const Notification = ({ message, type }) => {
@@ -50,7 +51,7 @@ export default function ProfileInfo({ data, onUpdate }) {
     try {
       const token = await auth.currentUser.getIdToken();
       // Admin kendi profilini /api/profile endpoint'inden günceller
-      const res = await fetch("http://localhost:5000/api/profile", {
+      const res = await fetch(getApiUrl("/api/profile"), {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

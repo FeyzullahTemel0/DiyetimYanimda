@@ -14,7 +14,7 @@ html, body, #root {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: #0D1117; 
+  background-color: var(--broken-white, #F9FAF7); 
 }
 
 .main-content {

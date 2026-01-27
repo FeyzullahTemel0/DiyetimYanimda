@@ -5,7 +5,6 @@ const cors = require("cors");
 const app = express();
 require('dotenv').config(); 
 
-const aiRoutes = require('./routes/ai');
 // --- Middleware Tanımlamaları ---
 // Bu bölüm, gelen istekleri işlemek için kullanılan ara yazılımları içerir.
 // Tüm istekler rotalara ulaşmadan önce bu adımlardan geçer.
@@ -18,12 +17,11 @@ app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 // 2. JSON Parser
 // Gelen isteklerin gövdesindeki (body) JSON verilerini ayrıştırır
 // ve req.body nesnesi olarak erişilebilir hale getirir.
-app.use(express.json());
+// Base64 encoded resimler için payload limit'i 50MB'a çıkartıldı
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 
-
-// Mevcut app.use() satırlarınızın altına ekleyin
-app.use('/api/ai', aiRoutes); // Yeni AI route'umuzu /api/ai altında bağlıyoruz
 
 // --- Rota Tanımlamaları ---
 // Bu bölüm, gelen istekleri ilgili rota dosyalarına yönlendirir.
@@ -37,6 +35,12 @@ const profileRoutes = require("./routes/protected");
 const dietProgramsRoutes = require("./routes/dietPrograms");
 const adminUserRoutes = require("./routes/admin");
 const adminDietRoutes = require("./routes/adminDietPrograms");
+const paymentRoutes = require("./routes/payment");
+const notificationRoutes = require("./routes/notifications");
+const quotesRoutes = require("./routes/quotes");
+const communityRoutes = require("./routes/community");
+const nutritionTipsRoutes = require("./routes/nutritionTips");
+const mealsRoutes = require("./routes/meals");
 
 // 2. Rotaları Uygulamaya Bağlama
 // '/api/auth' ile başlayan tüm istekler (örn: /api/auth/register, /api/auth/google-sync)
@@ -49,11 +53,45 @@ app.use("/api/profile", profileRoutes);
 // '/api/diet-programs' ile başlayan tüm istekler dietProgramsRoutes'a yönlendirilir.
 app.use("/api/diet-programs", dietProgramsRoutes);
 
+// Topluluk paylaşımları
+app.use("/api/community", communityRoutes);
+
 // '/api/admin/users' ile başlayan tüm istekler adminUserRoutes'a yönlendirilir.
 app.use("/api/admin/users", adminUserRoutes);
 
 // '/api/admin/diet-programs' ile başlayan tüm istekler adminDietRoutes'a yönlendirilir.
 app.use("/api/admin/diet-programs", adminDietRoutes);
+
+// '/api/payment' ile başlayan tüm istekler paymentRoutes'a yönlendirilir.
+app.use("/api/payment", paymentRoutes);
+
+// '/api/notifications' ile başlayan tüm istekler notificationRoutes'a yönlendirilir.
+app.use("/api/notifications", notificationRoutes);
+
+// '/api/admin/quotes' ile başlayan tüm istekler quotesRoutes'a yönlendirilir.
+app.use("/api/admin/quotes", quotesRoutes);
+
+// '/api/nutrition-tips' ile başlayan tüm istekler nutritionTipsRoutes'a yönlendirilir.
+app.use("/api/nutrition-tips", nutritionTipsRoutes);
+
+// '/api/meals' ile başlayan tüm istekler mealsRoutes'a yönlendirilir.
+app.use("/api/meals", mealsRoutes);
+
+// Pricing endpoint - Firestore'daki pricing collection'ını döner
+app.get("/api/pricing", async (req, res) => {
+  try {
+    const { firestore } = require("./services/firebaseAdmin");
+    const snapshot = await firestore.collection("pricing").get();
+    if (snapshot.empty) {
+      return res.status(200).json([]);
+    }
+    const pricing = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    res.status(200).json(pricing);
+  } catch (err) {
+    console.error("Pricing fetch hatası:", err);
+    res.status(500).json({ error: "Fiyatlandırma verileri alınamadı." });
+  }
+});
 
 console.log("✅ Rotalar başarıyla yüklendi.");
 

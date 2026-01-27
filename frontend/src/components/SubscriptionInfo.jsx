@@ -18,7 +18,7 @@ const calculateDaysLeft = (endDate) => {
 const getPlanName = (planId) => {
     switch (planId) {
         case 'basic': return 'Temel Plan';
-        case 'premium': return 'Premium AI';
+        case 'premium': return 'Premium Plan';
         case 'plus': return 'Profesyonel Plus+';
         default: return 'Ücretsiz Plan';
     }
