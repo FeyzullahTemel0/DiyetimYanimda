@@ -1,22 +1,277 @@
 import { useState, useEffect, useMemo } from "react";
+import { useGlobalUpdate } from "../contexts/GlobalUpdateContext";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "../services/firebase";
 import { useNavigate, Link } from "react-router-dom";
-import { arrayRemove, doc, updateDoc } from "firebase/firestore";
+import { arrayRemove, doc, updateDoc, collection, query, where, getDocs, getDoc, deleteDoc } from "firebase/firestore";
 import ServiceRequest from "../components/ServiceRequest"; 
+import ModernSpinner from "../components/ModernSpinner";
 import PlanFeatures from "../components/PlanFeatures";
 import { getApiUrl } from "../config/apiConfig";
 import { useToastContext } from "../contexts/ToastContext";
 import "./Profile.css"; 
 import { onAuthStateChanged } from "firebase/auth"; 
 
-const PLAN_ORDER = ["free", "basic", "pro", "premium", "plus"];
+const PLAN_ORDER = ["free", "basic", "premium", "plus"];
 const hasPlanAccess = (userPlan = "free", requiredPlan = "basic") => PLAN_ORDER.indexOf(userPlan) >= PLAN_ORDER.indexOf(requiredPlan);
 
 const FREE_FEATURES = [
   { key: "calorie-tracker", label: "📊 Günlük Kalori Tracker", to: "/calorie-tracker", requiredPlan: "free", type: "route" },
   { key: "newsletter", label: "📧 Beslenme İpuçları Bülteni", to: "/nutrition-newsletter", requiredPlan: "free", type: "route" }
 ];
+
+// ======================================================================
+// BİLEŞEN: MyDietitianTab (Diyetisyenim)
+// ======================================================================
+function MyDietitianTab({ profile }) {
+      const { updateKey, triggerGlobalUpdate } = useGlobalUpdate();
+    const [cancelling, setCancelling] = useState(false);
+    const [polling, setPolling] = useState(false); // Polling state
+    // Diyetisyen ilişiğini iptal et
+    const handleCancelDietitian = async () => {
+      if (!window.confirm('Diyetisyen ile olan çalışmayı bırakmak için istek göndermek istediğinize emin misiniz?')) return;
+      setCancelling(true);
+      try {
+        const token = await auth.currentUser.getIdToken();
+        const response = await fetch(getApiUrl('/api/cancel-dietitian'), {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        const data = await response.json();
+        if (data.success) {
+          showToast('Çalışmayı bırakma isteğiniz diyetisyene iletildi. Diyetisyen onaylayana kadar ilişki devam edecek.', 'success');
+          setPolling(true); // Start polling after leave request
+        } else {
+          showToast(data.error || 'İstek sırasında hata oluştu.', 'error');
+        }
+      } catch (err) {
+        showToast('İstek sırasında hata oluştu.', 'error');
+      } finally {
+        setCancelling(false);
+      }
+    };
+  const [dietitianData, setDietitianData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [appointments, setAppointments] = useState([]);
+  const { showToast } = useToastContext();
+
+  useEffect(() => {
+    loadDietitianInfo();
+  }, [profile?.subscription?.plan, updateKey]); // Plan veya global güncellemede yenile
+
+  // Polling effect: after leave request, poll every 10s until dietitianData is null (relationship ended)
+  useEffect(() => {
+    if (!polling) return;
+    const interval = setInterval(() => {
+      loadDietitianInfo();
+    }, 10000); // 10 seconds
+    return () => clearInterval(interval);
+  }, [polling]);
+
+  const loadDietitianInfo = async () => {
+    try {
+      if (!auth.currentUser) return;
+
+      // Kullanıcının diyetisyenini bul
+      const clientRelationQuery = query(
+        collection(db, 'dietitian_clients'),
+        where('userId', '==', auth.currentUser.uid),
+        where('isActive', '==', true)
+      );
+
+      const relationSnapshot = await getDocs(clientRelationQuery);
+
+      if (relationSnapshot.empty) {
+        setDietitianData(null);
+        setLoading(false);
+        setPolling(false); // Stop polling if relationship ended
+        return;
+      }
+
+      const relationDoc = relationSnapshot.docs[0];
+      const relationData = relationDoc.data();
+
+      // Diyetisyen bilgilerini çek - UID ile getDoc kullan
+      const dietitianDoc = await getDoc(doc(db, 'dietitians', relationData.dietitianId));
+
+      if (dietitianDoc.exists()) {
+        setDietitianData({ id: dietitianDoc.id, ...dietitianDoc.data() });
+      } else {
+        // Diyetisyen bulunamadıysa ilişkiyi tamamen sil (doğru yöntem)
+        await deleteDoc(relationDoc.ref);
+        setDietitianData(null);
+        showToast('Diyetisyen kaydı bulunamadı. Hatalı ilişki kaldırıldı. Lütfen yeni bir diyetisyen seçin.', 'error');
+        setLoading(false);
+        setPolling(false); // Stop polling if relationship ended
+        return;
+      }
+
+      // Randevuları yükle
+      const appointmentsQuery = query(
+        collection(db, 'appointments'),
+        where('userId', '==', auth.currentUser.uid),
+        where('dietitianId', '==', relationData.dietitianId)
+      );
+
+      const appointmentsSnapshot = await getDocs(appointmentsQuery);
+      const appts = appointmentsSnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+
+      setAppointments(appts);
+    } catch (error) {
+      console.error('Diyetisyen bilgileri yüklenemedi:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <section className="tab-section">
+        <ModernSpinner text="Diyetisyen bilgileriniz yükleniyor..." />
+      </section>
+    );
+  }
+
+  if (!dietitianData) {
+    return (
+      <section className="tab-section">
+        <h2>🏥 Diyetisyenim</h2>
+        <div style={{ textAlign: 'center', padding: '3rem', background: 'white', borderRadius: '12px', marginTop: '2rem' }}>
+          <p style={{ fontSize: '1.2rem', color: '#7f8c8d', marginBottom: '1.5rem' }}>
+            Henüz bir diyetisyenle çalışmıyorsunuz.
+          </p>
+          <Link to="/dietitians" className="btn btn-primary">
+            🔍 Diyetisyenleri Keşfet
+          </Link>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section className="tab-section">
+      <h2>🏥 Diyetisyenim</h2>
+      
+      {/* Diyetisyen Kartı */}
+      <div style={{ background: '#181818', borderRadius: '12px', padding: '2rem', marginTop: '2rem', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', cursor: 'pointer', position: 'relative', color: 'white' }} onClick={handleCancelDietitian} title="Diyetisyen ile ilişiği iptal et">
+        <div style={{ display: 'flex', gap: '2rem', alignItems: 'flex-start', color: 'white' }}>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); handleCancelDietitian(); }}
+                    disabled={cancelling}
+                    style={{
+                      position: 'absolute',
+                      top: 10,
+                      right: 10,
+                      background: '#e74c3c',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: 8,
+                      padding: '0.5rem 1rem',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      fontSize: '1rem',
+                      boxShadow: '0 2px 8px rgba(231,76,60,0.08)'
+                    }}
+                  >
+                    {cancelling ? 'İptal Ediliyor...' : 'Çalışmayı İptal Et'}
+                  </button>
+          <div style={{ width: '120px', height: '120px', borderRadius: '50%', overflow: 'hidden', background: 'linear-gradient(135deg, #4ca175 0%, #3d8a5e 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            {dietitianData.profilePhoto ? (
+              <img src={dietitianData.profilePhoto} alt={dietitianData.fullName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            ) : (
+              <span style={{ fontSize: '3rem', color: 'white' }}>👤</span>
+            )}
+          </div>
+          
+          <div style={{ flex: 1 }}>
+            <h3 style={{ fontSize: '1.8rem', marginBottom: '0.5rem', color: 'white' }}>{dietitianData.fullName}</h3>
+            <p style={{ color: '#e0e0e0', fontSize: '1.1rem', marginBottom: '1rem' }}>{dietitianData.specialization}</p>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginTop: '1.5rem', color: 'white' }}>
+              <div>
+                <span style={{ fontSize: '1.2rem' }}>📍</span>
+                <span style={{ marginLeft: '0.5rem' }}>
+                  {typeof dietitianData.location === 'object' && dietitianData.location !== null
+                    ? [dietitianData.location.city, dietitianData.location.district, dietitianData.location.neighborhood].filter(Boolean).join(', ')
+                    : dietitianData.location}
+                </span>
+              </div>
+              <div>
+                <span style={{ fontSize: '1.2rem' }}>💼</span>
+                <span style={{ marginLeft: '0.5rem' }}>{dietitianData.experienceYears} yıl deneyim</span>
+              </div>
+              {dietitianData.phone && (
+                <div>
+                  <span style={{ fontSize: '1.2rem' }}>📞</span>
+                  <span style={{ marginLeft: '0.5rem' }}>{dietitianData.phone}</span>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Randevularım */}
+      <div style={{ marginTop: '2rem' }}>
+        <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>📅 Randevularım</h3>
+        
+        {appointments.length === 0 ? (
+          <div style={{ background: 'white', borderRadius: '12px', padding: '2rem', textAlign: 'center' }}>
+            <p style={{ color: '#7f8c8d' }}>Henüz randevunuz yok.</p>
+          </div>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            {appointments.map((appt) => (
+              <div key={appt.id} style={{ background: 'white', borderRadius: '12px', padding: '1.5rem', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                  <div>
+                    <span style={{ fontSize: '1.1rem', fontWeight: '600' }}>
+                      {appt.type === 'video' && '🎥 Video Görüşme'}
+                      {appt.type === 'phone' && '📞 Telefon'}
+                      {appt.type === 'whatsapp' && '💬 WhatsApp'}
+                    </span>
+                  </div>
+                  <span style={{ 
+                    padding: '0.4rem 0.8rem', 
+                    borderRadius: '12px', 
+                    fontSize: '0.85rem', 
+                    fontWeight: '600',
+                    background: appt.status === 'confirmed' ? '#d4edda' : appt.status === 'pending' ? '#fff5e6' : '#f8d7da',
+                    color: appt.status === 'confirmed' ? '#155724' : appt.status === 'pending' ? '#f39c12' : '#721c24'
+                  }}>
+                    {appt.status === 'pending' && '⏳ Bekliyor'}
+                    {appt.status === 'confirmed' && '✅ Onaylandı'}
+                    {appt.status === 'cancelled' && '❌ İptal'}
+                  </span>
+                </div>
+                
+                <div style={{ display: 'flex', gap: '2rem' }}>
+                  <div>
+                    <span style={{ fontSize: '1rem' }}>📅 {appt.confirmedDate || appt.preferredDate}</span>
+                  </div>
+                  <div>
+                    <span style={{ fontSize: '1rem' }}>⏰ {appt.confirmedTime || appt.preferredTime}</span>
+                  </div>
+                </div>
+                
+                {appt.notes && (
+                  <div style={{ marginTop: '1rem', padding: '0.8rem', background: '#f8f9fa', borderRadius: '6px' }}>
+                    <span style={{ fontSize: '0.9rem', color: '#555' }}>📝 {appt.notes}</span>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
 
 // ======================================================================
 // BİLEŞEN 0: FavoritesTrackingTab (Favori Programlarım)
@@ -741,6 +996,7 @@ export default function Profile() {
     { key: "info", label: "Profil Bilgileri", type: "tab" },
     { key: "subscription", label: "Aboneliğim", type: "tab" },
     { key: "diet", label: "Favori Programlarım", type: "tab" },
+    { key: "dietitian", label: "🏥 Diyetisyenim", type: "tab" },
     { key: "request", label: "Geri Bildirim & Talep", type: "tab" },
     { key: "community", label: "Topluluk Forumları", to: "/community", type: "route" },
     ...FREE_FEATURES,
@@ -1060,6 +1316,10 @@ export default function Profile() {
 
         {tab === "diet" && (
           <FavoritesTrackingTab profile={profile} />
+        )}
+
+        {tab === "dietitian" && (
+          <MyDietitianTab profile={profile} />
         )}
 
         {tab === "subscription" && ( <SubscriptionInfo profile={profile} setProfile={setProfile} /> )}

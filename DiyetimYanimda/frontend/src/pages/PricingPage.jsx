@@ -80,6 +80,13 @@ export default function PricingPage() {
       return navigate('/register', { state: { fromPlan: plan.id } });
     }
 
+    // Plan ID validasyonu
+    if (!plan || !plan.id || plan.id.trim() === '') {
+      showToast('❌ Hata: Plan bilgileri eksik', 'error');
+      setLoadingPlan(null);
+      return;
+    }
+
     setLoadingPlan(plan.id);
 
     try {
@@ -108,17 +115,22 @@ export default function PricingPage() {
 
       // Ücretli planlar için ödeme sayfasına yönlendir
       // Plan ve özelliklerini state'de tutalım
+      if (!plan.planName || !plan.price) {
+        throw new Error("Plan bilgileri eksik - ödeme başarısız olur");
+      }
+
       navigate('/payment', { 
         state: { 
           plan: plan.id,
           planName: plan.planName, 
           planPrice: plan.price,
-          features: plan.features,
-          description: plan.description
+          features: plan.features || [],
+          description: plan.description || ''
         } 
       });
     } catch (error) {
-      showToast('Hata: ' + error.message, 'error');
+      showToast('❌ Hata: ' + error.message, 'error');
+    } finally {
       setLoadingPlan(null);
     }
   };

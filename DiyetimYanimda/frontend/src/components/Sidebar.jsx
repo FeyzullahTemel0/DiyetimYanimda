@@ -32,6 +32,12 @@ export default function Sidebar({ active, activeTab, onSelect }) {
             💰 Fiyatlandırma
           </Link>
         </li>
+
+        <li className={current === "admin-dietitian-invites" ? "active" : ""}>
+          <Link to="/admin/dietitian-invites" style={{ textDecoration: "none", color: "inherit", display: "block", width: "100%" }}>
+            🏥 Diyetisyen Davet
+          </Link>
+        </li>
         
         <li style={{ fontSize: "0.9rem", color: "#2dd4bf", padding: "1rem", fontWeight: "700", marginTop: "1rem" }}>
           📧 İÇERİK YÖNETİMİ

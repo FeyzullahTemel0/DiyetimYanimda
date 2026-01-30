@@ -1,10 +1,27 @@
-// backend/src/index.js
 
 const express = require("express");
 const cors = require("cors");
 const app = express();
 require('dotenv').config(); 
 
+// --- Middleware Tanımlamaları ---
+// 1. CORS (Cross-Origin Resource Sharing)
+// Frontend'in (http://localhost:3000) backend'e (http://localhost:5000)
+// güvenli bir şekilde istek atabilmesini sağlar.
+app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+
+// 2. JSON Parser
+// Gelen isteklerin gövdesindeki (body) JSON verilerini ayrıştırır
+// ve req.body nesnesi olarak erişilebilir hale getirir.
+// Base64 encoded resimler için payload limit'i 50MB'a çıkartıldı
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
+
+// Route'lar CORS'tan sonra import ve use edilmeli
+const approveLeaveRequestRoutes = require("./routes/approveLeaveRequest");
+app.use("/api/approve-leave-request", approveLeaveRequestRoutes);
+const leaveRequestsRoutes = require("./routes/leaveRequests");
+app.use("/api/leave-requests", leaveRequestsRoutes);
 // --- Middleware Tanımlamaları ---
 // Bu bölüm, gelen istekleri işlemek için kullanılan ara yazılımları içerir.
 // Tüm istekler rotalara ulaşmadan önce bu adımlardan geçer.
@@ -42,7 +59,12 @@ const communityRoutes = require("./routes/community");
 const nutritionTipsRoutes = require("./routes/nutritionTips");
 const mealsRoutes = require("./routes/meals");
 const recipesRoutes = require("./routes/recipes");
+const dietitiansRoutes = require("./routes/dietitians");
+const appointmentsRoutes = require("./routes/appointments");
 
+// Diyetisyen ilişiği iptal
+const cancelDietitianRoutes = require("./routes/cancelDietitian");
+app.use("/api/cancel-dietitian", cancelDietitianRoutes);
 // 2. Rotaları Uygulamaya Bağlama
 // '/api/auth' ile başlayan tüm istekler (örn: /api/auth/register, /api/auth/google-sync)
 // authRoutes dosyasına yönlendirilir.
@@ -80,6 +102,12 @@ app.use("/api/meals", mealsRoutes);
 
 // '/api/recipes' ile başlayan tüm istekler recipesRoutes'a yönlendirilir.
 app.use("/api/recipes", recipesRoutes);
+
+// '/api/dietitians' ile başlayan tüm istekler dietitiansRoutes'a yönlendirilir.
+app.use("/api/dietitians", dietitiansRoutes);
+
+// '/api/appointments' ile başlayan tüm istekler appointmentsRoutes'a yönlendirilir.
+app.use("/api/appointments", appointmentsRoutes);
 
 // Pricing endpoint - Firestore'daki pricing collection'ını döner
 app.get("/api/pricing", async (req, res) => {

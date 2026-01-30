@@ -6,8 +6,10 @@ import { ToastProvider } from "./contexts/ToastContext";
 // Bileşenler
 import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
+import MinimalLayout from "./layouts/MinimalLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminRoute from "./components/AdminRoute";
+import DietitianRoute from "./components/DietitianRoute";
 import "./App.css";
 // Sayfalar
 import HomePage from "./pages/HomePage";
@@ -62,6 +64,11 @@ import AdminPrograms from "./pages/AdminPrograms";
 import AdminQuotes from "./pages/AdminQuotes";
 import AdminUsers from "./pages/AdminUsers";
 import AdminPricing from "./pages/AdminPricing";
+import DietitianRegister from "./pages/DietitianRegister";
+import DietitianLogin from "./pages/DietitianLogin";
+import Dietitians from "./pages/Dietitians";
+import DietitianPanel from "./pages/DietitianPanel";
+import DietitianInvites from "./pages/DietitianInvites";
 
 // Yasal Sayfalar
 import Terms from "./pages/Terms";
@@ -77,169 +84,80 @@ export default function App() {
   return (
     <ToastProvider>
       <Router>
-      <div className="app-wrapper">
-        <NavBar />
-        <main className="app-content">
-          <Routes>
-            {/* ====================================================== */}
-            {/* ===    1. HERKESİN ERİŞEBİLECEĞİ GENEL SAYFALAR    === */}
-            {/* ====================================================== */}
-            <Route path="/" element={<HomePage />} />
-            <Route path="/pricing" element={<PricingPage />} />
-            <Route path="/motivation" element={<Motivation />} />
-            <Route path="/user-stories" element={<UserStories />} />
-            <Route path="/success-stories" element={<SuccessStories />} />
-            <Route path="/about-contact" element={<AboutContactPage />} />
-            <Route path="/advice" element={<DietAdvice />} />
-            <Route path="/calorie-tracker" element={<CalorieTracker />} />
-            <Route path="/personalized-nutrition" element={<PersonalizedNutrition />} />
-            <Route path="/favorites-tracking" element={<FavoritesTracking />} />
-            <Route path="/body-analysis" element={<BodyAnalysis />} />
-            <Route path="/monthly-progress" element={<MonthlyProgress />} />
-            <Route path="/ai-consultant" element={<AiConsultant />} />
-            <Route path="/recipes" element={<Recipes />} />
-            <Route path="/nutrition-optimization" element={<NutritionOptimization />} />
-            <Route path="/auto-meal-plan" element={<AutoMealPlan />} />
-            <Route path="/macro-tracking" element={<MacroTracking />} />
-            <Route path="/habit-builder" element={<HabitBuilder />} />
-            <Route path="/live-chat" element={<LiveChat />} />
-            <Route path="/reports-download" element={<ReportsDownload />} />
-            <Route path="/plus-consultation" element={<PlusConsultation />} />
-            <Route path="/keto-vegan-plans" element={<KetoVeganPlans />} />
-            <Route path="/fitness-integration" element={<FitnessIntegration />} />
-            <Route path="/training-guides" element={<TrainingGuides />} />
-            <Route path="/special-protocols" element={<SpecialProtocols />} />
-            <Route path="/unlimited-customization" element={<UnlimitedCustomization />} />
-            <Route path="/priority-chat" element={<PriorityChat />} />
-            <Route path="/phone-support" element={<PhoneSupport />} />
-            <Route path="/monthly-pro-report" element={<MonthlyProReport />} />
-            <Route path="/custom-meal-service" element={<CustomMealService />} />
-            <Route path="/thousand-programs" element={<ThousandPrograms />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/terms" element={<Terms />} />
-            <Route path="/privacy" element={<PrivacyPolicy />} />
-            <Route path="/kvkk" element={<KVKK />} />
-            <Route path="/security" element={<Security />} />
+        <Routes>
+          {/* Diyetisyen özel route'ları - MinimalLayout ile */}
+          <Route path="/dietitian/login" element={<MinimalLayout><DietitianLogin /></MinimalLayout>} />
+          <Route path="/dietitian/register" element={<MinimalLayout><DietitianRegister /></MinimalLayout>} />
+          <Route path="/dietitian/panel" element={<DietitianRoute><MinimalLayout><DietitianPanel /></MinimalLayout></DietitianRoute>} />
 
+          {/* Kullanıcı ve admin route'ları - NavBar/Footer ile */}
+          <Route path="/" element={<><NavBar /><HomePage /><Footer /></>} />
+          <Route path="/pricing" element={<><NavBar /><PricingPage /><Footer /></>} />
+          <Route path="/motivation" element={<><NavBar /><Motivation /><Footer /></>} />
+          <Route path="/user-stories" element={<><NavBar /><UserStories /><Footer /></>} />
+          <Route path="/success-stories" element={<><NavBar /><SuccessStories /><Footer /></>} />
+          <Route path="/about-contact" element={<><NavBar /><AboutContactPage /><Footer /></>} />
+          <Route path="/advice" element={<><NavBar /><DietAdvice /><Footer /></>} />
+          <Route path="/calorie-tracker" element={<ProtectedRoute><NavBar /><CalorieTracker /><Footer /></ProtectedRoute>} />
+          <Route path="/personalized-nutrition" element={<><NavBar /><PersonalizedNutrition /><Footer /></>} />
+          <Route path="/favorites-tracking" element={<><NavBar /><FavoritesTracking /><Footer /></>} />
+          <Route path="/body-analysis" element={<><NavBar /><BodyAnalysis /><Footer /></>} />
+          <Route path="/monthly-progress" element={<><NavBar /><MonthlyProgress /><Footer /></>} />
+          <Route path="/ai-consultant" element={<><NavBar /><AiConsultant /><Footer /></>} />
+          <Route path="/recipes" element={<><NavBar /><Recipes /><Footer /></>} />
+          <Route path="/nutrition-optimization" element={<><NavBar /><NutritionOptimization /><Footer /></>} />
+          <Route path="/auto-meal-plan" element={<><NavBar /><AutoMealPlan /><Footer /></>} />
+          <Route path="/macro-tracking" element={<><NavBar /><MacroTracking /><Footer /></>} />
+          <Route path="/habit-builder" element={<><NavBar /><HabitBuilder /><Footer /></>} />
+          <Route path="/live-chat" element={<><NavBar /><LiveChat /><Footer /></>} />
+          <Route path="/reports-download" element={<><NavBar /><ReportsDownload /><Footer /></>} />
+          <Route path="/plus-consultation" element={<><NavBar /><PlusConsultation /><Footer /></>} />
+          <Route path="/keto-vegan-plans" element={<><NavBar /><KetoVeganPlans /><Footer /></>} />
+          <Route path="/fitness-integration" element={<><NavBar /><FitnessIntegration /><Footer /></>} />
+          <Route path="/training-guides" element={<><NavBar /><TrainingGuides /><Footer /></>} />
+          <Route path="/special-protocols" element={<><NavBar /><SpecialProtocols /><Footer /></>} />
+          <Route path="/unlimited-customization" element={<><NavBar /><UnlimitedCustomization /><Footer /></>} />
+          <Route path="/priority-chat" element={<><NavBar /><PriorityChat /><Footer /></>} />
+          <Route path="/phone-support" element={<><NavBar /><PhoneSupport /><Footer /></>} />
+          <Route path="/monthly-pro-report" element={<><NavBar /><MonthlyProReport /><Footer /></>} />
+          <Route path="/custom-meal-service" element={<><NavBar /><CustomMealService /><Footer /></>} />
+          <Route path="/thousand-programs" element={<><NavBar /><ThousandPrograms /><Footer /></>} />
+          <Route path="/login" element={<><NavBar /><Login /><Footer /></>} />
+          <Route path="/register" element={<><NavBar /><Register /><Footer /></>} />
+          <Route path="/forgot-password" element={<><NavBar /><ForgotPassword /><Footer /></>} />
+          <Route path="/reset-password" element={<><NavBar /><ResetPassword /><Footer /></>} />
+          <Route path="/terms" element={<><NavBar /><Terms /><Footer /></>} />
+          <Route path="/privacy" element={<><NavBar /><PrivacyPolicy /><Footer /></>} />
+          <Route path="/kvkk" element={<><NavBar /><KVKK /><Footer /></>} />
+          <Route path="/security" element={<><NavBar /><Security /><Footer /></>} />
 
-            {/* ====================================================== */}
-            {/* ===      2. GİRİŞ YAPMIŞ KULLANICILAR İÇİN        === */}
-            {/* ====================================================== */}
+          {/* Giriş yapmış kullanıcılar için */}
+          <Route path="/diet-programs" element={<ProtectedRoute><NavBar /><DietPrograms /><Footer /></ProtectedRoute>} />
+          <Route path="/profile" element={<ProtectedRoute><NavBar /><Profile /><Footer /></ProtectedRoute>} />
+          <Route path="/payment" element={<ProtectedRoute><NavBar /><PaymentPage /><Footer /></ProtectedRoute>} />
+          <Route path="/notifications" element={<ProtectedRoute><NavBar /><Notifications /><Footer /></ProtectedRoute>} />
+          <Route path="/community" element={<ProtectedRoute><NavBar /><Community /><Footer /></ProtectedRoute>} />
+          <Route path="/community/user/:uid" element={<ProtectedRoute><NavBar /><UserPosts /><Footer /></ProtectedRoute>} />
+          <Route path="/community/archived" element={<ProtectedRoute><NavBar /><ArchivedPosts /><Footer /></ProtectedRoute>} />
+          <Route path="/nutrition-newsletter" element={<><NavBar /><NutritionNewsletter /><Footer /></>} />
+          <Route path="/nutrition-recommendations" element={<ProtectedRoute><NavBar /><PersonalizedNutritionRecommendations /><Footer /></ProtectedRoute>} />
+          <Route path="/dietitians" element={<ProtectedRoute><NavBar /><Dietitians /><Footer /></ProtectedRoute>} />
+          <Route path="/admin/dietitian-invites" element={<AdminRoute><NavBar /><DietitianInvites /><Footer /></AdminRoute>} />
 
-            {/* Bu rotalar, sadece giriş yapmış herhangi bir kullanıcının erişebileceği sayfalardır. */}
-            <Route path="/diet-programs" element={<ProtectedRoute><DietPrograms /></ProtectedRoute>} />
-            <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-            <Route path="/payment" element={<ProtectedRoute><PaymentPage /></ProtectedRoute>} />
-            <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
-            <Route path="/community" element={<ProtectedRoute><Community /></ProtectedRoute>} />
-            <Route path="/community/user/:uid" element={<ProtectedRoute><UserPosts /></ProtectedRoute>} />
-            <Route path="/community/archived" element={<ProtectedRoute><ArchivedPosts /></ProtectedRoute>} />
-            <Route path="/nutrition-newsletter" element={<NutritionNewsletter />} />
-            <Route path="/calorie-tracker" element={<ProtectedRoute><CalorieTracker /></ProtectedRoute>} />
-            <Route path="/nutrition-recommendations" element={<ProtectedRoute><PersonalizedNutritionRecommendations /></ProtectedRoute>} />
+          {/* Admin için */}
+          <Route path="/dashboard" element={<ProtectedRoute><AdminRoute><NavBar /><Dashboard /><Footer /></AdminRoute></ProtectedRoute>} />
+          <Route path="/admin/nutrition-tips" element={<ProtectedRoute><AdminRoute><NavBar /><AdminNutritionDashboard /><Footer /></AdminRoute></ProtectedRoute>} />
+          <Route path="/admin/recipes" element={<ProtectedRoute><AdminRoute><NavBar /><AdminRecipes /><Footer /></AdminRoute></ProtectedRoute>} />
+          <Route path="/admin/habits" element={<ProtectedRoute><AdminRoute><NavBar /><AdminHabits /><Footer /></AdminRoute></ProtectedRoute>} />
+          <Route path="/admin/programs" element={<ProtectedRoute><AdminRoute><NavBar /><AdminPrograms /><Footer /></AdminRoute></ProtectedRoute>} />
+          <Route path="/admin/quotes" element={<ProtectedRoute><AdminRoute><NavBar /><AdminQuotes /><Footer /></AdminRoute></ProtectedRoute>} />
+          <Route path="/admin/users" element={<ProtectedRoute><AdminRoute><NavBar /><AdminUsers /><Footer /></AdminRoute></ProtectedRoute>} />
+          <Route path="/admin/pricing" element={<ProtectedRoute><AdminRoute><NavBar /><AdminPricing /><Footer /></AdminRoute></ProtectedRoute>} />
 
-            {/* ====================================================== */}
-            {/* ===         4. SADECE ADMIN İÇİN SAYFALAR         === */}
-            {/* ====================================================== */}
-            
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute>
-                  <AdminRoute>
-                    <Dashboard />
-                  </AdminRoute>
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="/admin/nutrition-tips"
-              element={
-                <ProtectedRoute>
-                  <AdminRoute>
-                    <AdminNutritionDashboard />
-                  </AdminRoute>
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="/admin/recipes"
-              element={
-                <ProtectedRoute>
-                  <AdminRoute>
-                    <AdminRecipes />
-                  </AdminRoute>
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="/admin/habits"
-              element={
-                <ProtectedRoute>
-                  <AdminRoute>
-                    <AdminHabits />
-                  </AdminRoute>
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="/admin/programs"
-              element={
-                <ProtectedRoute>
-                  <AdminRoute>
-                    <AdminPrograms />
-                  </AdminRoute>
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="/admin/quotes"
-              element={
-                <ProtectedRoute>
-                  <AdminRoute>
-                    <AdminQuotes />
-                  </AdminRoute>
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="/admin/users"
-              element={
-                <ProtectedRoute>
-                  <AdminRoute>
-                    <AdminUsers />
-                  </AdminRoute>
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="/admin/pricing"
-              element={
-                <ProtectedRoute>
-                  <AdminRoute>
-                    <AdminPricing />
-                  </AdminRoute>
-                </ProtectedRoute>
-              }
-            />
-
-            {/* Geçersiz tüm rotalar ana sayfaya yönlendirilir */}
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
-    </Router>
+          {/* Geçersiz tüm rotalar ana sayfaya yönlendirilir */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Router>
     </ToastProvider>
   );
 }

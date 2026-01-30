@@ -1,3 +1,5 @@
+// ...existing code...
+
 // backend/src/routes/admin.js
 
 const express = require("express");
@@ -10,6 +12,22 @@ const checkAdmin = require("../middleware/checkAdmin");
 router.use(verifyToken);
 router.use(checkAdmin);
 
+
+// --- DİYETİSYEN DAVET LİNKİ SİLME ---
+// POST /api/admin/users/delete-dietitian-invite
+router.post("/delete-dietitian-invite", async (req, res) => {
+  try {
+    const { token } = req.body;
+    if (!token) {
+      return res.status(400).json({ success: false, error: "Token gerekli" });
+    }
+    await firestore.collection('dietitianInvites').doc(token).delete();
+    res.status(200).json({ success: true, message: "Davet linki silindi" });
+  } catch (error) {
+    console.error("POST /api/admin/users/delete-dietitian-invite hatası:", error);
+    res.status(500).json({ success: false, error: "Davet linki silinemedi." });
+  }
+});
 
 // --- TÜM KULLANICILARI LİSTELEME ENDPOINT'İ (GÜNCELLENMİŞ) ---
 // GET /api/admin/users
@@ -196,7 +214,7 @@ router.post("/:uid/subscription/gift", async (req, res) => {
     const { uid } = req.params;
     const { plan, planName, price, durationMonths } = req.body || {};
 
-    const allowedPlans = ['free', 'basic', 'premium', 'plus', 'starter', 'pro'];
+    const allowedPlans = ['free', 'basic', 'premium', 'plus'];
     const safePlan = allowedPlans.includes(plan) ? plan : 'free';
     const startDate = new Date();
     const months = Number(durationMonths) > 0 ? Number(durationMonths) : 1;
@@ -326,5 +344,69 @@ router.post("/:uid/update-email", async (req, res) => {
   }
 });
 
+
+
+
+// --- D�YET�SYEN DAVET L�NK� OLU�TURMA ---
+// POST /api/admin/users/create-dietitian-invite
+router.post("/create-dietitian-invite", async (req, res) => {
+  try {
+    const { expiresInDays = 7 } = req.body;
+    
+    const crypto = require('crypto');
+    const token = crypto.randomBytes(32).toString('hex');
+    
+    const expiryDate = new Date();
+    expiryDate.setDate(expiryDate.getDate() + expiresInDays);
+
+    await firestore.collection('dietitianInvites').doc(token).set({
+      createdBy: req.user.uid,
+      createdByEmail: req.user.email,
+      createdAt: FieldValue.serverTimestamp(),
+      expiresAt: expiryDate,
+      used: false,
+      usedBy: null,
+      usedAt: null
+    });
+
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+    const inviteUrl = `${frontendUrl}/dietitian/register?token=${token}`;
+
+    res.status(200).json({
+      success: true,
+      token,
+      inviteUrl,
+      expiresAt: expiryDate,
+      message: 'Diyetisyen davet linki ba�ar�yla olu�turuldu'
+    });
+  } catch (error) {
+    console.error(" POST /api/admin/users/create-dietitian-invite hatas�:", error);
+    res.status(500).json({ error: "Davet linki olu�turulamad�." });
+  }
+});
+
+// --- D�YET�SYEN DAVET L�NKLER�N� L�STELEME ---
+// GET /api/admin/users/dietitian-invites/list
+router.get("/dietitian-invites/list", async (req, res) => {
+  try {
+    const snapshot = await firestore.collection('dietitianInvites')
+      .orderBy('createdAt', 'desc')
+      .limit(50)
+      .get();
+
+    const invites = snapshot.docs.map(doc => ({
+      token: doc.id,
+      ...doc.data(),
+      createdAt: doc.data().createdAt?.toDate(),
+      expiresAt: doc.data().expiresAt,
+      usedAt: doc.data().usedAt?.toDate()
+    }));
+
+    res.status(200).json({ success: true, invites });
+  } catch (error) {
+    console.error(" GET /api/admin/users/dietitian-invites/list hatas�:", error);
+    res.status(500).json({ error: "Davet linkleri listelenemedi." });
+  }
+});
 
 module.exports = router;

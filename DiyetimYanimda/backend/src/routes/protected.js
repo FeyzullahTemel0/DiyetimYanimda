@@ -14,22 +14,65 @@ router.use(verifyToken);
 // GET /api/profile -> Giriş yapmış kullanıcının kendi profilini getirir.
 router.get("/", async (req, res) => {
   try {
-    console.log("user",req.user); // Kullanıcı bilgilerini kontrol et
-    console.log("userid",req.user.uid); // Kullanıcı bilgilerini kontrol et
+    console.log("🔍 [GET /api/profile] req.user:", req.user);
+    
+    if (!req.user || !req.user.uid) {
+      console.error("🚨 req.user veya req.user.uid tanımsız!");
+      return res.status(401).json({ error: "Kullanıcı bilgisi bulunamadı." });
+    }
     
     const uid = req.user.uid;
-    const doc = await firestore.collection("users").doc(uid).get();
-    console.log("doc", doc);
+    console.log("🔍 [GET /api/profile] UID:", uid);
     
-    if (!doc.exists) return res.status(404).json({ error: "Kullanıcı profili bulunamadı." });
+    const doc = await firestore.collection("users").doc(uid).get();
+    console.log("🔍 [GET /api/profile] doc.exists:", doc.exists);
+    
+    if (!doc.exists) {
+      console.log("⚠️ [GET /api/profile] Kullanıcı profili Firestore'da bulunamadı. Boş profil döndürülüyor...", uid);
+      // Kullanıcı henüz profil oluşturmamışsa boş profil döndür
+      return res.status(200).json({
+        uid: uid,
+        name: "",
+        surname: "",
+        email: "",
+        height: "",
+        weight: "",
+        targetWeight: "",
+        gender: "female",
+        allergies: "",
+        isDiabetic: false,
+        diabeticType: "",
+        isHypertensive: false,
+        bloodPressure: "",
+        hasHeartDisease: false,
+        hasKidneyDisease: false,
+        hasLiverDisease: false,
+        hasThyroidDisease: false,
+        otherDiseases: "",
+        medications: "",
+        dietaryRestrictions: "",
+        activityLevel: "moderate",
+        favoritePrograms: [],
+        subscription: {
+          plan: "free",
+          status: "active",
+          startDate: null,
+          endDate: null,
+          paymentId: null
+        }
+      });
+    }
     
     const profileData = doc.data();
+    console.log("🔍 [GET /api/profile] Profil verileri başarıyla alındı");
     if (!Array.isArray(profileData.favoritePrograms)) {
       profileData.favoritePrograms = [];
     }
     res.status(200).json(profileData);
   } catch (err) {
-    res.status(400).json({ error: "Profil bilgileri getirilirken bir hata oluştu." });
+    console.error("🚨 [GET /api/profile] HATA:", err.message);
+    console.error("🚨 [GET /api/profile] Stack:", err.stack);
+    res.status(500).json({ error: "Profil bilgileri getirilirken bir hata oluştu.", details: err.message });
   }
 });
 
@@ -168,15 +211,21 @@ router.post("/select-program", async (req, res) => {
 
 // === ABONELİK ENDPOINT'LERİ ===
 
-// POST /api/profile/subscribe
-router.post("/subscribe", async (req, res) => {
+// POST /api/profile/subscribe - Kullanıcının planını güncelle (Ücretsiz planlar için)
+router.post("/subscribe", verifyToken, async (req, res) => {
   try {
     const { uid } = req.user;
     const { plan, planName, features } = req.body;
     
-    // Ücretsiz plan için kontrol et
+    // Plan validasyonu - sadece ücretsiz plan için kontrol et
     if (plan !== 'free') {
-      return res.status(400).json({ error: "Bu endpoint sadece ücretsiz plan için kullanılır." });
+      return res.status(400).json({ 
+        error: "Bu endpoint sadece ücretsiz plan seçimi için kullanılır. Ücretli planlar için /api/payment/confirm endpoint'ini kullanın." 
+      });
+    }
+
+    if (!plan || plan.trim() === '') {
+      return res.status(400).json({ error: "Plan ID boş olamaz" });
     }
 
     const startDate = new Date();
@@ -195,12 +244,16 @@ router.post("/subscribe", async (req, res) => {
     };
     
     await firestore.collection("users").doc(uid).update({ subscription: subscriptionData });
+    
+    console.log(`✅ Ücretsiz plan seçildi - Kullanıcı ${uid} Plan: ${plan}`);
+    
     res.status(200).json({ 
       message: `Üyelik planınız başarıyla '${planName || plan}' olarak güncellendi!`, 
       subscription: subscriptionData 
     });
   } catch (error) {
-    res.status(500).json({ error: "Üyelik güncellenirken bir hata oluştu." });
+    console.error("❌ Plan güncellemesi hatası:", error);
+    res.status(500).json({ error: `Üyelik güncellenirken bir hata oluştu: ${error.message}` });
   }
 });
 

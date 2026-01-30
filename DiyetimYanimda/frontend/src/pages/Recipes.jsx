@@ -18,6 +18,7 @@ export default function Recipes() {
   });
   const [userPlan, setUserPlan] = useState(null);
   const [favoriteRecipes, setFavoriteRecipes] = useState([]);
+  const [userAllergies, setUserAllergies] = useState([]); // Kullanıcının profildeki alerjileri
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
@@ -25,19 +26,26 @@ export default function Recipes() {
   const [searchQuery, setSearchQuery] = useState("");
 
   // Kategori listesi
-  const categories = ["tümü", "tavuk", "balık", "vegan", "yumurta", "içecek"];
+  const categories = [
+    { key: "tümü", label: "Tümü" },
+    { key: "Tavuk Yemekleri", label: "Tavuk" },
+    { key: "Balık Yemekleri", label: "Balık" },
+    { key: "Vegan Yemekleri", label: "Vegan" },
+    { key: "Yumurta", label: "Yumurta" },
+    { key: "İçecekler ve Shakeler", label: "İçecekler" }
+  ];
 
-  // Hedef grup listesi
+  // Hedef grup listesi (backend'deki tags ile eşleşiyor)
   const targetGroups = [
     { key: "tümü", label: "Tümü" },
-    { key: "diabetes", label: "🏥 Diyabet Hastası" },
-    { key: "weight_loss", label: "⬇️ Kilo Verme" },
-    { key: "weight_gain", label: "⬆️ Kilo Alma" },
-    { key: "muscle_gain", label: "💪 Kas Gelişimi" },
-    { key: "maintain", label: "⚖️ Stabil Kalma" },
-    { key: "healthy_lifestyle", label: "💚 Sağlıklı Yaşam" },
-    { key: "diet", label: "📋 Beslenme" },
-    { key: "vegetarian", label: "🥬 Vejetaryen" }
+    { key: "Diyabet Hastası", label: "🏥 Diyabet Hastası" },
+    { key: "Kilo Verme", label: "⬇️ Kilo Verme" },
+    { key: "Kilo Alma", label: "⬆️ Kilo Alma" },
+    { key: "Kas Gelişimi", label: "💪 Kas Gelişimi" },
+    { key: "Stabil Kalma", label: "⚖️ Stabil Kalma" },
+    { key: "Sağlıklı Yaşam", label: "💚 Sağlıklı Yaşam" },
+    { key: "Beslenme", label: "📋 Beslenme" },
+    { key: "Vejetaryen", label: "🥬 Vejetaryen" }
   ];
 
   // Kullanıcı planını kontrol et ve favori tariflerini yükle
@@ -54,6 +62,20 @@ export default function Recipes() {
           const userData = userDoc.data();
           setUserPlan(userData.plan || "free");
           setFavoriteRecipes(userData.favoriteRecipes || []);
+          
+          // Alerjileri yükle - string'ten array'e dönüştür
+          let allergies = userData.allergies || "";
+          
+          // String ise virgülle ayırıp trim et
+          if (typeof allergies === 'string') {
+            allergies = allergies
+              .split(',')
+              .map(item => item.trim())
+              .filter(item => item.length > 0);
+          }
+          
+          console.log("🔍 Kullanıcı alerjileri:", allergies, typeof allergies);
+          setUserAllergies(allergies); // Kullanıcının alerjilerini yükle
         }
 
         // Firestore'dan tarifler yükle
@@ -129,14 +151,14 @@ export default function Recipes() {
         <div className="category-buttons">
           {categories.map(cat => (
             <button
-              key={cat}
-              className={`category-btn ${selectedCategory === cat ? "active" : ""}`}
+              key={cat.key}
+              className={`category-btn ${selectedCategory === cat.key ? "active" : ""}`}
               onClick={() => {
-                setSelectedCategory(cat);
+                setSelectedCategory(cat.key);
                 setSelectedRecipe(null);
               }}
             >
-              {cat.charAt(0).toUpperCase() + cat.slice(1)}
+              {cat.label}
             </button>
           ))}
         </div>
@@ -222,7 +244,9 @@ export default function Recipes() {
   // Seçili kategoriye ve hedef gruba göre tarifler
   const filteredRecipes = recipes.filter(recipe => {
     const categoryMatch = selectedCategory === "tümü" || recipe.category === selectedCategory;
+    // Backend'de tags field'i kullanılıyor, targetGroups değil
     const targetGroupMatch = selectedTargetGroup === "tümü" ||
+      (recipe.tags && recipe.tags.includes(selectedTargetGroup)) ||
       (recipe.targetGroups && recipe.targetGroups.includes(selectedTargetGroup));
     const searchMatch = !searchQuery || 
       recipe.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -352,6 +376,68 @@ export default function Recipes() {
                 <h2>{selectedRecipe.name}</h2>
                 <div className="detail-image">{selectedRecipe.image || "🍽️"}</div>
 
+                {/* ÖNEMLİ: Kullanıcının Alerjen Uyarısı - EN ÜSTTE */}
+                {(() => {
+                  // Kullanıcının alerjilerini güvenli şekilde array'e çevir
+                  const allergiesArray = Array.isArray(userAllergies) 
+                    ? userAllergies 
+                    : (userAllergies && typeof userAllergies === 'object' 
+                      ? Object.values(userAllergies) 
+                      : []);
+                  
+                  console.log("🔍 DEBUG - Allergies Array:", allergiesArray);
+                  console.log("🔍 DEBUG - Recipe Allergens:", selectedRecipe.allergens);
+                  
+                  // Kullanıcının alerjileri varsa kontrol et
+                  if (allergiesArray.length > 0) {
+                    // Tarifteki alerjenlerle kullanıcının alerjilerini karşılaştır
+                    const userAllergenMatches = allergiesArray.filter(userAllergy => {
+                      const userAllergyStr = String(userAllergy).toLowerCase().trim();
+                      
+                      if (!selectedRecipe.allergens || selectedRecipe.allergens.length === 0) {
+                        return false;
+                      }
+                      
+                      // Kelimeleri ayırıp kontrol et
+                      return selectedRecipe.allergens.some(recipeAllergen => {
+                        const recipeAllergenStr = String(recipeAllergen).toLowerCase().trim();
+                        
+                        // İçerip içermediğini kontrol et (iki yönlü)
+                        return (
+                          recipeAllergenStr.includes(userAllergyStr) ||
+                          userAllergyStr.includes(recipeAllergenStr) ||
+                          // Kısmi eşleşme
+                          (userAllergyStr.split(' ').some(word => recipeAllergenStr.includes(word)) ||
+                           recipeAllergenStr.split(' ').some(word => userAllergyStr.includes(word)))
+                        );
+                      });
+                    });
+
+                    console.log("🔍 DEBUG - Matches:", userAllergenMatches);
+
+                    // Eşleşme varsa uyarı göster
+                    if (userAllergenMatches.length > 0) {
+                      return (
+                        <div className="user-allergen-warning">
+                          <h4>🚨 DİKKAT! Alerjik Reaksiyon Riski</h4>
+                          <p className="warning-message">
+                            Bu tarif sizin alerjiniz olan şu içerikleri barındırıyor:
+                          </p>
+                          <ul className="allergen-list">
+                            {userAllergenMatches.map((allergen, idx) => (
+                              <li key={idx}>{String(allergen)}</li>
+                            ))}
+                          </ul>
+                          <p className="safety-note">
+                            ⚕️ Sağlığınız bizim için önceliklidir. Bu tarifi tüketmeden önce doktorunuza danışmanızı öneririz.
+                          </p>
+                        </div>
+                      );
+                    }
+                  }
+                  return null;
+                })()}
+
                 {/* Özelleştirilmiş Makrolar */}
                 <div className="macros-card">
                   <h3>Besin Bilgisi ({customization.servingSize} porsiyon)</h3>
@@ -381,8 +467,11 @@ export default function Recipes() {
                   <ul className="ingredients-list">
                     {selectedRecipe.ingredients.map((ingredient, idx) => (
                       <li key={idx}>
-                        <span>{ingredient.name}</span>
-                        <span className="ingredient-amount">{ingredient.amount} ({ingredient.calories} kcal)</span>
+                        <span>{ingredient.name || ingredient}</span>
+                        <span className="ingredient-amount">
+                          {ingredient.amount && `${ingredient.amount}`}
+                          {ingredient.notes && <small> ({ingredient.notes})</small>}
+                        </span>
                       </li>
                     ))}
                   </ul>
@@ -391,12 +480,35 @@ export default function Recipes() {
                 {/* Talimatlar */}
                 <div className="instructions-section">
                   <h3>Hazırlama Adımları</h3>
-                  <ol className="instructions-list">
+                  <ul className="instructions-list">
                     {selectedRecipe.instructions.map((instruction, idx) => (
-                      <li key={idx}>{instruction}</li>
+                      <li key={idx}>
+                        <strong>{instruction.title}</strong>
+                        <p>{instruction.description || instruction}</p>
+                      </li>
                     ))}
-                  </ol>
+                  </ul>
                 </div>
+
+                {/* İpuçları */}
+                {selectedRecipe.tips && selectedRecipe.tips.length > 0 && (
+                  <div className="tips-section">
+                    <h3>💡 İpuçları</h3>
+                    <ul className="tips-list">
+                      {selectedRecipe.tips.map((tip, idx) => (
+                        <li key={idx}>{tip}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Özel Özellikler */}
+                {selectedRecipe.description && (
+                  <div className="description-section">
+                    <h3>📝 Tarif Hakkında</h3>
+                    <p>{selectedRecipe.description}</p>
+                  </div>
+                )}
 
                 {/* İşlemler */}
                 <div className="recipe-actions">

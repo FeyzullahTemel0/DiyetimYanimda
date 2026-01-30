@@ -15,10 +15,11 @@ export function useAuth() {
     const unsubscribe = onAuthStateChanged(auth, async (authUser) => {
       if (authUser) {
         setUser(authUser);
-        const userRef = doc(db, 'users', authUser.uid);
+        let profileData = null;
+        let role = null;
+        let claimsAdmin = false;
         try {
           // Token claims (including custom claim 'admin')
-          let claimsAdmin = false;
           try {
             const idTokenResult = await authUser.getIdTokenResult(true);
             claimsAdmin = !!idTokenResult?.claims?.admin;
@@ -26,17 +27,24 @@ export function useAuth() {
             console.warn('ID token claims okunamadı:', e);
           }
 
-          const docSnap = await getDoc(userRef);
-          if (docSnap.exists()) {
-            const data = docSnap.data();
-            setProfile(data);
-            const roleAdmin = data?.role === 'admin';
-            setIsAdmin(roleAdmin || claimsAdmin);
+          // Önce users koleksiyonunda ara
+          const userRef = doc(db, 'users', authUser.uid);
+          const userSnap = await getDoc(userRef);
+          if (userSnap.exists()) {
+            profileData = userSnap.data();
+            role = profileData?.role || null;
           } else {
-            console.warn(`Firestore'da ${authUser.uid} için profil bulunamadı.`);
-            setProfile(null); // veya varsayılan bir profil nesnesi
-            setIsAdmin(claimsAdmin);
+            // Eğer users'da yoksa dietitians koleksiyonunda ara
+            const dietitianRef = doc(db, 'dietitians', authUser.uid);
+            const dietitianSnap = await getDoc(dietitianRef);
+            if (dietitianSnap.exists()) {
+              profileData = dietitianSnap.data();
+              role = 'dietitian';
+            }
           }
+
+          setProfile(profileData ? { ...profileData, role } : null);
+          setIsAdmin(role === 'admin' || claimsAdmin);
         } catch (error) {
           console.error("Profil çekme hatası:", error);
           setProfile(null);

@@ -6,8 +6,8 @@ const transporter = nodemailer.createTransport({
   port: 587,
   secure: false, // TLS kullan
   auth: {
-    user: process.env.EMAIL_USER,  // Tam email adresi
-    pass: process.env.EMAIL_PASSWORD.trim()  // App Password (boşlukları kaldır)
+    user: process.env.EMAIL_USER || 'noreply@diyetimyanimda.com',  // Tam email adresi
+    pass: process.env.EMAIL_PASSWORD ? process.env.EMAIL_PASSWORD.trim() : 'dummy_password'  // App Password (boşlukları kaldır)
   },
   tls: {
     rejectUnauthorized: false // Development için geçiçi çözüm

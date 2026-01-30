@@ -4,7 +4,7 @@ export function useToast() {
   const [toasts, setToasts] = useState([]);
 
   const showToast = useCallback((message, type = "success") => {
-    const id = Date.now();
+    const id = Math.random().toString(36).substr(2, 9) + Date.now();
     setToasts((prev) => [...prev, { id, message, type }]);
   }, []);
 

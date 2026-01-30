@@ -62,36 +62,58 @@ router.post("/confirm", verifyToken, async (req, res) => {
     const { planId, planName, planPrice, features, paymentId } = req.body;
     const uid = req.user.uid;
 
-    // Plan ID'nin boş olmamasını kontrol et
-    if (!planId) {
-      return res.status(400).json({ error: "Plan ID gereklidir" });
+    // Validasyonlar
+    if (!planId || planId.trim() === '') {
+      return res.status(400).json({ error: "Plan ID boş olamaz - ödeme başarısız" });
+    }
+
+    if (!PLANS[planId]) {
+      return res.status(400).json({ error: `Geçersiz plan: '${planId}' - Sistem tanımı yok` });
+    }
+
+    if (planPrice === null || planPrice === undefined || planPrice < 0) {
+      return res.status(400).json({ error: "Geçersiz ödeme tutarı" });
+    }
+
+    if (!paymentId) {
+      return res.status(400).json({ error: "Ödeme ID'si gereklidir" });
     }
 
     const userRef = firestore.collection("users").doc(uid);
     const now = new Date();
-    const endDate = new Date(now.setMonth(now.getMonth() + 1));
+    const endDate = new Date(now.getTime() + (30 * 24 * 60 * 60 * 1000)); // 30 gün sonra
 
     // Plan aktivasyonu - features ile beraber
-    await userRef.update({
+    const updateData = {
       "subscription.plan": planId,
-      "subscription.planName": planName || "Plan",
-      "subscription.price": planPrice || 0,
+      "subscription.planName": planName || PLANS[planId].name || "Plan",
+      "subscription.price": planPrice,
       "subscription.features": features || [],
       "subscription.status": "active",
       "subscription.startDate": FieldValue.serverTimestamp(),
-      "subscription.endDate": endDate,
+      "subscription.endDate": endDate.toISOString(),
       "subscription.paymentId": paymentId,
       "subscription.lastRenewalDate": FieldValue.serverTimestamp()
-    });
+    };
+
+    await userRef.update(updateData);
+
+    console.log(`✅ Ödeme başarılı - Kullanıcı ${uid} Plan: ${planId}`);
 
     res.json({ 
       success: true, 
-      message: "Plan başarı ile aktifleştirildi",
-      plan: planId
+      message: `Plan '${planName || PLANS[planId].name}' başarı ile aktifleştirildi`,
+      plan: planId,
+      subscription: {
+        plan: planId,
+        planName: planName || PLANS[planId].name,
+        price: planPrice,
+        status: "active"
+      }
     });
   } catch (error) {
-    console.error("Ödeme doğrulama hatası:", error);
-    res.status(500).json({ error: "Ödeme doğrulanamadı" });
+    console.error("❌ Ödeme doğrulama hatası:", error);
+    res.status(500).json({ error: `Ödeme doğrulanamadı: ${error.message}` });
   }
 });
 

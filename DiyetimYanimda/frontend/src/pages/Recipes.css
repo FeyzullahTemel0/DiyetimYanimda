@@ -618,17 +618,15 @@
   padding: 1.5rem;
   height: fit-content;
   position: sticky;
-  top: 100px;
+  top: 20px;
   backdrop-filter: blur(10px);
-  max-height: 90vh;
+  max-height: calc(100vh - 40px);
   overflow-y: auto;
+  overflow-x: hidden;
   box-sizing: border-box;
-  min-width: 280px;
-  max-width: 340px;
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
 }
 
 .recipes-detail.show-mobile {
@@ -667,6 +665,11 @@
 
 .recipe-detail-container {
   position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .close-detail {
@@ -692,40 +695,51 @@
 .recipe-detail-container h2 {
   font-size: 1.35rem;
   font-weight: 700;
-  margin: 0 0 1rem 0;
+  margin: 0 0 0.8rem 0;
   color: #f0f0f0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  line-height: 1.3;
 }
 
 .detail-image {
   font-size: 4rem;
   text-align: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.2rem;
   opacity: 0.8;
+  line-height: 1;
 }
 
 /* Makrolar Kartı */
 .macros-card {
-  background: rgba(76, 161, 117, 0.1);
+  background: rgba(76, 161, 117, 0.08);
   border: 1px solid rgba(76, 161, 117, 0.3);
   border-radius: 12px;
-  padding: 0.9rem;
-  margin-bottom: 1.25rem;
+  padding: 1.4rem;
+  margin-bottom: 1.5rem;
   width: 100%;
   box-sizing: border-box;
-  max-width: 300px;
+  transition: all 0.3s ease;
+}
+
+.macros-card:hover {
+  background: rgba(76, 161, 117, 0.12);
+  border-color: rgba(76, 161, 117, 0.5);
+  box-shadow: 0 4px 12px rgba(76, 161, 117, 0.15);
 }
 
 .macros-card h3 {
-  font-size: 0.88rem;
-  font-weight: 600;
-  margin: 0 0 0.6rem 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin: 0 0 1.2rem 0;
   color: #4ca175;
+  letter-spacing: 0.5px;
 }
 
 .macros-display {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 0.45rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.8rem;
   width: 100%;
   box-sizing: border-box;
 }
@@ -734,36 +748,57 @@
   background: rgba(45, 212, 191, 0.1);
   border: 1px solid rgba(45, 212, 191, 0.3);
   border-radius: 10px;
-  padding: 0.58rem;
+  padding: 1.2rem 0.8rem;
   text-align: center;
+  box-sizing: border-box;
   min-width: 0;
+  overflow: visible;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 80px;
+}
+
+.macro-item:hover {
+  background: rgba(45, 212, 191, 0.15);
+  border-color: rgba(45, 212, 191, 0.5);
 }
 
 .macro-label {
   display: block;
   font-size: 0.7rem;
-  color: #b0b0b0;
-  margin-bottom: 0.28rem;
-  font-weight: 500;
+  color: #a0a0a0;
+  margin-bottom: 0.6rem;
+  font-weight: 700;
+  white-space: normal;
+  word-break: break-word;
+  line-height: 1.1;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
 }
 
 .macro-value {
   display: block;
-  font-size: 0.96rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: #2dd4bf;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Malzemeler Bölümü */
 .ingredients-section,
 .instructions-section {
   margin-bottom: 1.5rem;
-}
-
-.ingredients-section,
-.instructions-section,
-.macros-card {
+  background: rgba(76, 161, 117, 0.05);
+  border: 1px solid rgba(76, 161, 117, 0.2);
+  border-radius: 12px;
+  padding: 1.5rem;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .ingredients-section h3,
@@ -783,38 +818,85 @@
 .ingredients-list li {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 0.7rem;
-  border-bottom: 1px solid rgba(76, 161, 117, 0.1);
-  font-size: 0.9rem;
+  align-items: flex-start;
+  padding: 1.2rem 0.5rem;
+  border-bottom: 1px solid rgba(76, 161, 117, 0.15);
+  font-size: 0.92rem;
   color: #d0d0d0;
-  gap: 0.5rem;
+  gap: 2rem;
+  box-sizing: border-box;
 }
 
 .ingredients-list li:last-child {
   border-bottom: none;
 }
 
+.ingredients-list li span:first-child {
+  flex: 1;
+  min-width: 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
 .ingredient-amount {
   color: #4ca175;
   font-weight: 500;
   font-size: 0.85rem;
+  flex-shrink: 0;
+  text-align: right;
 }
 
 /* Talimatlar */
 .instructions-list {
-  padding-left: 1.5rem;
+  padding-left: 0 !important;
   margin: 0;
+  list-style: none !important;
+  list-style-type: none !important;
 }
 
 .instructions-list li {
-  margin-bottom: 0.7rem;
+  margin-bottom: 1.2rem;
+  padding: 1rem 1.2rem;
+  background: rgba(45, 212, 191, 0.1);
+  border-left: 4px solid #4ca175;
+  border-radius: 8px;
+  box-sizing: border-box;
   color: #d0d0d0;
   line-height: 1.5;
+  position: relative;
+  list-style: none !important;
+  list-style-type: none !important;
+  display: block !important;
+}
+
+.instructions-list li::before {
+  display: none !important;
+  content: none !important;
+}
+
+.instructions-list li::marker {
+  display: none !important;
+  content: none !important;
 }
 
 .instructions-list li:last-child {
   margin-bottom: 0;
+}
+
+.instructions-list li strong {
+  display: inline;
+  font-size: 1.05rem;
+  color: #f0f0f0 !important;
+  font-weight: 700;
+}
+
+.instructions-list li p {
+  margin: 0.7rem 0 0 0;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: #c0c0c0;
+  display: block;
+  word-wrap: break-word;
 }
 
 /* İşlem Butonları */
@@ -983,11 +1065,7 @@
     gap: 1rem;
   }
 
-  .recipes-sidebar {
-  .close-detail {
-    top: 1rem;
-    right: 1rem;
-  }
+  .recipes-detail {
     left: 0;
     right: 0;
     bottom: 0;
@@ -1006,6 +1084,36 @@
   .close-detail {
     top: 1rem;
     right: 1rem;
+  }
+
+  .recipe-detail-container {
+    padding: 0;
+  }
+
+  .recipe-detail-container h2 {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+  }
+
+  .macros-card {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .macros-display {
+    gap: 0.7rem;
+  }
+
+  .macro-item {
+    padding: 0.9rem;
+  }
+
+  .macro-label {
+    font-size: 0.7rem;
+  }
+
+  .macro-value {
+    font-size: 1.15rem;
   }
 }
 
@@ -1048,7 +1156,20 @@
   }
 
   .macros-display {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
+  }
+
+  .macro-item {
+    padding: 0.6rem;
+  }
+
+  .macro-label {
+    font-size: 0.7rem;
+  }
+
+  .macro-value {
+    font-size: 0.95rem;
   }
 
   .recipe-actions {
@@ -1078,5 +1199,204 @@
   .instructions-list li {
     font-size: 0.8rem;
     margin-bottom: 0.5rem;
+    list-style: none !important;
+    list-style-type: none !important;
+  }
+}
+/* ============================================
+   YENİ BÖLÜMLER - İpuçları, Alerjenler, Açıklama
+   ============================================ */
+
+/* İpuçları Bölümü */
+.tips-section {
+  background: linear-gradient(135deg, rgba(255, 193, 7, 0.12) 0%, rgba(255, 152, 0, 0.08) 100%);
+  border: 1px solid rgba(255, 193, 7, 0.3);
+  border-radius: 14px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.tips-section h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #ffc107;
+  margin: 0 0 1rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tips-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tips-list li {
+  background: rgba(255, 255, 255, 0.05);
+  border-left: 3px solid #ffc107;
+  padding: 0.9rem 1rem;
+  margin-bottom: 0.7rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #e0e0e0;
+}
+
+.tips-list li:last-child {
+  margin-bottom: 0;
+}
+
+/* Tarif Açıklaması */
+.description-section {
+  background: linear-gradient(135deg, rgba(76, 161, 117, 0.12) 0%, rgba(45, 212, 191, 0.08) 100%);
+  border: 1px solid rgba(76, 161, 117, 0.3);
+  border-radius: 14px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.description-section h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #4ca175;
+  margin: 0 0 1rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.description-section p {
+  font-size: 0.98rem;
+  line-height: 1.6;
+  color: #d0d0d0;
+  margin: 0;
+}
+
+/* Alerjen Uyarısı */
+.allergen-warning {
+  background: linear-gradient(135deg, rgba(244, 67, 54, 0.12) 0%, rgba(211, 47, 47, 0.08) 100%);
+  border: 1px solid rgba(244, 67, 54, 0.4);
+  border-radius: 14px;
+  padding: 1.3rem 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.allergen-warning h4 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #f44336;
+  margin: 0 0 0.7rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.allergen-warning p {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #ffcdd2;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* Ingredient Amount Stili */
+.ingredient-amount {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.2rem;
+}
+
+.ingredient-amount small {
+  font-size: 0.8rem;
+  color: #9e9e9e;
+  font-style: italic;
+}
+/* ============================================
+   KULLANICI ALERJEN UYARISI - EN �NEML�
+   ============================================ */
+
+/* Kullan�c�ya �zel Alerjen Uyar�s� */
+.user-allergen-warning {
+  background: linear-gradient(135deg, rgba(220, 38, 38, 0.25) 0%, rgba(185, 28, 28, 0.15) 100%);
+  border: 2px solid rgba(239, 68, 68, 0.6);
+  border-radius: 14px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3);
+  animation: pulse-warning 2s ease-in-out infinite;
+}
+
+@keyframes pulse-warning {
+  0%, 100% {
+    box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3);
+  }
+  50% {
+    box-shadow: 0 8px 35px rgba(239, 68, 68, 0.5);
+  }
+}
+
+.user-allergen-warning h4 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #fca5a5;
+  margin: 0 0 0.8rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.user-allergen-warning .warning-message {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #fecaca;
+  margin: 0 0 0.8rem 0;
+  font-weight: 500;
+}
+
+.user-allergen-warning .allergen-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem 0;
+}
+
+.user-allergen-warning .allergen-list li {
+  background: rgba(239, 68, 68, 0.2);
+  border-left: 4px solid #ef4444;
+  padding: 0.7rem 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #fee2e2;
+}
+
+.user-allergen-warning .allergen-list li:last-child {
+  margin-bottom: 0;
+}
+
+.user-allergen-warning .safety-note {
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: #fef3c7;
+  margin: 0;
+  padding: 0.8rem 1rem;
+  background: rgba(245, 158, 11, 0.15);
+  border-radius: 8px;
+  border-left: 3px solid #f59e0b;
+  font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .user-allergen-warning {
+    padding: 1.2rem;
+  }
+
+  .user-allergen-warning h4 {
+    font-size: 1rem;
   }
 }

@@ -336,13 +336,18 @@
 }
 
 /* Responsive */
-@media (max-width: 540px) { 
-  .notif-panel { 
-    width: calc(100vw - 32px);
-    right: -12px;
-    max-height: 70vh;
+@media (max-width: 540px) {
+  .notif-panel {
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+    width: 95vw !important;
+    min-width: 0 !important;
+    max-width: 420px !important;
+    max-height: 70vh !important;
+    z-index: 1200 !important;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
   }
-  
   .notif-list {
     max-height: calc(70vh - 80px);
   }

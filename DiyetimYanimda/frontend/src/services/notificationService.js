@@ -4,19 +4,15 @@ import { db } from './firebase';
 export async function fetchNotifications(uid, max = 20) {
   try {
     console.log('Bildirimler çekiliyor, uid:', uid);
+    const notifCol = collection(db, 'users', uid, 'notifications');
     const q = query(
-      collection(db, 'notifications'),
-      where('userId', '==', uid),
+      notifCol,
+      orderBy('createdAt', 'desc'),
       limit(max)
     );
     const snap = await getDocs(q);
     const notifications = snap.docs
-      .map((d) => ({ id: d.id, ...d.data() }))
-      .sort((a, b) => {
-        const timeA = a.createdAt?.toDate?.() || new Date(a.createdAt);
-        const timeB = b.createdAt?.toDate?.() || new Date(b.createdAt);
-        return timeB - timeA; // En yeni önce
-      });
+      .map((d) => ({ id: d.id, ...d.data() }));
     console.log('Çekilen bildirim sayısı:', notifications.length, 'Bildirimler:', notifications);
     return notifications;
   } catch (error) {
@@ -25,17 +21,20 @@ export async function fetchNotifications(uid, max = 20) {
   }
 }
 
-export async function markRead(id, read = true) {
-  return updateDoc(doc(db, 'notifications', id), { read });
+
+// Needs uid to update correct subcollection
+export async function markRead(uid, id, read = true) {
+  return updateDoc(doc(db, 'users', uid, 'notifications', id), { read });
 }
 
 export async function markAllRead(uid) {
   const items = await fetchNotifications(uid, 50);
-  const ops = items.map((n) => markRead(n.id, true));
+  const ops = items.map((n) => markRead(uid, n.id, true));
   return Promise.all(ops);
 }
 
-export async function deleteNotification(id) {
-  return deleteDoc(doc(db, 'notifications', id));
+// Needs uid to delete from correct subcollection
+export async function deleteNotification(uid, id) {
+  return deleteDoc(doc(db, 'users', uid, 'notifications', id));
 }
 

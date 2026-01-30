@@ -1,7 +1,7 @@
 // frontend/src/config/apiConfig.js
 // Centralized API configuration that respects environment variables
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 export const API_BASE = BACKEND_URL;
 

@@ -94,6 +94,9 @@ export default function HomePage() {
                 <Link to="/login" className="btn btn-secondary">
                   Giriş Yap
                 </Link>
+                <Link to="/dietitian/login" className="btn btn-secondary">
+                  🏥 Diyetisyen Girişi
+                </Link>
               </>
             ) : (
               <Link to="/profile" className="btn btn-primary">

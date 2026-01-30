@@ -33,6 +33,8 @@ export default function Login() {
 
       if (data.role === "admin") {
         navigate("/dashboard", { replace: true });
+      } else if (data.role === "dietitian") {
+        navigate("/dietitian/panel", { replace: true });
       } else {
         navigate("/", { replace: true });
       }

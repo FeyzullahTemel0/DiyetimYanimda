@@ -65,7 +65,7 @@ export default function Notifications() {
 
   const onMark = async (id, read = true) => {
     if (!user) return;
-    await markRead(id, read);
+    await markRead(user.uid, id, read);
     setItems((prev) => prev.map((n) => (n.id === id ? { ...n, read } : n)));
   };
 
@@ -85,7 +85,7 @@ export default function Notifications() {
     if (!user) return;
     setBusy(true);
     try {
-      await deleteNotification(id);
+      await deleteNotification(user.uid, id);
       setItems((prev) => prev.filter((n) => n.id !== id));
       setSelected((prev) => {
         const next = new Set(prev);
@@ -101,7 +101,7 @@ export default function Notifications() {
     if (!user || selected.size === 0) return;
     setBusy(true);
     try {
-      await Promise.all(Array.from(selected).map((id) => deleteNotification(id)));
+      await Promise.all(Array.from(selected).map((id) => deleteNotification(user.uid, id)));
       setItems((prev) => prev.filter((n) => !selected.has(n.id)));
       clearSelection();
     } finally {
@@ -181,7 +181,8 @@ export default function Notifications() {
                     {n.type === 'post_like' ? '❤️ Beğeni' : n.type === 'post_comment' ? '💬 Yorum' : 'Bildirim'}
                   </span>
                 </div>
-                <h3>{n.message || 'Bildirim'}</h3>
+                <h3>{n.title || 'Bildirim'}</h3>
+                <div>{n.body}</div>
                 <p>{createdDate} {createdTime}</p>
                 <div className="notif-card-actions">
                   <button onClick={() => onMark(n.id, !n.read)}>{n.read ? 'Tekrar oku' : 'Okundu işaretle'}</button>

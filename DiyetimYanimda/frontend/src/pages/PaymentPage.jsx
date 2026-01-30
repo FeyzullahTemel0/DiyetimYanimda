@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../services/firebase';
 import { useToastContext } from '../contexts/ToastContext';
+import { getApiUrl } from '../config/apiConfig';
 import './PaymentPage.css';
 
 export default function PaymentPage() {
@@ -30,7 +31,7 @@ export default function PaymentPage() {
       if (user) {
         try {
           const token = await user.getIdToken();
-          const res = await fetch("http://localhost:5000/api/profile", {
+          const res = await fetch(getApiUrl("/api/profile"), {
             headers: { 'Authorization': `Bearer ${token}` }
           });
           if (res.ok) {
@@ -52,6 +53,25 @@ export default function PaymentPage() {
   }, [user, navigate]);
 
   const handleConfirmPayment = async () => {
+    // Ödeme öncesi validasyon
+    if (!planId || planId.trim() === '') {
+      setError('Hata: Plan ID boş - Ödeme başarısız');
+      showToast('❌ Hata: Plan bilgileri eksik', 'error');
+      return;
+    }
+
+    if (planPrice === null || planPrice === undefined || planPrice < 0) {
+      setError('Hata: Geçersiz ödeme tutarı');
+      showToast('❌ Hata: Ödeme tutarı geçersiz', 'error');
+      return;
+    }
+
+    if (!planName || planName.trim() === '') {
+      setError('Hata: Plan adı boş - Ödeme başarısız');
+      showToast('❌ Hata: Plan adı eksik', 'error');
+      return;
+    }
+
     setLoading(true);
     setError('');
 
@@ -59,17 +79,17 @@ export default function PaymentPage() {
       const token = await user.getIdToken();
       
       // Ödeme doğrulaması - features ile beraber gönder
-      const res = await fetch("http://localhost:5000/api/payment/confirm", {
+      const res = await fetch(getApiUrl("/api/payment/confirm"), {
         method: "POST",
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
-          planId,
-          planName,
-          planPrice,
-          features,
+          planId: planId.trim(),
+          planName: planName.trim(),
+          planPrice: Number(planPrice),
+          features: Array.isArray(features) ? features : [],
           paymentId: sessionId || `payment_${Date.now()}`
         })
       });
@@ -79,12 +99,14 @@ export default function PaymentPage() {
         throw new Error(data.error || "Ödeme işlemi başarısız oldu");
       }
 
+      const result = await res.json();
+      
       // Başarılı
-      showToast('Ödeme başarılı! Plan aktifleştirildi 🎉', 'success');
+      showToast(`Ödeme başarılı! ${planName} planı aktifleştirildi 🎉`, 'success');
       navigate('/profile', { state: { planUpdated: true } });
     } catch (err) {
       setError(err.message);
-      showToast('Ödeme hatası: ' + err.message, 'error');
+      showToast('❌ Ödeme hatası: ' + err.message, 'error');
     } finally {
       setLoading(false);
     }
@@ -92,6 +114,29 @@ export default function PaymentPage() {
 
   if (!user) {
     return <div className="payment-page"><p>Yükleniyor...</p></div>;
+  }
+
+  // Plan bilgilerinin eksik olup olmadığını kontrol et
+  if (!planId || planId.trim() === '' || !planName || planName.trim() === '') {
+    return (
+      <div className="payment-page">
+        <div className="payment-container">
+          <div className="payment-card">
+            <h1>⚠️ Ödeme Bilgileri Eksik</h1>
+            <p style={{ color: 'red', textAlign: 'center', marginBottom: '2rem' }}>
+              Hata: Plan seçim bilgileri alınamadı. Lütfen fiyatlandırma sayfasından yeniden deneyin.
+            </p>
+            <button 
+              className="btn-confirm" 
+              onClick={() => navigate('/pricing')}
+              style={{ width: '100%' }}
+            >
+              Fiyatlandırma Sayfasına Dön
+            </button>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (

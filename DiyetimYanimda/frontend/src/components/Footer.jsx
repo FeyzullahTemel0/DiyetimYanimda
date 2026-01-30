@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 import "./Footer.css";
 
-export default function Footer() {
+export default function Footer({ compact }) {
   return (
-    <footer className="site-footer">
+    <footer className={`site-footer${compact ? ' footer--compact' : ''}`}>
       <div className="footer-top">
         <div className="footer-section">
           <h4>Hızlı Linkler</h4>

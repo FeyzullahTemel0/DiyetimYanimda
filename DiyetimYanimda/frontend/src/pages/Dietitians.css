@@ -1,0 +1,410 @@
+.dietitians-container {
+  min-height: calc(100vh - 150px);
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.dietitians-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.dietitians-header h1 {
+  font-size: 2.5rem;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, #4ca175 0%, #3d8a5e 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  color: #7f8c8d;
+}
+
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #4ca175;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.premium-required {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.premium-required h2 {
+  font-size: 2rem;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.premium-required p {
+  font-size: 1.1rem;
+  color: #7f8c8d;
+  margin-bottom: 2rem;
+}
+
+.btn-upgrade {
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  background: linear-gradient(135deg, #4ca175 0%, #3d8a5e 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-upgrade:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(76, 161, 117, 0.3);
+}
+
+.no-dietitians {
+  text-align: center;
+  padding: 3rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.no-dietitians p {
+  font-size: 1.2rem;
+  color: #7f8c8d;
+}
+
+.dietitians-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.2rem;
+}
+
+.dietitian-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease;
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+.dietitian-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(76, 161, 117, 0.2);
+}
+
+.dietitian-photo {
+  width: 100%;
+  height: 140px;
+  background: linear-gradient(135deg, #e0e0e0 0%, #f5f5f5 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.dietitian-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.default-photo {
+  width: 90px;
+  height: 90px;
+  background: linear-gradient(135deg, #4ca175 0%, #3d8a5e 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.default-photo span {
+  font-size: 5rem;
+  color: white;
+}
+
+.dietitian-info {
+  padding: 1rem 1rem 0.8rem 1rem;
+}
+
+.dietitian-info h3 {
+  font-size: 1.1rem;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.info-row .icon {
+  font-size: 1.2rem;
+  margin-right: 0.5rem;
+  min-width: 25px;
+}
+
+.certificates {
+  display: flex;
+  align-items: flex-start;
+  margin: 0.5rem 0;
+@media (max-width: 600px) {
+  .dietitians-container {
+    padding: 0.5rem;
+  }
+  .dietitians-header h1 {
+    font-size: 1.2rem;
+  }
+  .dietitians-grid {
+    grid-template-columns: 1fr;
+    gap: 0.7rem;
+  }
+  .dietitian-card {
+    max-width: 98vw;
+    min-width: 0;
+    border-radius: 8px;
+    padding: 0.2rem;
+  }
+  .dietitian-photo {
+    height: 80px;
+  }
+  .default-photo {
+    width: 50px;
+    height: 50px;
+  }
+  .dietitian-info {
+    padding: 0.6rem 0.5rem 0.5rem 0.5rem;
+  }
+  .dietitian-info h3 {
+    font-size: 0.98rem;
+  }
+  .info-row {
+    font-size: 0.85rem;
+    margin-bottom: 0.3rem;
+  }
+  .certificates {
+    margin: 0.2rem 0;
+  }
+}
+}
+
+.certificate-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.certificate-badge {
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
+  color: #00796b;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.capacity-info {
+  margin: 1.5rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.capacity-label {
+  font-weight: 600;
+  color: #2c3e50;
+  min-width: 60px;
+}
+
+.capacity-bar {
+  flex: 1;
+  height: 12px;
+  background: #e0e0e0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.capacity-fill {
+  height: 100%;
+  transition: all 0.3s ease;
+}
+
+.capacity-text {
+  font-weight: 600;
+  color: #555;
+  min-width: 50px;
+  text-align: right;
+}
+
+.btn-request {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.1rem;
+  background: linear-gradient(135deg, #4ca175 0%, #3d8a5e 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-request:hover:not(.disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(76, 161, 117, 0.3);
+}
+
+.btn-request.disabled {
+  background: linear-gradient(135deg, #bdc3c7 0%, #95a5a6 100%);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content h2 {
+  font-size: 1.8rem;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.modal-content p {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.modal-info {
+  background: #e8f5e9;
+  padding: 1rem;
+  border-radius: 8px;
+  border-left: 4px solid #4ca175;
+  margin: 1.5rem 0;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.btn-confirm,
+.btn-cancel {
+  flex: 1;
+  padding: 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-confirm {
+  background: linear-gradient(135deg, #4ca175 0%, #3d8a5e 100%);
+  color: white;
+}
+
+.btn-confirm:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(76, 161, 117, 0.3);
+}
+
+.btn-confirm:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-cancel {
+  background: #ecf0f1;
+  color: #2c3e50;
+}
+
+.btn-cancel:hover:not(:disabled) {
+  background: #bdc3c7;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .dietitians-container {
+    padding: 1rem;
+  }
+
+  .dietitians-header h1 {
+    font-size: 2rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+  }
+
+  .dietitians-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .modal-content {
+    padding: 1.5rem;
+  }
+
+  .modal-actions {
+    flex-direction: column;
+  }
+}

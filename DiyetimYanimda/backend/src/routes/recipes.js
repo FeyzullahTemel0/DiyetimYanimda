@@ -16,9 +16,10 @@ router.get("/", verifyToken, async (req, res) => {
       query = query.where("category", "==", category);
     }
 
-    // Hedef grup filtresi
-    if (targetGroup) {
-      query = query.where("targetGroups", "array-contains", targetGroup);
+    // Hedef grup filtresi - hem tags hem targetGroups için kontrol
+    if (targetGroup && targetGroup !== "tümü") {
+      // Önce tags field'ini dene (yeni tarifler için)
+      query = query.where("tags", "array-contains", targetGroup);
     }
 
     // Status aktif olması

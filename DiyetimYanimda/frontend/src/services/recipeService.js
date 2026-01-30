@@ -1,8 +1,7 @@
 // frontend/src/services/recipeService.js
 
+import { API_BASE } from '../config/apiConfig';
 import { auth } from './firebase';
-
-const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 // Tarifler listesini getir
 export const getRecipes = async (category = null, filters = {}) => {

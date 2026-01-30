@@ -2,6 +2,11 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
+    // Yardımcı fonksiyon: Request sunucudan mı geliyor?
+    function isFromServer() {
+      return request.auth == null;
+    }
+    
     // Yardımcı fonksiyon: Kullanıcının admin olup olmadığını kontrol et
     function isAdmin() {
       return request.auth != null && 
@@ -15,81 +20,81 @@ service cloud.firestore {
     
     // Kullanıcı koleksiyonu
     match /users/{userId} {
-      // Okuma: herkes kendi kaydını okuyabilir, adminler herkesi okuyabilir
-      allow read: if request.auth != null && 
+      // Sunucudan gelen istekler: HER ŞEY İZİN
+      // İstemciden gelen istekler: Kendi kaydını oku/yaz, adminler herkesi oku/yaz
+      allow read: if isFromServer() || (request.auth != null && 
                      (userId == request.auth.uid || 
                       (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
-                       get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'));
-      // Yazma: adminler veya kullanıcı kendi kaydını güncelleyebilir
-      allow write: if request.auth != null && 
+                       get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin')));
+      allow write: if isFromServer() || (request.auth != null && 
                       (userId == request.auth.uid || 
                        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
-                        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'));
-      allow create: if isUser();
+                        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin')));
+      allow create: if isFromServer() || isUser();
       
       // Alt koleksiyon: Bildirimler
       match /notifications/{notifId} {
-        allow read: if request.auth != null && userId == request.auth.uid;
-        allow write: if request.auth != null && userId == request.auth.uid;
-        allow create: if request.auth != null && (userId == request.auth.uid || isAdmin());
-        allow delete: if request.auth != null && userId == request.auth.uid;
+        allow read: if isFromServer() || (request.auth != null && userId == request.auth.uid);
+        allow write: if isFromServer() || (request.auth != null && userId == request.auth.uid);
+        allow create: if isFromServer() || (request.auth != null && (userId == request.auth.uid || isAdmin()));
+        allow delete: if isFromServer() || (request.auth != null && userId == request.auth.uid);
       }
     }
     
     // Kullanıcı Sağlık Profili (Hastalık, Alerji, İlaçlar vb)
     match /healthProfiles/{userId} {
-      allow read: if request.auth != null && 
+      allow read: if isFromServer() || (request.auth != null && 
                      (userId == request.auth.uid || 
                       (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
-                       get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'));
-      allow write, create, update: if request.auth != null && userId == request.auth.uid;
-      allow delete: if request.auth != null && userId == request.auth.uid;
+                       get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin')));
+      allow write, create, update: if isFromServer() || (request.auth != null && userId == request.auth.uid);
+      allow delete: if isFromServer() || (request.auth != null && userId == request.auth.uid);
     }
     
     // Diyet Programları
     match /dietPrograms/{programId} {
-      allow read: if isUser();
-      allow write: if isAdmin();
-      allow create: if isAdmin();
-      allow delete: if isAdmin();
+      allow read: if isFromServer() || isUser();
+      allow write: if isFromServer() || isAdmin();
+      allow create: if isFromServer() || isAdmin();
+      allow delete: if isFromServer() || isAdmin();
     }
 
     // Alışkanlık Programları
     match /habitPrograms/{habitId} {
-      allow read: if isUser();
-      allow write, create, update, delete: if isAdmin();
+      allow read: if isFromServer() || isUser();
+      allow write, create, update, delete: if isFromServer() || isAdmin();
     }
     
     // Kullanıcı Hikayeleri
     match /userStories/{storyId} {
-      allow read: if isUser();
-      allow write: if isUser() && resource.data.userId == request.auth.uid;
-      allow create: if isUser();
-      allow delete: if isUser() && resource.data.userId == request.auth.uid;
-      allow update: if isUser() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow read: if isFromServer() || isUser();
+      allow write: if isFromServer() || (isUser() && resource.data.userId == request.auth.uid);
+      allow create: if isFromServer() || isUser();
+      allow delete: if isFromServer() || (isUser() && resource.data.userId == request.auth.uid);
+      allow update: if isFromServer() || (isUser() && (resource.data.userId == request.auth.uid || isAdmin()));
     }
     
     // Motivasyon Sözleri
     match /motivationQuotes/{quoteId} {
-      allow read: if isUser();
-      allow write: if isAdmin();
-      allow create: if isAdmin();
-      allow delete: if isAdmin();
-      allow update: if isAdmin();
+      allow read: if isFromServer() || isUser();
+      allow write: if isFromServer() || isAdmin();
+      allow create: if isFromServer() || isAdmin();
+      allow delete: if isFromServer() || isAdmin();
+      allow update: if isFromServer() || isAdmin();
     }
     
     // Fiyatlandırma İçerikleri
     match /pricing/{priceId} {
-      allow read: if isUser();
-      allow write: if isAdmin();
-      allow create: if isAdmin();
-      allow delete: if isAdmin();
+      allow read: if isFromServer() || isUser();
+      allow write: if isFromServer() || isAdmin();
+      allow create: if isFromServer() || isAdmin();
+      allow delete: if isFromServer() || isAdmin();
     }
     
     // Kalori Tracker - Kullanıcılar kendi verilerini kaydetmeli ve silebilmeli
     match /calorieTracker/{trackerDoc} {
       // TEST MODE: Tüm giriş yapmış kullanıcılar yazabilir (temporary)
-      allow read, write, delete: if request.auth != null;
+      allow read, write, delete: if isFromServer() || request.auth != null;
       
       // PRODUCTION: Sadece kendi verilerini yazabilir
       // allow read: if request.auth != null && 
@@ -102,119 +107,170 @@ service cloud.firestore {
     
     // Topluluk Gönderileri
     match /community_posts/{postId} {
-      allow read: if isUser();
-      allow create: if isUser() && 
+      allow read: if isFromServer() || isUser();
+      allow create: if isFromServer() || (isUser() && 
                        request.resource.data.userId == request.auth.uid &&
                        request.resource.data.userName != null &&
                        request.resource.data.title != null &&
                        request.resource.data.description != null &&
-                       request.resource.data.createdAt != null;
-      allow update: if isUser() && 
+                       request.resource.data.createdAt != null);
+      allow update: if isFromServer() || (isUser() && 
                        (resource.data.userId == request.auth.uid || isAdmin()) &&
-                       request.resource.data.userId == resource.data.userId;
-      allow delete: if isUser() && 
-                       (resource.data.userId == request.auth.uid || isAdmin());
+                       request.resource.data.userId == resource.data.userId);
+      allow delete: if isFromServer() || (isUser() && 
+                       (resource.data.userId == request.auth.uid || isAdmin()));
     }
 
     // Topluluk Gönderileri -> Yorumlar (alt koleksiyon)
     match /community_posts/{postId}/comments/{commentId} {
-      allow read: if isUser();
-      allow create: if isUser() &&
+      allow read: if isFromServer() || isUser();
+      allow create: if isFromServer() || (isUser() &&
                        request.resource.data.userId == request.auth.uid &&
                        request.resource.data.userName != null &&
                        request.resource.data.content != null &&
                        request.resource.data.postId == postId &&
-                       request.resource.data.createdAt != null;
+                       request.resource.data.createdAt != null);
 
       // Güncelleme sadece beğeni sayısı / beğenenler listesi gibi alanlarla sınırlı olsun
-      allow update: if isUser() &&
+      allow update: if isFromServer() || (isUser() &&
                      request.resource.data.userId == resource.data.userId &&
                      request.resource.data.postId == resource.data.postId &&
                      request.resource.data.content == resource.data.content &&
-                     request.resource.data.userName == resource.data.userName;
+                     request.resource.data.userName == resource.data.userName);
 
-      allow delete: if isUser() &&
-                       (resource.data.userId == request.auth.uid || isAdmin());
+      allow delete: if isFromServer() || (isUser() &&
+                       (resource.data.userId == request.auth.uid || isAdmin()));
     }
     
     // Topluluk Yorumları
     match /community_comments/{commentId} {
-      allow read: if isUser();
-      allow create: if isUser() && 
+      allow read: if isFromServer() || isUser();
+      allow create: if isFromServer() || (isUser() && 
                        request.resource.data.userId == request.auth.uid &&
                        request.resource.data.userName != null &&
                        request.resource.data.content != null &&
                        request.resource.data.postId != null &&
-                       request.resource.data.createdAt != null;
+                       request.resource.data.createdAt != null);
       allow update: if false; // Comments cannot be edited
-      allow delete: if isUser() && 
-                       (resource.data.userId == request.auth.uid || isAdmin());
+      allow delete: if isFromServer() || (isUser() && 
+                       (resource.data.userId == request.auth.uid || isAdmin()));
     }
     
     // Tarifler
     match /recipes/{recipeId} {
-      allow read: if isUser();
-      allow create, write, update, delete: if isAdmin();
+      allow read: if isFromServer() || isUser();
+      allow create, write, update, delete: if isFromServer() || isAdmin();
     }
     
     // Bildirimler - Kullanıcı sadece kendisine yazılan bildirimleri okuyabilir
     match /notifications/{notifId} {
-      allow read, write: if request.auth != null;
-      allow delete: if request.auth != null;
+      allow read, write: if isFromServer() || request.auth != null;
+      allow delete: if isFromServer() || request.auth != null;
     }
 
     // AI Consultant - Konuşmalar
     match /aiConversations/{conversationId} {
-      allow read: if request.auth != null && resource.data.userId == request.auth.uid;
-      allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
-      allow update: if request.auth != null && resource.data.userId == request.auth.uid;
-      allow delete: if request.auth != null && resource.data.userId == request.auth.uid;
+      allow read: if isFromServer() || (request.auth != null && resource.data.userId == request.auth.uid);
+      allow create: if isFromServer() || (request.auth != null && request.resource.data.userId == request.auth.uid);
+      allow update: if isFromServer() || (request.auth != null && resource.data.userId == request.auth.uid);
+      allow delete: if isFromServer() || (request.auth != null && resource.data.userId == request.auth.uid);
     }
 
     // AI Consultant - Mesajlar
     match /aiMessages/{messageId} {
-      allow read: if request.auth != null && 
+      allow read: if isFromServer() || (request.auth != null && 
                      exists(/databases/$(database)/documents/aiConversations/$(resource.data.conversationId)) &&
-                     get(/databases/$(database)/documents/aiConversations/$(resource.data.conversationId)).data.userId == request.auth.uid;
-      allow create: if request.auth != null && 
-                       request.resource.data.userId == request.auth.uid;
-      allow delete: if request.auth != null && resource.data.userId == request.auth.uid;
+                     get(/databases/$(database)/documents/aiConversations/$(resource.data.conversationId)).data.userId == request.auth.uid);
+      allow create: if isFromServer() || (request.auth != null && 
+                       request.resource.data.userId == request.auth.uid);
+      allow delete: if isFromServer() || (request.auth != null && resource.data.userId == request.auth.uid);
     }
 
     // Live Chat - Diyetisyen Profilleri
     match /dietitians/{dietitianId} {
-      allow read: if request.auth != null;
-      allow write: if isAdmin();
-      allow create: if isAdmin();
-      allow delete: if isAdmin();
+      allow read: if isFromServer() || request.auth != null;
+      allow write: if isFromServer() || isAdmin();
+      allow create: if isFromServer() || isAdmin();
+      allow delete: if isFromServer() || isAdmin();
+    }
+
+    // Diyetisyen Davet Tokenları
+    match /dietitianInvites/{token} {
+      allow read: if isFromServer() || isAdmin();
+      allow create: if isFromServer() || isAdmin();
+      allow update: if isFromServer();
+      allow delete: if isFromServer() || isAdmin();
+    }
+
+    // Diyetisyen-Danışan İlişkileri
+    match /dietitian_clients/{relationId} {
+      allow read: if isFromServer() || (request.auth != null && 
+                     (resource.data.userId == request.auth.uid || 
+                      resource.data.dietitianId == request.auth.uid ||
+                      isAdmin()));
+      allow create: if isFromServer() || (request.auth != null && 
+                       (request.resource.data.userId == request.auth.uid || 
+                        request.resource.data.dietitianId == request.auth.uid));
+      allow update: if isFromServer() || (request.auth != null && 
+                       resource.data.dietitianId == request.auth.uid);
+      allow delete: if isFromServer() || isAdmin();
+    }
+
+    // Danışan İstekleri
+    match /clientRequests/{requestId} {
+      allow read: if isFromServer() || (request.auth != null && 
+                     (resource.data.userId == request.auth.uid || 
+                      resource.data.dietitianId == request.auth.uid ||
+                      isAdmin()));
+      allow create: if isFromServer() || (request.auth != null && 
+                       request.resource.data.userId == request.auth.uid);
+      allow update: if isFromServer() || (request.auth != null && 
+                       resource.data.dietitianId == request.auth.uid);
+      allow delete: if isFromServer() || isAdmin();
+    }
+
+    // Randevular
+    match /appointments/{appointmentId} {
+      allow read: if isFromServer() || (request.auth != null && 
+                     (resource.data.userId == request.auth.uid || 
+                      resource.data.dietitianId == request.auth.uid ||
+                      isAdmin()));
+      allow create: if isFromServer() || (request.auth != null && 
+                       request.resource.data.userId == request.auth.uid);
+      allow update: if isFromServer() || (request.auth != null && 
+                       (resource.data.userId == request.auth.uid ||
+                        resource.data.dietitianId == request.auth.uid));
+      allow delete: if isFromServer() || (request.auth != null && 
+                       (resource.data.userId == request.auth.uid ||
+                        resource.data.dietitianId == request.auth.uid));
     }
 
     // Live Chat - Sohbet Oturumları
     match /liveChatSessions/{sessionId} {
-      allow read: if request.auth != null && 
-                     (resource.data.userId == request.auth.uid || isAdmin());
-      allow create: if request.auth != null && 
-                       request.resource.data.userId == request.auth.uid;
-      allow update: if request.auth != null && 
-                       (resource.data.userId == request.auth.uid || isAdmin());
-      allow delete: if request.auth != null && 
-                       (resource.data.userId == request.auth.uid || isAdmin());
+      allow read: if isFromServer() || (request.auth != null && 
+                     (resource.data.userId == request.auth.uid || isAdmin()));
+      allow create: if isFromServer() || (request.auth != null && 
+                       request.resource.data.userId == request.auth.uid);
+      allow update: if isFromServer() || (request.auth != null && 
+                       (resource.data.userId == request.auth.uid || isAdmin()));
+      allow delete: if isFromServer() || (request.auth != null && 
+                       (resource.data.userId == request.auth.uid || isAdmin()));
     }
 
     // Live Chat - Mesajlar
     match /liveChatMessages/{messageId} {
-      allow read: if request.auth != null && 
+      allow read: if isFromServer() || (request.auth != null && 
                      exists(/databases/$(database)/documents/liveChatSessions/$(resource.data.sessionId)) &&
                      (get(/databases/$(database)/documents/liveChatSessions/$(resource.data.sessionId)).data.userId == request.auth.uid ||
                       get(/databases/$(database)/documents/liveChatSessions/$(resource.data.sessionId)).data.dietitianId == request.auth.uid ||
-                      isAdmin());
-      allow create: if request.auth != null;
-      allow delete: if request.auth != null && isAdmin();
+                      isAdmin()));
+      allow create: if isFromServer() || request.auth != null;
+      allow delete: if isFromServer() || (request.auth != null && isAdmin());
     }
     
     // Varsayılan - Tüm belgeler için
     match /{document=**} {
-      allow read: if isUser();
+      allow read: if isFromServer() || isUser();
       allow write: if false;
     }
   }
